@@ -12,12 +12,4 @@
 
 @implementation AVEAudioSession
 
-- (instancetype)init {
-    self = super.init;
-    if (self) {
-        AudioComponentDescription description = {0};
-    }
-    return self;
-}
-
 @end

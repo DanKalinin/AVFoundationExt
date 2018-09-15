@@ -8,6 +8,8 @@
 
 #import <AVFoundation/AVFoundation.h>
 
+@class AVEAudioSession;
+
 
 
 @interface AVEAudioSession : AVAudioSession
