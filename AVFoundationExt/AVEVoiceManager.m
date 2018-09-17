@@ -33,6 +33,16 @@
         description.componentType = kAudioUnitType_Output;
         description.componentSubType = kAudioUnitSubType_VoiceProcessingIO;
         description.componentManufacturer = kAudioUnitManufacturer_Apple;
+        
+        AudioComponent component = AudioComponentFindNext(NULL, &description);
+        
+        AudioUnit unit;
+        OSStatus status = AudioComponentInstanceNew(component, &unit);
+        if (status == noErr) {
+        } else {
+            NSError *error = [NSError errorWithDomain:NSOSStatusErrorDomain code:status userInfo:nil];
+            [self.errors addObject:error];
+        }
     }
     return self;
 }
