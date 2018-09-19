@@ -10,10 +10,113 @@
 
 
 
+
+
+
+
+
+
+
+@interface AVEAudioSessionInterruptionInfo ()
+
+@property AVAudioSessionInterruptionType type;
+@property AVAudioSessionInterruptionOptions option;
+@property BOOL wasSuspended;
+
+@end
+
+
+
+@implementation AVEAudioSessionInterruptionInfo
+
+- (instancetype)initWithDictionary:(NSDictionary *)dictionary {
+    self = super.init;
+    if (self) {
+        self.type = [dictionary[AVAudioSessionInterruptionTypeKey] unsignedIntegerValue];
+        self.option = [dictionary[AVAudioSessionInterruptionOptionKey] unsignedIntegerValue];
+        self.wasSuspended = [dictionary[AVAudioSessionInterruptionWasSuspendedKey] boolValue];
+    }
+    return self;
+}
+
+@end
+
+
+
+
+
+
+
+
+
+
+@interface AVEAudioSessionRouteChangeInfo ()
+
+@property AVAudioSessionRouteChangeReason reason;
+@property AVAudioSessionRouteDescription *previousRoute;
+
+@end
+
+
+
+@implementation AVEAudioSessionRouteChangeInfo
+
+- (instancetype)initWithDictionary:(NSDictionary *)dictionary {
+    self = super.init;
+    if (self) {
+        self.reason = [dictionary[AVAudioSessionRouteChangeReasonKey] unsignedIntegerValue];
+        self.previousRoute = dictionary[AVAudioSessionRouteChangePreviousRouteKey];
+    }
+    return self;
+}
+
+@end
+
+
+
+
+
+
+
+
+
+
+@interface AVEAudioSessionSilenceSecondaryAudioHintInfo ()
+
+@property AVAudioSessionSilenceSecondaryAudioHintType type;
+
+@end
+
+
+
+@implementation AVEAudioSessionSilenceSecondaryAudioHintInfo
+
+- (instancetype)initWithDictionary:(NSDictionary *)dictionary {
+    self = super.init;
+    if (self) {
+        self.type = [dictionary[AVAudioSessionSilenceSecondaryAudioHintTypeKey] unsignedIntegerValue];
+    }
+    return self;
+}
+
+@end
+
+
+
+
+
+
+
+
+
+
 @interface AVEAudioSession ()
 
 @property NSNotificationCenter *notificationCenter;
 @property AVAudioSession *audioSession;
+@property AVEAudioSessionInterruptionInfo *interruptionInfo;
+@property AVEAudioSessionRouteChangeInfo *routeChangeInfo;
+@property AVEAudioSessionSilenceSecondaryAudioHintInfo *silenceSecondaryAudioHintInfo;
 
 @end
 
@@ -60,10 +163,12 @@
 #pragma mark - Notifications
 
 - (void)AVAudioSessionInterruptionNotification:(NSNotification *)notification {
+    self.interruptionInfo = [AVEAudioSessionInterruptionInfo.alloc initWithDictionary:notification.userInfo];
     [self.delegates AVEAudioSessionInterruption:self];
 }
 
 - (void)AVAudioSessionRouteChangeNotification:(NSNotification *)notification {
+    self.routeChangeInfo = [AVEAudioSessionRouteChangeInfo.alloc initWithDictionary:notification.userInfo];
     [self.delegates AVEAudioSessionRouteChange:self];
 }
 
@@ -76,6 +181,7 @@
 }
 
 - (void)AVAudioSessionSilenceSecondaryAudioHintNotification:(NSNotification *)notification {
+    self.silenceSecondaryAudioHintInfo = [AVEAudioSessionSilenceSecondaryAudioHintInfo.alloc initWithDictionary:notification.userInfo];
     [self.delegates AVEAudioSessionSilenceSecondaryAudioHint:self];
 }
 

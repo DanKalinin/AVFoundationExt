@@ -9,7 +9,68 @@
 #import <AVFoundation/AVFoundation.h>
 #import <Helpers/Helpers.h>
 
-@class AVEAudioSession;
+@class AVEAudioSessionInterruptionInfo, AVEAudioSessionRouteChangeInfo, AVEAudioSessionSilenceSecondaryAudioHintInfo, AVEAudioSession;
+
+
+
+
+
+
+
+
+
+
+@interface AVEAudioSessionInterruptionInfo : HLPObject
+
+@property (readonly) AVAudioSessionInterruptionType type;
+@property (readonly) AVAudioSessionInterruptionOptions option;
+@property (readonly) BOOL wasSuspended;
+
+- (instancetype)initWithDictionary:(NSDictionary *)dictionary;
+
+@end
+
+
+
+
+
+
+
+
+
+
+@interface AVEAudioSessionRouteChangeInfo : HLPObject
+
+@property (readonly) AVAudioSessionRouteChangeReason reason;
+@property (readonly) AVAudioSessionRouteDescription *previousRoute;
+
+- (instancetype)initWithDictionary:(NSDictionary *)dictionary;
+
+@end
+
+
+
+
+
+
+
+
+
+
+@interface AVEAudioSessionSilenceSecondaryAudioHintInfo : HLPObject
+
+@property (readonly) AVAudioSessionSilenceSecondaryAudioHintType type;
+
+- (instancetype)initWithDictionary:(NSDictionary *)dictionary;
+
+@end
+
+
+
+
+
+
+
 
 
 
@@ -36,5 +97,8 @@
 @property (readonly) HLPArray<AVEAudioSessionDelegate> *delegates;
 @property (readonly) NSNotificationCenter *notificationCenter;
 @property (readonly) AVAudioSession *audioSession;
+@property (readonly) AVEAudioSessionInterruptionInfo *interruptionInfo;
+@property (readonly) AVEAudioSessionRouteChangeInfo *routeChangeInfo;
+@property (readonly) AVEAudioSessionSilenceSecondaryAudioHintInfo *silenceSecondaryAudioHintInfo;
 
 @end
