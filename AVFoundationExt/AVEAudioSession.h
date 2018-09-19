@@ -15,6 +15,18 @@
 
 @protocol AVEAudioSessionDelegate <HLPOperationDelegate>
 
+@optional
+- (void)AVEAudioSessionDidUpdateState:(AVEAudioSession *)audioSession;
+
+- (void)AVEAudioSessionDidBegin:(AVEAudioSession *)audioSession;
+- (void)AVEAudioSessionDidEnd:(AVEAudioSession *)audioSession;
+
+- (void)AVEAudioSessionInterruption:(AVEAudioSession *)audioSession;
+- (void)AVEAudioSessionRouteChange:(AVEAudioSession *)audioSession;
+- (void)AVEAudioSessionMediaServicesWereLost:(AVEAudioSession *)audioSession;
+- (void)AVEAudioSessionMediaServicesWereReset:(AVEAudioSession *)audioSession;
+- (void)AVEAudioSessionSilenceSecondaryAudioHint:(AVEAudioSession *)audioSession;
+
 @end
 
 
