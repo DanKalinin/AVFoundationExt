@@ -20,7 +20,8 @@
 
 @interface AVEVoiceManager : HLPOperation <AVEVoiceManagerDelegate>
 
-@property (readonly) AUAudioUnit *unit;
-@property (readonly) AVAudioConverter *converter;
+@property (readonly) AudioComponent component;
+@property (readonly) AudioUnit unit;
+
 
 @end

@@ -11,8 +11,8 @@
 
 @interface AVEVoiceManager ()
 
-@property AUAudioUnit *unit;
-@property AVAudioConverter *converter;
+@property AudioComponent component;
+@property AudioUnit unit;
 
 @end
 
@@ -37,10 +37,16 @@
         description.componentSubType = kAudioUnitSubType_VoiceProcessingIO;
         description.componentManufacturer = kAudioUnitManufacturer_Apple;
         
-        NSError *error = nil;
-        self.unit = [AUAudioUnit.alloc initWithComponentDescription:description error:&error];
-        if (error) {
-            [self.errors addObject:error];
+        self.component = AudioComponentFindNext(NULL, &description);
+        if (self.component) {
+            OSStatus status = AudioComponentInstanceNew(self.component, &_unit);
+            if (status == noErr) {
+                
+            } else {
+                
+            }
+        } else {
+            
         }
     }
     return self;
