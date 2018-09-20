@@ -11,6 +11,7 @@
 
 @interface AVEVoiceManager ()
 
+@property AVEAudioSession *audioSession;
 @property AudioComponent component;
 @property AudioUnit unit;
 
@@ -32,6 +33,8 @@
 - (instancetype)init {
     self = super.init;
     if (self) {
+        self.audioSession = AVEAudioSession.shared;
+        
         AudioComponentDescription description = {0};
         description.componentType = kAudioUnitType_Output;
         description.componentSubType = kAudioUnitSubType_VoiceProcessingIO;

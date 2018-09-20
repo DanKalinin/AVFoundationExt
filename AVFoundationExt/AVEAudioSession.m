@@ -185,17 +185,4 @@
     [self.delegates AVEAudioSessionSilenceSecondaryAudioHint:self];
 }
 
-//AVAudioSessionInterruptionNotification
-//AVAudioSessionRouteChangeNotification
-//AVAudioSessionMediaServicesWereLostNotification
-//AVAudioSessionMediaServicesWereResetNotification
-//AVAudioSessionSilenceSecondaryAudioHintNotification
-
-//AVAudioSessionInterruptionTypeKey
-//AVAudioSessionInterruptionOptionKey
-//AVAudioSessionInterruptionWasSuspendedKey
-//AVAudioSessionRouteChangeReasonKey
-//AVAudioSessionRouteChangePreviousRouteKey
-//AVAudioSessionSilenceSecondaryAudioHintTypeKey
-
 @end

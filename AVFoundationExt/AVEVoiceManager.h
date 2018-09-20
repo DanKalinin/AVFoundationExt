@@ -7,6 +7,7 @@
 
 #import <Helpers/Helpers.h>
 #import <AVFoundation/AVFoundation.h>
+#import "AVEAudioSession.h"
 
 @class AVEVoiceManager;
 
@@ -20,8 +21,8 @@
 
 @interface AVEVoiceManager : HLPOperation <AVEVoiceManagerDelegate>
 
+@property (readonly) AVEAudioSession *audioSession;
 @property (readonly) AudioComponent component;
 @property (readonly) AudioUnit unit;
-
 
 @end
