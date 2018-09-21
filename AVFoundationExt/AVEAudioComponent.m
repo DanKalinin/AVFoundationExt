@@ -7,6 +7,14 @@
 
 #import "AVEAudioComponent.h"
 
+
+
+@interface AVEAudioComponent ()
+
+@end
+
+
+
 @implementation AVEAudioComponent
 
 @end
