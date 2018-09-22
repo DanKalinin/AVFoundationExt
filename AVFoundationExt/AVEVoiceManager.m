@@ -44,8 +44,16 @@
         if (error) {
             [self.errors addObject:error];
         } else {
-            NSLog(@"class - %@", self.audioUnit.class);
+            NSLog(@"class - %@", self.audioUnit.parameterTree.children);
         }
+        
+        // componentName = Apple: AUVoiceIO
+        // componentVersion = 65792
+        // audioUnitName = AUVoiceIO
+        // manufacturerName = Apple
+        // renderResourcesAllocated = YES - after - allocateRenderResourcesAndReturnError:
+        // maximumFramesToRender = 1156
+        // inputBusses = 2, outputBusses = 2
     }
     return self;
 }
