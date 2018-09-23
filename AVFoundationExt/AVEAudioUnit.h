@@ -12,6 +12,17 @@
 
 
 
-@interface AVEAudioUnit : HLPOperation
+@protocol AVEAudioUnitDelegate <HLPOperationDelegate>
+
+@end
+
+
+
+@interface AVEAudioUnit : HLPOperation <AVEAudioUnitDelegate>
+
+@property (readonly) HLPArray<AVEAudioUnitDelegate> *delegates;
+@property (readonly) AudioComponentDescription componentDescription;
+
+- (instancetype)initWithComponentDescription:(AudioComponentDescription)componentDescription;
 
 @end

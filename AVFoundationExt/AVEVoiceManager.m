@@ -39,7 +39,10 @@
         description.componentSubType = kAudioUnitSubType_VoiceProcessingIO;
         description.componentManufacturer = kAudioUnitManufacturer_Apple;
         
-        NSLog(@"components - %@", [AVEAudioComponent componentsWithDescription:description]);
+//        NSLog(@"components - %@", [AVEAudioComponent componentsWithDescription:description]);
+        
+//        AVEAudioComponent *component = [AVEAudioComponent componentsWithDescription:description].firstObject;
+//        NSLog(@"name - %@", component.name);
         
 //        NSError *error = nil;
 //        self.audioUnit = [AUAudioUnit.alloc initWithComponentDescription:description error:&error];

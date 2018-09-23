@@ -11,10 +11,22 @@
 
 @interface AVEAudioUnit ()
 
+@property AudioComponentDescription componentDescription;
+
 @end
 
 
 
 @implementation AVEAudioUnit
+
+@dynamic delegates;
+
+- (instancetype)initWithComponentDescription:(AudioComponentDescription)componentDescription {
+    self = super.init;
+    if (self) {
+        self.componentDescription = componentDescription;
+    }
+    return self;
+}
 
 @end
