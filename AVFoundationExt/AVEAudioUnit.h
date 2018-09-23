@@ -51,7 +51,12 @@
 
 @interface AVEAudioComponentInstantiation : HLPOperation <AVEAudioComponentInstantiationDelegate>
 
+@property (readonly) AVEAudioComponent *parent;
+@property (readonly) HLPArray<AVEAudioComponentInstantiationDelegate> *delegates;
+@property (readonly) AudioComponentInstantiationOptions options;
 @property (readonly) AVEAudioUnit *unit;
+
+- (instancetype)initWithOptions:(AudioComponentInstantiationOptions)options;
 
 @end
 
@@ -75,6 +80,9 @@
 @property (readonly) AudioComponent component;
 
 - (instancetype)initWithComponent:(AudioComponent)component;
+
+- (AVEAudioComponentInstantiation *)instantiateWithOptions:(AudioComponentInstantiationOptions)options;
+- (AVEAudioComponentInstantiation *)instantiateWithOptions:(AudioComponentInstantiationOptions)options completion:(HLPVoidBlock)completion;
 
 + (NSArray<AVEAudioComponent *> *)componentsWithDescription:(AudioComponentDescription)description;
 
