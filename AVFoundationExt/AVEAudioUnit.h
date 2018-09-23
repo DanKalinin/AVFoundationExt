@@ -9,6 +9,14 @@
 #import <Helpers/Helpers.h>
 
 @class AVEAudioUnit;
+@class AVEAudioComponentInstantiation, AVEAudioComponent;
+
+
+
+
+
+
+
 
 
 
@@ -20,9 +28,54 @@
 
 @interface AVEAudioUnit : HLPOperation <AVEAudioUnitDelegate>
 
-@property (readonly) HLPArray<AVEAudioUnitDelegate> *delegates;
-@property (readonly) AudioComponentDescription componentDescription;
+@property (readonly) AudioUnit unit;
 
-- (instancetype)initWithComponentDescription:(AudioComponentDescription)componentDescription;
+- (instancetype)initWithUnit:(AudioUnit)unit;
+
+@end
+
+
+
+
+
+
+
+
+
+
+@protocol AVEAudioComponentInstantiationDelegate <HLPOperationDelegate>
+
+@end
+
+
+
+@interface AVEAudioComponentInstantiation : HLPOperation <AVEAudioComponentInstantiationDelegate>
+
+@property (readonly) AVEAudioUnit *unit;
+
+@end
+
+
+
+
+
+
+
+
+
+
+@protocol AVEAudioComponentDelegate <AVEAudioComponentInstantiationDelegate>
+
+@end
+
+
+
+@interface AVEAudioComponent : HLPOperationQueue <AVEAudioComponentDelegate>
+
+@property (readonly) AudioComponent component;
+
+- (instancetype)initWithComponent:(AudioComponent)component;
+
++ (NSArray<AVEAudioComponent *> *)componentsWithDescription:(AudioComponentDescription)description;
 
 @end

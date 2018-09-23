@@ -9,9 +9,16 @@
 
 
 
+
+
+
+
+
+
+
 @interface AVEAudioUnit ()
 
-@property AudioComponentDescription componentDescription;
+@property AudioUnit unit;
 
 @end
 
@@ -19,12 +26,60 @@
 
 @implementation AVEAudioUnit
 
-@dynamic delegates;
-
-- (instancetype)initWithComponentDescription:(AudioComponentDescription)componentDescription {
+- (instancetype)initWithUnit:(AudioUnit)unit {
     self = super.init;
     if (self) {
-        self.componentDescription = componentDescription;
+        self.unit = unit;
+    }
+    return self;
+}
+
+@end
+
+
+
+
+
+
+
+
+
+
+@interface AVEAudioComponentInstantiation ()
+
+@property AVEAudioUnit *unit;
+
+@end
+
+
+
+@implementation AVEAudioComponentInstantiation
+
+@end
+
+
+
+
+
+
+
+
+
+
+@interface AVEAudioComponent ()
+
+@property AudioComponent component;
+
+@end
+
+
+
+@implementation AVEAudioComponent
+
+- (instancetype)initWithComponent:(AudioComponent)component {
+    self = super.init;
+    if (self) {
+        self.component = component;
     }
     return self;
 }
