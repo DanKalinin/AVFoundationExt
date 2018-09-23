@@ -68,9 +68,21 @@
 }
 
 - (void)main {
-    AudioComponentInstantiate(self.parent.component, self.options, ^(AudioComponentInstance unit, OSStatus status) {
-        
+    [self updateState:HLPOperationStateDidBegin];
+    
+    dispatch_group_enter(self.group);
+    AudioComponentInstantiate(self.parent.component, self.options, ^(AudioComponentInstance opaqueUnit, OSStatus status) {
+        if (status == noErr) {
+            self.unit = [AVEAudioUnit.alloc initWithUnit:opaqueUnit];
+        } else {
+            NSError *error = [NSError errorWithDomain:NSOSStatusErrorDomain code:status userInfo:nil];
+            [self.errors addObject:error];
+        }
+        dispatch_group_leave(self.group);
     });
+    dispatch_group_wait(self.group, DISPATCH_TIME_FOREVER);
+    
+    [self updateState:HLPOperationStateDidEnd];
 }
 
 @end
@@ -112,6 +124,23 @@
     AVEAudioComponentInstantiation *instantiation = [self instantiateWithOptions:options];
     instantiation.completionBlock = completion;
     return instantiation;
+}
+
++ (NSArray<AVEAudioComponent *> *)componentsWithDescription:(AudioComponentDescription)description {
+    NSMutableArray *components = NSMutableArray.array;
+    
+    AudioComponent opaqueComponent = NULL;
+    while (YES) {
+        opaqueComponent = AudioComponentFindNext(opaqueComponent, &description);
+        if (opaqueComponent) {
+            AVEAudioComponent *component = [AVEAudioComponent.alloc initWithComponent:opaqueComponent];
+            [components addObject:component];
+        } else {
+            break;
+        }
+    }
+    
+    return components;
 }
 
 @end
