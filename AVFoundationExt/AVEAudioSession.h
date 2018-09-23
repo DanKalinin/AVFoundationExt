@@ -95,7 +95,6 @@
 @interface AVEAudioSession : HLPOperation <AVEAudioSessionDelegate>
 
 @property (readonly) HLPArray<AVEAudioSessionDelegate> *delegates;
-@property (readonly) NSNotificationCenter *notificationCenter;
 @property (readonly) AVAudioSession *audioSession;
 @property (readonly) AVEAudioSessionInterruptionInfo *interruptionInfo;
 @property (readonly) AVEAudioSessionRouteChangeInfo *routeChangeInfo;

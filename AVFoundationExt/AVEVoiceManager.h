@@ -8,6 +8,7 @@
 #import <Helpers/Helpers.h>
 #import <AVFoundation/AVFoundation.h>
 #import "AVEAudioSession.h"
+#import "AVEAudioUnit.h"
 
 @class AVEVoiceManager;
 

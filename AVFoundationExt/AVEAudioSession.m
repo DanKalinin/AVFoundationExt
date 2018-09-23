@@ -112,7 +112,6 @@
 
 @interface AVEAudioSession ()
 
-@property NSNotificationCenter *notificationCenter;
 @property AVAudioSession *audioSession;
 @property AVEAudioSessionInterruptionInfo *interruptionInfo;
 @property AVEAudioSessionRouteChangeInfo *routeChangeInfo;
@@ -138,7 +137,6 @@
 - (instancetype)init {
     self = super.init;
     if (self) {
-        self.notificationCenter = NSNotificationCenter.defaultCenter;
         self.audioSession = AVAudioSession.sharedInstance;
     }
     return self;
