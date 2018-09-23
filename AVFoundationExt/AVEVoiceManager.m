@@ -39,13 +39,15 @@
         description.componentSubType = kAudioUnitSubType_VoiceProcessingIO;
         description.componentManufacturer = kAudioUnitManufacturer_Apple;
         
-        NSError *error = nil;
-        self.audioUnit = [AUAudioUnit.alloc initWithComponentDescription:description error:&error];
-        if (error) {
-            [self.errors addObject:error];
-        } else {
-            NSLog(@"class - %@", self.audioUnit.parameterTree.children);
-        }
+        NSLog(@"components - %@", [AVEAudioComponent componentsWithDescription:description]);
+        
+//        NSError *error = nil;
+//        self.audioUnit = [AUAudioUnit.alloc initWithComponentDescription:description error:&error];
+//        if (error) {
+//            [self.errors addObject:error];
+//        } else {
+//            NSLog(@"class - %@", self.audioUnit.parameterTree.children);
+//        }
         
         // componentName = Apple: AUVoiceIO
         // componentVersion = 65792

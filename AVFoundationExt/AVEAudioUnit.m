@@ -7,6 +7,14 @@
 
 #import "AVEAudioUnit.h"
 
+
+
+@interface AVEAudioUnit ()
+
+@end
+
+
+
 @implementation AVEAudioUnit
 
 @end

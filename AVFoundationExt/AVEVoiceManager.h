@@ -9,6 +9,8 @@
 #import <AVFoundation/AVFoundation.h>
 #import "AVEAudioSession.h"
 
+#import "AVEAudioComponent.h"
+
 @class AVEVoiceManager;
 
 
