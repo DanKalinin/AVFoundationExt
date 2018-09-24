@@ -45,13 +45,13 @@
 
 - (NSData *)valueForProperty:(AudioUnitPropertyID)property scope:(AudioUnitScope)scope element:(AudioUnitElement)element {
     NSData *value = nil;
-    UInt32 size = 0;
-    OSStatus status = AudioUnitGetPropertyInfo(self.unit, property, scope, element, &size, NULL);
+    UInt32 length = 0;
+    OSStatus status = AudioUnitGetPropertyInfo(self.unit, property, scope, element, &length, NULL);
     if (status == noErr) {
-        void *bytes = malloc(size);
-        status = AudioUnitGetProperty(self.unit, property, scope, element, bytes, &size);
+        void *bytes = malloc(length);
+        status = AudioUnitGetProperty(self.unit, property, scope, element, bytes, &length);
         if (status == noErr) {
-            value = [NSData dataWithBytes:bytes length:size];
+            value = [NSData dataWithBytes:bytes length:length];
         } else {
             NSError *error = [NSError errorWithDomain:NSOSStatusErrorDomain code:status userInfo:nil];
             [self.errors addObject:error];
