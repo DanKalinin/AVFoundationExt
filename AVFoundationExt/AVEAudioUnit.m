@@ -34,15 +34,6 @@
     return self;
 }
 
-- (void)setValue:(NSData *)value forProperty:(AudioUnitPropertyID)property scope:(AudioUnitScope)scope element:(AudioUnitElement)element {
-    OSStatus status = AudioUnitSetProperty(self.unit, property, scope, element, value.bytes, (UInt32)value.length);
-    if (status == noErr) {
-    } else {
-        NSError *error = [NSError errorWithDomain:NSOSStatusErrorDomain code:status userInfo:nil];
-        [self.errors addObject:error];
-    }
-}
-
 - (NSData *)valueForProperty:(AudioUnitPropertyID)property scope:(AudioUnitScope)scope element:(AudioUnitElement)element {
     NSData *value = nil;
     UInt32 length = 0;
@@ -62,6 +53,15 @@
         [self.errors addObject:error];
     }
     return value;
+}
+
+- (void)setValue:(NSData *)value forProperty:(AudioUnitPropertyID)property scope:(AudioUnitScope)scope element:(AudioUnitElement)element {
+    OSStatus status = AudioUnitSetProperty(self.unit, property, scope, element, value.bytes, (UInt32)value.length);
+    if (status == noErr) {
+    } else {
+        NSError *error = [NSError errorWithDomain:NSOSStatusErrorDomain code:status userInfo:nil];
+        [self.errors addObject:error];
+    }
 }
 
 @end

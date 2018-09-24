@@ -39,13 +39,17 @@
         description.componentSubType = kAudioUnitSubType_VoiceProcessingIO;
         description.componentManufacturer = kAudioUnitManufacturer_Apple;
         
-        NSArray *components = [AVEAudioComponent componentsWithDescription:description];
-        NSLog(@"components - %@", components);
+//        NSArray *components = [AVEAudioComponent componentsWithDescription:description];
+//        NSLog(@"components - %@", components);
+//        
+//        AVEAudioComponentInstantiation *instantiation = [components.firstObject instantiateWithOptions:kAudioComponentInstantiation_LoadOutOfProcess];
+//        instantiation.delegates.operationQueue = nil;
+//        [instantiation waitUntilFinished];
+//        NSLog(@"unit - %@", instantiation.unit);
         
-        AVEAudioComponentInstantiation *instantiation = [components.firstObject instantiateWithOptions:kAudioComponentInstantiation_LoadOutOfProcess];
-        instantiation.delegates.operationQueue = nil;
-        [instantiation waitUntilFinished];
-        NSLog(@"unit - %@", instantiation.unit);
+//        NSData *enableIO = [instantiation.unit valueForProperty:kAudioOutputUnitProperty_EnableIO scope:kAudioUnitScope_Output element:0];
+//        NSLog(@"enableIO - %@", enableIO);
+//        NSLog(@"errors - %@", instantiation.unit.errors);
         
 //        NSLog(@"components - %@", [AVEAudioComponent componentsWithDescription:description]);
         
