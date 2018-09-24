@@ -34,6 +34,36 @@
     return self;
 }
 
+- (void)setValue:(NSData *)value forProperty:(AudioUnitPropertyID)property scope:(AudioUnitScope)scope element:(AudioUnitElement)element {
+    OSStatus status = AudioUnitSetProperty(self.unit, property, scope, element, value.bytes, (UInt32)value.length);
+    if (status == noErr) {
+    } else {
+        NSError *error = [NSError errorWithDomain:NSOSStatusErrorDomain code:status userInfo:nil];
+        [self.errors addObject:error];
+    }
+}
+
+- (NSData *)valueForProperty:(AudioUnitPropertyID)property scope:(AudioUnitScope)scope element:(AudioUnitElement)element {
+    NSData *value = nil;
+    UInt32 size = 0;
+    OSStatus status = AudioUnitGetPropertyInfo(self.unit, property, scope, element, &size, NULL);
+    if (status == noErr) {
+        void *bytes = malloc(size);
+        status = AudioUnitGetProperty(self.unit, property, scope, element, bytes, &size);
+        if (status == noErr) {
+            value = [NSData dataWithBytes:bytes length:size];
+        } else {
+            NSError *error = [NSError errorWithDomain:NSOSStatusErrorDomain code:status userInfo:nil];
+            [self.errors addObject:error];
+        }
+        free(bytes);
+    } else {
+        NSError *error = [NSError errorWithDomain:NSOSStatusErrorDomain code:status userInfo:nil];
+        [self.errors addObject:error];
+    }
+    return value;
+}
+
 @end
 
 

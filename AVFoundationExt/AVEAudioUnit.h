@@ -32,6 +32,9 @@
 
 - (instancetype)initWithUnit:(AudioUnit)unit;
 
+- (void)setValue:(NSData *)value forProperty:(AudioUnitPropertyID)property scope:(AudioUnitScope)scope element:(AudioUnitElement)element;
+- (NSData *)valueForProperty:(AudioUnitPropertyID)property scope:(AudioUnitScope)scope element:(AudioUnitElement)element;
+
 @end
 
 

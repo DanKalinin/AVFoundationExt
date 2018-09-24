@@ -42,6 +42,11 @@
         NSArray *components = [AVEAudioComponent componentsWithDescription:description];
         NSLog(@"components - %@", components);
         
+        AVEAudioComponentInstantiation *instantiation = [components.firstObject instantiateWithOptions:kAudioComponentInstantiation_LoadOutOfProcess];
+        instantiation.delegates.operationQueue = nil;
+        [instantiation waitUntilFinished];
+        NSLog(@"unit - %@", instantiation.unit);
+        
 //        NSLog(@"components - %@", [AVEAudioComponent componentsWithDescription:description]);
         
 //        AVEAudioComponent *component = [AVEAudioComponent componentsWithDescription:description].firstObject;
