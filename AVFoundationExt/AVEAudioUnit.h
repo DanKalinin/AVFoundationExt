@@ -87,7 +87,10 @@ NS_ERROR_ENUM(AVEAudioUnitErrorDomain) {
 
 @interface AVEAudioUnitElement : HLPObject
 
+@property UInt32 elementCount;
 @property Float64 sampleRate;
+
+@property (readonly) Float64 latency;
 
 @property (readonly) AudioUnitScope scope;
 @property (readonly) AudioUnitElement element;

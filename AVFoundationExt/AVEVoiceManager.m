@@ -36,7 +36,13 @@
         
         self.unit = AVEAudioUnitVoiceProcessingIO.new;
         
-        NSLog(@"unit - %@", self.unit.unit);
+        AVEAudioUnitInstantiation *instantiation = [self.unit instantiateWithOptions:kAudioComponentInstantiation_LoadOutOfProcess];
+        instantiation.delegates.operationQueue = nil;
+        [instantiation waitUntilFinished];
+        
+//        self.unit.globalElement.sampleRate = 44100.0;
+//        NSLog(@"unit - %@", self.unit.globalElement.elementName);
+//        NSLog(@"errors - %@", self.unit.errors);
         
         
         

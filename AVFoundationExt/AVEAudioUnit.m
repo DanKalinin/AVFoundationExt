@@ -154,6 +154,62 @@ NSErrorDomain const AVEAudioUnitErrorDomain = @"AVEAudioUnit";
     return self;
 }
 
+#pragma mark - Accessors
+
+- (void)setElementCount:(UInt32)elementCount {
+    OSStatus status = AudioUnitSetProperty(self.unit.unit, kAudioUnitProperty_ElementCount, self.scope, self.element, &elementCount, sizeof(elementCount));
+    if (status == noErr) {
+    } else {
+        NSError *error = [NSError errorWithDomain:NSOSStatusErrorDomain code:status userInfo:nil];
+        [self.unit.errors addObject:error];
+    }
+}
+
+- (UInt32)elementCount {
+    UInt32 elementCount = 0.0;
+    UInt32 size = sizeof(elementCount);
+    OSStatus status = AudioUnitGetProperty(self.unit.unit, kAudioUnitProperty_ElementCount, self.scope, self.scope, &elementCount, &size);
+    if (status == noErr) {
+    } else {
+        NSError *error = [NSError errorWithDomain:NSOSStatusErrorDomain code:status userInfo:nil];
+        [self.unit.errors addObject:error];
+    }
+    return elementCount;
+}
+
+- (void)setSampleRate:(Float64)sampleRate {
+    OSStatus status = AudioUnitSetProperty(self.unit.unit, kAudioUnitProperty_SampleRate, self.scope, self.element, &sampleRate, sizeof(sampleRate));
+    if (status == noErr) {
+    } else {
+        NSError *error = [NSError errorWithDomain:NSOSStatusErrorDomain code:status userInfo:nil];
+        [self.unit.errors addObject:error];
+    }
+}
+
+- (Float64)sampleRate {
+    Float64 sampleRate = 0.0;
+    UInt32 size = sizeof(sampleRate);
+    OSStatus status = AudioUnitGetProperty(self.unit.unit, kAudioUnitProperty_SampleRate, self.scope, self.scope, &sampleRate, &size);
+    if (status == noErr) {
+    } else {
+        NSError *error = [NSError errorWithDomain:NSOSStatusErrorDomain code:status userInfo:nil];
+        [self.unit.errors addObject:error];
+    }
+    return sampleRate;
+}
+
+- (Float64)latency {
+    Float64 latency = 0.0;
+    UInt32 size = sizeof(latency);
+    OSStatus status = AudioUnitGetProperty(self.unit.unit, kAudioUnitProperty_Latency, self.scope, self.scope, &latency, &size);
+    if (status == noErr) {
+    } else {
+        NSError *error = [NSError errorWithDomain:NSOSStatusErrorDomain code:status userInfo:nil];
+        [self.unit.errors addObject:error];
+    }
+    return latency;
+}
+
 @end
 
 
