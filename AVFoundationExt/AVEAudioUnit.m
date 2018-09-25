@@ -92,6 +92,9 @@ NSErrorDomain const AVEAudioUnitErrorDomain = @"AVEAudioUnit";
 - (instancetype)init {
     self = super.init;
     if (self) {
+        AudioComponentDescription componentDescription = {0};
+        self.componentDescription = &componentDescription;
+        
         self.componentDescription->componentManufacturer = kAudioUnitManufacturer_Apple;
     }
     return self;
