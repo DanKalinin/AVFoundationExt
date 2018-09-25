@@ -20,7 +20,7 @@
 - (instancetype)init {
     self = super.init;
     if (self) {
-        self.componentDescription->componentType = kAudioUnitType_Output;
+        self.type = kAudioUnitType_Output;
     }
     return self;
 }

@@ -8,7 +8,7 @@
 #import <AVFoundation/AVFoundation.h>
 #import <Helpers/Helpers.h>
 
-@class AVEAudioUnitInstantiation, AVEAudioUnit;
+@class AVEAudioUnitInstantiation, AVEAudioUnit, AVEAudioUnitElement;
 
 extern NSErrorDomain const AVEAudioUnitErrorDomain;
 
@@ -61,13 +61,38 @@ NS_ERROR_ENUM(AVEAudioUnitErrorDomain) {
 
 @interface AVEAudioUnit : HLPOperation <AVEAudioUnitDelegate>
 
+@property OSType type;
+@property OSType subtype;
+@property OSType manufacturer;
 @property AudioComponent component;
 @property AudioUnit unit;
 
-@property (readonly) AudioComponentDescription *componentDescription;
+@property (readonly) AVEAudioUnitElement *globalElement;
+@property (readonly) NSMutableArray<AVEAudioUnitElement *> *inputElements;
+@property (readonly) NSMutableArray<AVEAudioUnitElement *> *outputElements;
 
 - (AVEAudioUnitInstantiation *)instantiateWithOptions:(AudioComponentInstantiationOptions)options;
 - (AVEAudioUnitInstantiation *)instantiateWithOptions:(AudioComponentInstantiationOptions)options completion:(HLPVoidBlock)completion;
+
+@end
+
+
+
+
+
+
+
+
+
+
+@interface AVEAudioUnitElement : HLPObject
+
+@property (readonly) AudioUnitScope scope;
+@property (readonly) AudioUnitElement element;
+
+@property (weak, readonly) AVEAudioUnit *unit;
+
+- (instancetype)initWithUnit:(AVEAudioUnit *)unit scope:(AudioUnitScope)scope element:(AudioUnitElement)element;
 
 @end
 

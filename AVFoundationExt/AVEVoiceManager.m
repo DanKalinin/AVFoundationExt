@@ -35,6 +35,7 @@
         self.session = AVEAudioSession.shared;
         
         self.unit = AVEAudioUnitVoiceProcessingIO.new;
+        
         NSLog(@"unit - %@", self.unit.unit);
         
         

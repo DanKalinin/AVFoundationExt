@@ -44,7 +44,12 @@ NSErrorDomain const AVEAudioUnitErrorDomain = @"AVEAudioUnit";
 - (void)main {
     [self updateState:HLPOperationStateDidBegin];
     
-    self.component = AudioComponentFindNext(NULL, self.parent.componentDescription);
+    AudioComponentDescription description = {0};
+    description.componentType = self.parent.type;
+    description.componentSubType = self.parent.subtype;
+    description.componentManufacturer = self.parent.manufacturer;
+    
+    self.component = AudioComponentFindNext(NULL, &description);
     if (self.component) {
         dispatch_group_enter(self.group);
         AudioComponentInstantiate(self.component, self.options, ^(AudioUnit unit, OSStatus status) {
@@ -81,7 +86,9 @@ NSErrorDomain const AVEAudioUnitErrorDomain = @"AVEAudioUnit";
 
 @interface AVEAudioUnit ()
 
-@property AudioComponentDescription *componentDescription;
+@property AVEAudioUnitElement *globalElement;
+@property NSMutableArray<AVEAudioUnitElement *> *inputElements;
+@property NSMutableArray<AVEAudioUnitElement *> *outputElements;
 
 @end
 
@@ -92,10 +99,9 @@ NSErrorDomain const AVEAudioUnitErrorDomain = @"AVEAudioUnit";
 - (instancetype)init {
     self = super.init;
     if (self) {
-        AudioComponentDescription componentDescription = {0};
-        self.componentDescription = &componentDescription;
+        self.manufacturer = kAudioUnitManufacturer_Apple;
         
-        self.componentDescription->componentManufacturer = kAudioUnitManufacturer_Apple;
+        self.globalElement = [AVEAudioUnitElement.alloc initWithUnit:self scope:kAudioUnitScope_Global element:0];
     }
     return self;
 }
@@ -120,6 +126,33 @@ NSErrorDomain const AVEAudioUnitErrorDomain = @"AVEAudioUnit";
 
 
 
+
+
+
+@interface AVEAudioUnitElement ()
+
+@property AudioUnitScope scope;
+@property AudioUnitElement element;
+
+@property (weak) AVEAudioUnit *unit;
+
+@end
+
+
+
+@implementation AVEAudioUnitElement
+
+- (instancetype)initWithUnit:(AVEAudioUnit *)unit scope:(AudioUnitScope)scope element:(AudioUnitElement)element {
+    self = super.init;
+    if (self) {
+        self.unit = unit;
+        self.scope = scope;
+        self.element = element;
+    }
+    return self;
+}
+
+@end
 
 
 

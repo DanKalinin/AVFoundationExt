@@ -20,7 +20,7 @@
 - (instancetype)init {
     self = super.init;
     if (self) {
-        self.componentDescription->componentSubType = kAudioUnitSubType_VoiceProcessingIO;
+        self.subtype = kAudioUnitSubType_VoiceProcessingIO;
     }
     return self;
 }
