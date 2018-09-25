@@ -11,8 +11,8 @@
 
 @interface AVEVoiceManager ()
 
-@property AVEAudioSession *audioSession;
-@property AUAudioUnit *audioUnit;
+@property AVEAudioSession *session;
+@property AVEAudioUnitVoiceProcessingIO *unit;
 
 @end
 
@@ -32,12 +32,17 @@
 - (instancetype)init {
     self = super.init;
     if (self) {
-        self.audioSession = AVEAudioSession.shared;
+        self.session = AVEAudioSession.shared;
         
-        AudioComponentDescription description = {0};
-        description.componentType = kAudioUnitType_Output;
-        description.componentSubType = kAudioUnitSubType_VoiceProcessingIO;
-        description.componentManufacturer = kAudioUnitManufacturer_Apple;
+        self.unit = AVEAudioUnitVoiceProcessingIO.new;
+        
+        
+        
+        
+//        AudioComponentDescription description = {0};
+//        description.componentType = kAudioUnitType_Output;
+//        description.componentSubType = kAudioUnitSubType_VoiceProcessingIO;
+//        description.componentManufacturer = kAudioUnitManufacturer_Apple;
         
 //        NSArray *components = [AVEAudioComponent componentsWithDescription:description];
 //        NSLog(@"components - %@", components);
