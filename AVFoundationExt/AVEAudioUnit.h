@@ -87,6 +87,8 @@ NS_ERROR_ENUM(AVEAudioUnitErrorDomain) {
 
 @interface AVEAudioUnitElement : HLPObject
 
+@property Float64 sampleRate;
+
 @property (readonly) AudioUnitScope scope;
 @property (readonly) AudioUnitElement element;
 

@@ -102,6 +102,8 @@ NSErrorDomain const AVEAudioUnitErrorDomain = @"AVEAudioUnit";
         self.manufacturer = kAudioUnitManufacturer_Apple;
         
         self.globalElement = [AVEAudioUnitElement.alloc initWithUnit:self scope:kAudioUnitScope_Global element:0];
+        self.inputElements = NSMutableArray.array;
+        self.outputElements = NSMutableArray.array;
     }
     return self;
 }
@@ -153,6 +155,13 @@ NSErrorDomain const AVEAudioUnitErrorDomain = @"AVEAudioUnit";
 }
 
 @end
+
+
+
+
+
+
+
 
 
 
