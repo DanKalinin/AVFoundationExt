@@ -8,8 +8,14 @@
 #import <AVFoundation/AVFoundation.h>
 #import <Helpers/Helpers.h>
 
-@class AVEAudioUnit;
-@class AVEAudioComponentInstantiation, AVEAudioComponent;
+@class AVEAudioUnitInstantiation, AVEAudioUnit;
+
+extern NSErrorDomain const AVEAudioUnitErrorDomain;
+
+NS_ERROR_ENUM(AVEAudioUnitErrorDomain) {
+    AVEAudioUnitErrorUnknown = 0,
+    AVEAudioUnitErrorNotFound = 1
+};
 
 
 
@@ -20,44 +26,19 @@
 
 
 
-@protocol AVEAudioUnitDelegate <HLPOperationDelegate>
-
-@end
-
-
-
-@interface AVEAudioUnit : HLPOperation <AVEAudioUnitDelegate>
-
-@property (readonly) AudioUnit unit;
-
-- (instancetype)initWithUnit:(AudioUnit)unit;
-
-- (NSData *)valueForProperty:(AudioUnitPropertyID)property scope:(AudioUnitScope)scope element:(AudioUnitElement)element;
-- (void)setValue:(NSData *)value forProperty:(AudioUnitPropertyID)property scope:(AudioUnitScope)scope element:(AudioUnitElement)element;
+@protocol AVEAudioUnitInstantiationDelegate <HLPOperationDelegate>
 
 @end
 
 
 
+@interface AVEAudioUnitInstantiation : HLPOperation <AVEAudioUnitInstantiationDelegate>
 
-
-
-
-
-
-
-@protocol AVEAudioComponentInstantiationDelegate <HLPOperationDelegate>
-
-@end
-
-
-
-@interface AVEAudioComponentInstantiation : HLPOperation <AVEAudioComponentInstantiationDelegate>
-
-@property (readonly) AVEAudioComponent *parent;
-@property (readonly) HLPArray<AVEAudioComponentInstantiationDelegate> *delegates;
+@property (readonly) AVEAudioUnit *parent;
+@property (readonly) HLPArray<AVEAudioUnitInstantiationDelegate> *delegates;
 @property (readonly) AudioComponentInstantiationOptions options;
-@property (readonly) AVEAudioUnit *unit;
+@property (readonly) AudioComponent component;
+@property (readonly) AudioUnit unit;
 
 - (instancetype)initWithOptions:(AudioComponentInstantiationOptions)options;
 
@@ -72,21 +53,112 @@
 
 
 
-@protocol AVEAudioComponentDelegate <AVEAudioComponentInstantiationDelegate>
+@protocol AVEAudioUnitDelegate <AVEAudioUnitInstantiationDelegate>
 
 @end
 
 
 
-@interface AVEAudioComponent : HLPOperationQueue <AVEAudioComponentDelegate>
+@interface AVEAudioUnit : HLPOperation <AVEAudioUnitDelegate>
 
-@property (readonly) AudioComponent component;
+@property AudioComponent component;
+@property AudioUnit unit;
 
-- (instancetype)initWithComponent:(AudioComponent)component;
+@property (readonly) AudioComponentDescription *componentDescription;
 
-- (AVEAudioComponentInstantiation *)instantiateWithOptions:(AudioComponentInstantiationOptions)options;
-- (AVEAudioComponentInstantiation *)instantiateWithOptions:(AudioComponentInstantiationOptions)options completion:(HLPVoidBlock)completion;
-
-+ (NSArray<AVEAudioComponent *> *)componentsWithDescription:(AudioComponentDescription)description;
+- (AVEAudioUnitInstantiation *)instantiateWithOptions:(AudioComponentInstantiationOptions)options;
+- (AVEAudioUnitInstantiation *)instantiateWithOptions:(AudioComponentInstantiationOptions)options completion:(HLPVoidBlock)completion;
 
 @end
+
+
+
+
+
+
+
+
+
+
+//@class AVEAudioUnit;
+//@class AVEAudioComponentInstantiation, AVEAudioComponent;
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//@protocol AVEAudioUnitDelegate <HLPOperationDelegate>
+//
+//@end
+//
+//
+//
+//@interface AVEAudioUnit : HLPOperation <AVEAudioUnitDelegate>
+//
+//@property (readonly) AudioUnit unit;
+//
+//- (instancetype)initWithUnit:(AudioUnit)unit;
+//
+//- (NSData *)valueForProperty:(AudioUnitPropertyID)property scope:(AudioUnitScope)scope element:(AudioUnitElement)element;
+//- (void)setValue:(NSData *)value forProperty:(AudioUnitPropertyID)property scope:(AudioUnitScope)scope element:(AudioUnitElement)element;
+//
+//@end
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//@protocol AVEAudioComponentInstantiationDelegate <HLPOperationDelegate>
+//
+//@end
+//
+//
+//
+//@interface AVEAudioComponentInstantiation : HLPOperation <AVEAudioComponentInstantiationDelegate>
+//
+//@property (readonly) AVEAudioComponent *parent;
+//@property (readonly) HLPArray<AVEAudioComponentInstantiationDelegate> *delegates;
+//@property (readonly) AudioComponentInstantiationOptions options;
+//@property (readonly) AVEAudioUnit *unit;
+//
+//- (instancetype)initWithOptions:(AudioComponentInstantiationOptions)options;
+//
+//@end
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//@protocol AVEAudioComponentDelegate <AVEAudioComponentInstantiationDelegate>
+//
+//@end
+//
+//
+//
+//@interface AVEAudioComponent : HLPOperationQueue <AVEAudioComponentDelegate>
+//
+//@property (readonly) AudioComponent component;
+//
+//- (instancetype)initWithComponent:(AudioComponent)component;
+//
+//- (AVEAudioComponentInstantiation *)instantiateWithOptions:(AudioComponentInstantiationOptions)options;
+//- (AVEAudioComponentInstantiation *)instantiateWithOptions:(AudioComponentInstantiationOptions)options completion:(HLPVoidBlock)completion;
+//
+//+ (NSArray<AVEAudioComponent *> *)componentsWithDescription:(AudioComponentDescription)description;
+//
+//@end
