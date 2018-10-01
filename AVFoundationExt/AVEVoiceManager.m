@@ -12,7 +12,7 @@
 @interface AVEVoiceManager ()
 
 @property AVEAudioSession *session;
-@property AVEAudioUnitVoiceProcessingIO *unit;
+@property AVEAudioUnit *unit;
 
 @end
 
@@ -34,11 +34,22 @@
     if (self) {
         self.session = AVEAudioSession.shared;
         
-        self.unit = AVEAudioUnitVoiceProcessingIO.new;
+        AudioComponentDescription description = {0};
+        description.componentType = kAudioUnitType_Output;
+        description.componentSubType = kAudioUnitSubType_VoiceProcessingIO;
+        description.componentManufacturer = kAudioUnitManufacturer_Apple;
+
+        self.unit = [AVEAudioUnit.alloc initWithComponentDescription:description];
         
         AVEAudioUnitInstantiation *instantiation = [self.unit instantiateWithOptions:kAudioComponentInstantiation_LoadOutOfProcess];
         instantiation.delegates.operationQueue = nil;
         [instantiation waitUntilFinished];
+        
+//        self.unit = AVEAudioUnitVoiceProcessingIO.new;
+        
+//        AVEAudioUnitInstantiation *instantiation = [self.unit instantiateWithOptions:kAudioComponentInstantiation_LoadOutOfProcess];
+//        instantiation.delegates.operationQueue = nil;
+//        [instantiation waitUntilFinished];
         
 //        self.unit.globalElement.sampleRate = 44100.0;
 //        NSLog(@"unit - %@", self.unit.globalElement.elementName);
