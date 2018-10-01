@@ -42,18 +42,20 @@
 - (void)main {
     [self updateState:HLPOperationStateDidBegin];
     
-    self.tick = [HLPClock.shared tickWithInterval:DBL_MAX];
-    AudioComponentInstantiate(self.parent.component, self.options, ^(AudioComponentInstance unit, OSStatus status) {
-        [self.tick cancel];
+    AudioUnit unit = NULL;
+    OSStatus status = AudioComponentInstanceNew(self.parent.component, &unit);
+    if (status == noErr) {
+        self.parent.unit = self.unit = unit;
         
-        if (status == noErr) {
-            self.unit = self.parent.unit = unit;
-        } else {
-            NSError *error = [NSError errorWithDomain:NSOSStatusErrorDomain code:status userInfo:nil];
-            [self.errors addObject:error];
-        }
-    });
-    [self.tick waitUntilFinished];
+//        AVEAudioUnitElement *input = [AVEAudioUnitElement.alloc initWithUnit:self.parent scope:kAudioUnitScope_Input element:0];
+//        for (AudioUnitElement element = 0; element < input.kAudioUnitProperty_ElementCount; element++) {
+//            input = [AVEAudioUnitElement.alloc initWithUnit:self.parent scope:kAudioUnitScope_Input element:element];
+//            [self.parent.inputs addObject:input];
+//        }
+    } else {
+        NSError *error = [NSError errorWithDomain:NSOSStatusErrorDomain code:status userInfo:nil];
+        [self.errors addObject:error];
+    }
     
     [self updateState:HLPOperationStateDidEnd];
 }
@@ -79,6 +81,10 @@
 
 
 @implementation AVEAudioUnit
+
+- (void)dealloc {
+    
+}
 
 - (instancetype)initWithComponentDescription:(AudioComponentDescription)componentDescription {
     self = super.init;
@@ -115,7 +121,7 @@
 
 @interface AVEAudioUnitElement ()
 
-@property AVEAudioUnit *unit;
+@property AudioUnit unit;
 @property AudioUnitScope scope;
 @property AudioUnitElement element;
 
@@ -125,7 +131,7 @@
 
 @implementation AVEAudioUnitElement
 
-- (instancetype)initWithUnit:(AVEAudioUnit *)unit scope:(AudioUnitScope)scope element:(AudioUnitElement)element {
+- (instancetype)initWithUnit:(AudioUnit)unit scope:(AudioUnitScope)scope element:(AudioUnitElement)element {
     self = super.init;
     if (self) {
         self.unit = unit;
@@ -138,7 +144,7 @@
 #pragma mark - Helpers
 
 - (void)getProperty:(AudioUnitPropertyID)property data:(void *)data size:(UInt32 *)size {
-    OSStatus status = AudioUnitGetProperty(self.unit.unit, property, self.scope, self.element, data, size);
+    OSStatus status = AudioUnitGetProperty(self.unit, property, self.scope, self.element, data, size);
     if (status == noErr) {
     } else {
         NSError *error = [NSError errorWithDomain:NSOSStatusErrorDomain code:status userInfo:nil];
@@ -147,7 +153,7 @@
 }
 
 - (void)setProperty:(AudioUnitPropertyID)property data:(void *)data size:(UInt32)size {
-    OSStatus status = AudioUnitSetProperty(self.unit.unit, property, self.scope, self.element, data, size);
+    OSStatus status = AudioUnitSetProperty(self.unit, property, self.scope, self.element, data, size);
     if (status == noErr) {
     } else {
         NSError *error = [NSError errorWithDomain:NSOSStatusErrorDomain code:status userInfo:nil];
@@ -156,7 +162,7 @@
 }
 
 - (void)getParameter:(AudioUnitParameterID)parameter value:(AudioUnitParameterValue *)value {
-    OSStatus status = AudioUnitGetParameter(self.unit.unit, parameter, self.scope, self.element, value);
+    OSStatus status = AudioUnitGetParameter(self.unit, parameter, self.scope, self.element, value);
     if (status == noErr) {
     } else {
         NSError *error = [NSError errorWithDomain:NSOSStatusErrorDomain code:status userInfo:nil];
@@ -165,7 +171,7 @@
 }
 
 - (void)setParameter:(AudioUnitParameterID)parameter value:(AudioUnitParameterValue)value {
-    OSStatus status = AudioUnitSetParameter(self.unit.unit, parameter, self.scope, self.element, value, 0);
+    OSStatus status = AudioUnitSetParameter(self.unit, parameter, self.scope, self.element, value, 0);
     if (status == noErr) {
     } else {
         NSError *error = [NSError errorWithDomain:NSOSStatusErrorDomain code:status userInfo:nil];
@@ -184,6 +190,17 @@
     UInt32 size = sizeof(streamFormat);
     [self getProperty:kAudioUnitProperty_StreamFormat data:&streamFormat size:&size];
     return streamFormat;
+}
+
+- (void)setKAudioUnitProperty_ElementCount:(UInt32)elementCount {
+    [self setProperty:kAudioUnitProperty_ElementCount data:&elementCount size:sizeof(elementCount)];
+}
+
+- (UInt32)kAudioUnitProperty_ElementCount {
+    UInt32 elementCount = 0;
+    UInt32 size = sizeof(elementCount);
+    [self getProperty:kAudioUnitProperty_ElementCount data:&elementCount size:&size];
+    return elementCount;
 }
 
 - (void)setKAudioUnitProperty_MaximumFramesPerSlice:(UInt32)maximumFramesPerSlice {

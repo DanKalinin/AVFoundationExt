@@ -34,16 +34,16 @@
     if (self) {
         self.session = AVEAudioSession.shared;
         
-//        AudioComponentDescription description = {0};
-//        description.componentType = kAudioUnitType_Output;
-//        description.componentSubType = kAudioUnitSubType_VoiceProcessingIO;
-//        description.componentManufacturer = kAudioUnitManufacturer_Apple;
-//        
-//        self.unit = [AVEAudioUnit.alloc initWithComponentDescription:description];
-//
-//        AVEAudioUnitInstantiation *instantiation = [self.unit instantiateWithOptions:kAudioComponentInstantiation_LoadOutOfProcess];
-//        instantiation.delegates.operationQueue = nil;
-//        [instantiation waitUntilFinished];
+        AudioComponentDescription description = {0};
+        description.componentType = kAudioUnitType_Output;
+        description.componentSubType = kAudioUnitSubType_VoiceProcessingIO;
+        description.componentManufacturer = kAudioUnitManufacturer_Apple;
+        
+        AVEAudioUnit *unit = [AVEAudioUnit.alloc initWithComponentDescription:description];
+        
+        AVEAudioUnitInstantiation *instantiation = [unit instantiateWithOptions:kAudioComponentInstantiation_LoadOutOfProcess];
+        instantiation.delegates.operationQueue = nil;
+        [instantiation waitUntilFinished];
     }
     return self;
 }

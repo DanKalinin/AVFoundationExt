@@ -55,6 +55,8 @@
 @interface AVEAudioUnit : HLPOperation <AVEAudioUnitDelegate>
 
 @property AudioUnit unit;
+@property NSMutableArray<AVEAudioUnitElement *> *inputs;
+@property NSMutableArray<AVEAudioUnitElement *> *outputs;
 
 @property (readonly) AudioComponentDescription componentDescription;
 @property (readonly) AudioComponent component;
@@ -84,16 +86,17 @@
 @interface AVEAudioUnitElement : HLPOperation <AVEAudioUnitElementDelegate>
 
 @property AudioStreamBasicDescription kAudioUnitProperty_StreamFormat;
+@property UInt32 kAudioUnitProperty_ElementCount;
 @property UInt32 kAudioUnitProperty_MaximumFramesPerSlice;
 @property AURenderCallbackStruct kAudioUnitProperty_SetRenderCallback;
 @property UInt32 kAudioOutputUnitProperty_EnableIO;
 @property AURenderCallbackStruct kAudioOutputUnitProperty_SetInputCallback;
 
-@property (readonly) AVEAudioUnit *unit;
+@property (readonly) AudioUnit unit;
 @property (readonly) AudioUnitScope scope;
 @property (readonly) AudioUnitElement element;
 
-- (instancetype)initWithUnit:(AVEAudioUnit *)unit scope:(AudioUnitScope)scope element:(AudioUnitElement)element;
+- (instancetype)initWithUnit:(AudioUnit)unit scope:(AudioUnitScope)scope element:(AudioUnitElement)element;
 
 - (void)getProperty:(AudioUnitPropertyID)property data:(void *)data size:(UInt32 *)size;
 - (void)setProperty:(AudioUnitPropertyID)property data:(void *)data size:(UInt32)size;
