@@ -36,13 +36,9 @@
 //    AVAssetChapterMetadataGroupsDidChangeNotification
 //    AVAssetMediaSelectionGroupsDidChangeNotification
     
-    [self updateState:HLPOperationStateDidBegin];
-}
-
-- (void)cancel {
-    [self.notificationCenter removeObserver:self];
     
-    [self updateState:HLPOperationStateDidEnd];
+    
+    [self updateState:HLPOperationStateDidBegin];
 }
 
 @end
