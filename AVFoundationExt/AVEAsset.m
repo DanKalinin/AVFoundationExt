@@ -30,15 +30,35 @@
 }
 
 - (void)start {
-//    AVAssetDurationDidChangeNotification
-//    AVAssetContainsFragmentsDidChangeNotification
-//    AVAssetWasDefragmentedNotification
-//    AVAssetChapterMetadataGroupsDidChangeNotification
-//    AVAssetMediaSelectionGroupsDidChangeNotification
-    
-    
+    [self.notificationCenter addObserver:self selector:@selector(AVAssetDurationDidChangeNotification:) name:AVAssetDurationDidChangeNotification object:self.asset];
+    [self.notificationCenter addObserver:self selector:@selector(AVAssetContainsFragmentsDidChangeNotification:) name:AVAssetContainsFragmentsDidChangeNotification object:self.asset];
+    [self.notificationCenter addObserver:self selector:@selector(AVAssetWasDefragmentedNotification:) name:AVAssetWasDefragmentedNotification object:self.asset];
+    [self.notificationCenter addObserver:self selector:@selector(AVAssetChapterMetadataGroupsDidChangeNotification:) name:AVAssetChapterMetadataGroupsDidChangeNotification object:self.asset];
+    [self.notificationCenter addObserver:self selector:@selector(AVAssetMediaSelectionGroupsDidChangeNotification:) name:AVAssetMediaSelectionGroupsDidChangeNotification object:self.asset];
     
     [self updateState:HLPOperationStateDidBegin];
+}
+
+#pragma mark - Notifications
+
+- (void)AVAssetDurationDidChangeNotification:(NSNotification *)notification {
+    
+}
+
+- (void)AVAssetContainsFragmentsDidChangeNotification:(NSNotification *)notification {
+    
+}
+
+- (void)AVAssetWasDefragmentedNotification:(NSNotification *)notification {
+    
+}
+
+- (void)AVAssetChapterMetadataGroupsDidChangeNotification:(NSNotification *)notification {
+    
+}
+
+- (void)AVAssetMediaSelectionGroupsDidChangeNotification:(NSNotification *)notification {
+    
 }
 
 @end
