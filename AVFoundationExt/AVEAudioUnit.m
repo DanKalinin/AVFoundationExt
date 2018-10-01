@@ -175,6 +175,61 @@
 
 #pragma mark - Properties
 
+- (void)setKAudioUnitProperty_StreamFormat:(AudioStreamBasicDescription)streamFormat {
+    [self setProperty:kAudioUnitProperty_StreamFormat data:&streamFormat size:sizeof(streamFormat)];
+}
+
+- (AudioStreamBasicDescription)kAudioUnitProperty_StreamFormat {
+    AudioStreamBasicDescription streamFormat = {0};
+    UInt32 size = sizeof(streamFormat);
+    [self getProperty:kAudioUnitProperty_StreamFormat data:&streamFormat size:&size];
+    return streamFormat;
+}
+
+- (void)setKAudioUnitProperty_MaximumFramesPerSlice:(UInt32)maximumFramesPerSlice {
+    [self setProperty:kAudioUnitProperty_MaximumFramesPerSlice data:&maximumFramesPerSlice size:sizeof(maximumFramesPerSlice)];
+}
+
+- (UInt32)kAudioUnitProperty_MaximumFramesPerSlice {
+    UInt32 maximumFramesPerSlice = 0;
+    UInt32 size = sizeof(maximumFramesPerSlice);
+    [self getProperty:kAudioUnitProperty_MaximumFramesPerSlice data:&maximumFramesPerSlice size:&size];
+    return maximumFramesPerSlice;
+}
+
+- (void)setKAudioUnitProperty_SetRenderCallback:(AURenderCallbackStruct)setRenderCallback {
+    [self setProperty:kAudioUnitProperty_SetRenderCallback data:&setRenderCallback size:sizeof(setRenderCallback)];
+}
+
+- (AURenderCallbackStruct)kAudioUnitProperty_SetRenderCallback {
+    AURenderCallbackStruct setRenderCallback = {0};
+    UInt32 size = sizeof(setRenderCallback);
+    [self getProperty:kAudioUnitProperty_SetRenderCallback data:&setRenderCallback size:&size];
+    return setRenderCallback;
+}
+
+- (void)setKAudioOutputUnitProperty_EnableIO:(UInt32)enableIO {
+    [self setProperty:kAudioOutputUnitProperty_EnableIO data:&enableIO size:sizeof(enableIO)];
+}
+
+- (UInt32)kAudioOutputUnitProperty_EnableIO {
+    UInt32 enableIO = 0;
+    UInt32 size = sizeof(enableIO);
+    [self getProperty:kAudioOutputUnitProperty_EnableIO data:&enableIO size:&size];
+    return enableIO;
+}
+
+- (void)setKAudioOutputUnitProperty_SetInputCallback:(AURenderCallbackStruct)setInputCallback {
+    [self setProperty:kAudioOutputUnitProperty_SetInputCallback data:&setInputCallback size:sizeof(setInputCallback)];
+}
+
+- (AURenderCallbackStruct)kAudioOutputUnitProperty_SetInputCallback {
+    AURenderCallbackStruct setInputCallback = {0};
+    UInt32 size = sizeof(setInputCallback);
+    [self getProperty:kAudioOutputUnitProperty_SetInputCallback data:&setInputCallback size:&size];
+    return setInputCallback;
+}
+
 @end
 
 //NSErrorDomain const AVEAudioUnitErrorDomain = @"AVEAudioUnit";

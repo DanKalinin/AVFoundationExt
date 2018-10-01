@@ -83,7 +83,11 @@
 
 @interface AVEAudioUnitElement : HLPOperation <AVEAudioUnitElementDelegate>
 
-@property UInt32 audioOutputUnitProperty_EnableIO;
+@property AudioStreamBasicDescription kAudioUnitProperty_StreamFormat;
+@property UInt32 kAudioUnitProperty_MaximumFramesPerSlice;
+@property AURenderCallbackStruct kAudioUnitProperty_SetRenderCallback;
+@property UInt32 kAudioOutputUnitProperty_EnableIO;
+@property AURenderCallbackStruct kAudioOutputUnitProperty_SetInputCallback;
 
 @property (readonly) AVEAudioUnit *unit;
 @property (readonly) AudioUnitScope scope;
