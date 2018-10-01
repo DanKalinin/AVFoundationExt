@@ -40,7 +40,8 @@
         description.componentManufacturer = kAudioUnitManufacturer_Apple;
         
         AVEAudioUnit *unit = [AVEAudioUnit.alloc initWithComponentDescription:description];
-        
+        NSLog(@"inputs - %i", (int)unit.inputs.count);
+        NSLog(@"outputs - %i", (int)unit.outputs.count);
 //        AVEAudioUnitInstantiation *instantiation = [unit instantiateWithOptions:kAudioComponentInstantiation_LoadOutOfProcess];
 //        instantiation.delegates.operationQueue = nil;
 //        [instantiation waitUntilFinished];
