@@ -39,4 +39,10 @@
     [self updateState:HLPOperationStateDidBegin];
 }
 
+- (void)cancel {
+    [self.notificationCenter removeObserver:self];
+    
+    [self updateState:HLPOperationStateDidEnd];
+}
+
 @end

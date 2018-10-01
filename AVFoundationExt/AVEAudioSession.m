@@ -152,6 +152,12 @@
     [self updateState:HLPOperationStateDidBegin];
 }
 
+- (void)cancel {
+    [self.notificationCenter removeObserver:self];
+    
+    [self updateState:HLPOperationStateDidEnd];
+}
+
 #pragma mark - Notifications
 
 - (void)AVAudioSessionInterruptionNotification:(NSNotification *)notification {
