@@ -152,12 +152,6 @@
     [self updateState:HLPOperationStateDidBegin];
 }
 
-- (void)cancel {
-    [self.notificationCenter removeObserver:self];
-    
-    [self updateState:HLPOperationStateDidEnd];
-}
-
 #pragma mark - Notifications
 
 - (void)AVAudioSessionInterruptionNotification:(NSNotification *)notification {
@@ -181,6 +175,19 @@
 - (void)AVAudioSessionSilenceSecondaryAudioHintNotification:(NSNotification *)notification {
     self.silenceSecondaryAudioHintInfo = [AVEAudioSessionSilenceSecondaryAudioHintInfo.alloc initWithDictionary:notification.userInfo];
     [self.delegates AVEAudioSessionSilenceSecondaryAudioHint:self];
+}
+
+#pragma mark - Helpers
+
+- (void)updateState:(HLPOperationState)state {
+    [super updateState:state];
+    
+    [self.delegates AVEAudioSessionDidUpdateState:self];
+    if (state == HLPOperationStateDidBegin) {
+        [self.delegates AVEAudioSessionDidBegin:self];
+    } else if (state == HLPOperationStateDidEnd) {
+        [self.delegates AVEAudioSessionDidEnd:self];
+    }
 }
 
 @end
