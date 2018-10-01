@@ -41,9 +41,9 @@
         
         AVEAudioUnit *unit = [AVEAudioUnit.alloc initWithComponentDescription:description];
         
-        AVEAudioUnitInstantiation *instantiation = [unit instantiateWithOptions:kAudioComponentInstantiation_LoadOutOfProcess];
-        instantiation.delegates.operationQueue = nil;
-        [instantiation waitUntilFinished];
+//        AVEAudioUnitInstantiation *instantiation = [unit instantiateWithOptions:kAudioComponentInstantiation_LoadOutOfProcess];
+//        instantiation.delegates.operationQueue = nil;
+//        [instantiation waitUntilFinished];
     }
     return self;
 }

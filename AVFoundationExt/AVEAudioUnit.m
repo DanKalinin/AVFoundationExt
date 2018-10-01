@@ -16,65 +16,14 @@
 
 
 
-@interface AVEAudioUnitInstantiation ()
-
-@property AudioComponentInstantiationOptions options;
-@property AudioUnit unit;
-@property HLPTick *tick;
-
-@end
-
-
-
-@implementation AVEAudioUnitInstantiation
-
-@dynamic parent;
-@dynamic delegates;
-
-- (instancetype)initWithOptions:(AudioComponentInstantiationOptions)options {
-    self = super.init;
-    if (self) {
-        self.options = options;
-    }
-    return self;
-}
-
-- (void)main {
-    [self updateState:HLPOperationStateDidBegin];
-    
-    AudioUnit unit = NULL;
-    OSStatus status = AudioComponentInstanceNew(self.parent.component, &unit);
-    if (status == noErr) {
-        self.parent.unit = self.unit = unit;
-        
-//        AVEAudioUnitElement *input = [AVEAudioUnitElement.alloc initWithUnit:self.parent scope:kAudioUnitScope_Input element:0];
-//        for (AudioUnitElement element = 0; element < input.kAudioUnitProperty_ElementCount; element++) {
-//            input = [AVEAudioUnitElement.alloc initWithUnit:self.parent scope:kAudioUnitScope_Input element:element];
-//            [self.parent.inputs addObject:input];
-//        }
-    } else {
-        NSError *error = [NSError errorWithDomain:NSOSStatusErrorDomain code:status userInfo:nil];
-        [self.errors addObject:error];
-    }
-    
-    [self updateState:HLPOperationStateDidEnd];
-}
-
-@end
-
-
-
-
-
-
-
-
-
-
 @interface AVEAudioUnit ()
 
 @property AudioComponentDescription componentDescription;
 @property AudioComponent component;
+@property AudioUnit unit;
+@property AVEAudioUnitElement *global;
+@property NSMutableArray<AVEAudioUnitElement *> *inputs;
+@property NSMutableArray<AVEAudioUnitElement *> *outputs;
 
 @end
 
@@ -82,30 +31,36 @@
 
 @implementation AVEAudioUnit
 
-- (void)dealloc {
-    
-}
-
 - (instancetype)initWithComponentDescription:(AudioComponentDescription)componentDescription {
     self = super.init;
     if (self) {
         self.componentDescription = componentDescription;
         
         self.component = AudioComponentFindNext(NULL, &componentDescription);
+        
+        OSStatus status = AudioComponentInstanceNew(self.component, &_unit);
+        if (status == noErr) {
+            self.global = [AVEAudioUnitElement.alloc initWithUnit:self.unit scope:kAudioUnitScope_Global element:0];
+            
+            self.inputs = NSMutableArray.array;
+            AVEAudioUnitElement *input = [AVEAudioUnitElement.alloc initWithUnit:self.unit scope:kAudioUnitScope_Input element:0];
+            for (AudioUnitElement element = 0; element < input.kAudioUnitProperty_ElementCount; element++) {
+                input = [AVEAudioUnitElement.alloc initWithUnit:self.unit scope:kAudioUnitScope_Input element:element];
+                [self.inputs addObject:input];
+            }
+            
+            self.outputs = NSMutableArray.array;
+            AVEAudioUnitElement *output = [AVEAudioUnitElement.alloc initWithUnit:self.unit scope:kAudioUnitScope_Output element:0];
+            for (AudioUnitElement element = 0; element < output.kAudioUnitProperty_ElementCount; element++) {
+                output = [AVEAudioUnitElement.alloc initWithUnit:self.unit scope:kAudioUnitScope_Output element:element];
+                [self.outputs addObject:output];
+            }
+        } else {
+            NSError *error = [NSError errorWithDomain:NSOSStatusErrorDomain code:status userInfo:nil];
+            [self.errors addObject:error];
+        }
     }
     return self;
-}
-
-- (AVEAudioUnitInstantiation *)instantiateWithOptions:(AudioComponentInstantiationOptions)options {
-    AVEAudioUnitInstantiation *instantiation = [AVEAudioUnitInstantiation.alloc initWithOptions:options];
-    [self addOperation:instantiation];
-    return instantiation;
-}
-
-- (AVEAudioUnitInstantiation *)instantiateWithOptions:(AudioComponentInstantiationOptions)options completion:(HLPVoidBlock)completion {
-    AVEAudioUnitInstantiation *instantiation = [self instantiateWithOptions:options];
-    instantiation.completionBlock = completion;
-    return instantiation;
 }
 
 @end

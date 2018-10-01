@@ -8,7 +8,7 @@
 #import <AVFoundation/AVFoundation.h>
 #import <Helpers/Helpers.h>
 
-@class AVEAudioUnitInstantiation, AVEAudioUnit, AVEAudioUnitElement;
+@class AVEAudioUnit, AVEAudioUnitElement;
 
 
 
@@ -19,34 +19,7 @@
 
 
 
-@protocol AVEAudioUnitInstantiationDelegate <HLPOperationDelegate>
-
-@end
-
-
-
-@interface AVEAudioUnitInstantiation : HLPOperation <AVEAudioUnitInstantiationDelegate>
-
-@property (readonly) AVEAudioUnit *parent;
-@property (readonly) HLPArray<AVEAudioUnitInstantiationDelegate> *delegates;
-@property (readonly) AudioComponentInstantiationOptions options;
-@property (readonly) AudioUnit unit;
-@property (readonly) HLPTick *tick;
-
-- (instancetype)initWithOptions:(AudioComponentInstantiationOptions)options;
-
-@end
-
-
-
-
-
-
-
-
-
-
-@protocol AVEAudioUnitDelegate <AVEAudioUnitInstantiationDelegate>
+@protocol AVEAudioUnitDelegate <HLPOperationDelegate>
 
 @end
 
@@ -54,17 +27,14 @@
 
 @interface AVEAudioUnit : HLPOperation <AVEAudioUnitDelegate>
 
-@property AudioUnit unit;
-@property NSMutableArray<AVEAudioUnitElement *> *inputs;
-@property NSMutableArray<AVEAudioUnitElement *> *outputs;
-
 @property (readonly) AudioComponentDescription componentDescription;
 @property (readonly) AudioComponent component;
+@property (readonly) AudioUnit unit;
+@property (readonly) AVEAudioUnitElement *global;
+@property (readonly) NSMutableArray<AVEAudioUnitElement *> *inputs;
+@property (readonly) NSMutableArray<AVEAudioUnitElement *> *outputs;
 
 - (instancetype)initWithComponentDescription:(AudioComponentDescription)componentDescription;
-
-- (AVEAudioUnitInstantiation *)instantiateWithOptions:(AudioComponentInstantiationOptions)options;
-- (AVEAudioUnitInstantiation *)instantiateWithOptions:(AudioComponentInstantiationOptions)options completion:(HLPVoidBlock)completion;
 
 @end
 
