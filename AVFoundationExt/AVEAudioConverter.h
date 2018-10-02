@@ -8,11 +8,40 @@
 #import <AVFoundation/AVFoundation.h>
 #import <Helpers/Helpers.h>
 
-@class AVEAudioConverter;
+@class AVEAudioConversion, AVEAudioConverter;
 
 
 
-@protocol AVEAudioConverterDelegate <HLPOperationDelegate>
+
+
+
+
+
+
+
+@protocol AVEAudioConversionDelegate <HLPOperationDelegate>
+
+@end
+
+
+
+@interface AVEAudioConversion : HLPOperation <AVEAudioConversionDelegate>
+
+@property (readonly) AVEAudioConverter *parent;
+@property (readonly) HLPArray<AVEAudioConversionDelegate> *delegates;
+
+@end
+
+
+
+
+
+
+
+
+
+
+@protocol AVEAudioConverterDelegate <AVEAudioConversionDelegate>
 
 @end
 
@@ -20,6 +49,7 @@
 
 @interface AVEAudioConverter : HLPOperation <AVEAudioConverterDelegate>
 
+@property (readonly) HLPArray<AVEAudioConverterDelegate> *delegates;
 @property (readonly) AVEAudioConverter *converter;
 
 - (instancetype)initFromFormat:(AVAudioFormat *)fromFormat toFormat:(AVAudioFormat *)toFormat;

@@ -15,7 +15,7 @@
 
 
 
-@protocol AVEVoiceManagerDelegate <AVEAudioSessionDelegate>
+@protocol AVEVoiceManagerDelegate <AVEAudioSessionDelegate, AVEAudioUnitDelegate, AVEAudioConverterDelegate>
 
 @end
 

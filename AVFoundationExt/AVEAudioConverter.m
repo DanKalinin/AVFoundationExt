@@ -9,6 +9,35 @@
 
 
 
+
+
+
+
+
+
+
+@interface AVEAudioConversion ()
+
+@end
+
+
+
+@implementation AVEAudioConversion
+
+@dynamic parent;
+@dynamic delegates;
+
+@end
+
+
+
+
+
+
+
+
+
+
 @interface AVEAudioConverter ()
 
 @property AVEAudioConverter *converter;
@@ -18,6 +47,8 @@
 
 
 @implementation AVEAudioConverter
+
+@dynamic delegates;
 
 - (instancetype)initFromFormat:(AVAudioFormat *)fromFormat toFormat:(AVAudioFormat *)toFormat {
     self = super.init;
