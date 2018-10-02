@@ -8,6 +8,8 @@
 #import <AVFoundation/AVFoundation.h>
 #import <Helpers/Helpers.h>
 
+@class AVEAudioConverter;
+
 
 
 @protocol AVEAudioConverterDelegate <HLPOperationDelegate>
