@@ -15,7 +15,7 @@
 
 
 
-@protocol AVEVoiceManagerDelegate <HLPOperationDelegate>
+@protocol AVEVoiceManagerDelegate <AVEAudioSessionDelegate>
 
 @end
 

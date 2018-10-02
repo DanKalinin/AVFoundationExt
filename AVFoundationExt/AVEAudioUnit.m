@@ -16,64 +16,6 @@
 
 
 
-@interface AVEAudioUnit ()
-
-@property AudioComponentDescription componentDescription;
-@property AudioComponent component;
-@property AudioUnit unit;
-@property AVEAudioUnitElement *global;
-@property NSMutableArray<AVEAudioUnitElement *> *inputs;
-@property NSMutableArray<AVEAudioUnitElement *> *outputs;
-
-@end
-
-
-
-@implementation AVEAudioUnit
-
-- (instancetype)initWithComponentDescription:(AudioComponentDescription)componentDescription {
-    self = super.init;
-    if (self) {
-        self.componentDescription = componentDescription;
-        
-        self.component = AudioComponentFindNext(NULL, &componentDescription);
-        
-        OSStatus status = AudioComponentInstanceNew(self.component, &_unit);
-        if (status == noErr) {
-            self.global = [AVEAudioUnitElement.alloc initWithUnit:self.unit scope:kAudioUnitScope_Global element:0];
-            
-            self.inputs = NSMutableArray.array;
-            AVEAudioUnitElement *input = [AVEAudioUnitElement.alloc initWithUnit:self.unit scope:kAudioUnitScope_Input element:0];
-            for (AudioUnitElement element = 0; element < input.kAudioUnitProperty_ElementCount; element++) {
-                input = [AVEAudioUnitElement.alloc initWithUnit:self.unit scope:kAudioUnitScope_Input element:element];
-                [self.inputs addObject:input];
-            }
-            
-            self.outputs = NSMutableArray.array;
-            AVEAudioUnitElement *output = [AVEAudioUnitElement.alloc initWithUnit:self.unit scope:kAudioUnitScope_Output element:0];
-            for (AudioUnitElement element = 0; element < output.kAudioUnitProperty_ElementCount; element++) {
-                output = [AVEAudioUnitElement.alloc initWithUnit:self.unit scope:kAudioUnitScope_Output element:element];
-                [self.outputs addObject:output];
-            }
-        } else {
-            NSError *error = [NSError errorWithDomain:NSOSStatusErrorDomain code:status userInfo:nil];
-            [self.errors addObject:error];
-        }
-    }
-    return self;
-}
-
-@end
-
-
-
-
-
-
-
-
-
-
 @interface AVEAudioUnitElement ()
 
 @property AudioUnit unit;
@@ -224,6 +166,66 @@
     UInt32 size = sizeof(setInputCallback);
     [self getProperty:kAudioOutputUnitProperty_SetInputCallback data:&setInputCallback size:&size];
     return setInputCallback;
+}
+
+@end
+
+
+
+
+
+
+
+
+
+
+@interface AVEAudioUnit ()
+
+@property AudioComponentDescription componentDescription;
+@property AudioComponent component;
+@property AudioUnit unit;
+@property AVEAudioUnitElement *global;
+@property NSMutableArray<AVEAudioUnitElement *> *inputs;
+@property NSMutableArray<AVEAudioUnitElement *> *outputs;
+
+@end
+
+
+
+@implementation AVEAudioUnit
+
+- (instancetype)initWithComponentDescription:(AudioComponentDescription)componentDescription {
+    self = super.init;
+    if (self) {
+        self.componentDescription = componentDescription;
+        
+        self.component = AudioComponentFindNext(NULL, &componentDescription);
+        
+        OSStatus status = AudioComponentInstanceNew(self.component, &_unit);
+        if (status == noErr) {
+            self.global = [AVEAudioUnitElement.alloc initWithUnit:self.unit scope:kAudioUnitScope_Global element:0];
+            
+            self.inputs = NSMutableArray.array;
+            AVEAudioUnitElement *input = [AVEAudioUnitElement.alloc initWithUnit:self.unit scope:kAudioUnitScope_Input element:0];
+            for (AudioUnitElement element = 0; element < input.kAudioUnitProperty_ElementCount; element++) {
+                input = [AVEAudioUnitElement.alloc initWithUnit:self.unit scope:kAudioUnitScope_Input element:element];
+                [input.delegates addObject:self.delegates];
+                [self.inputs addObject:input];
+            }
+            
+            self.outputs = NSMutableArray.array;
+            AVEAudioUnitElement *output = [AVEAudioUnitElement.alloc initWithUnit:self.unit scope:kAudioUnitScope_Output element:0];
+            for (AudioUnitElement element = 0; element < output.kAudioUnitProperty_ElementCount; element++) {
+                output = [AVEAudioUnitElement.alloc initWithUnit:self.unit scope:kAudioUnitScope_Output element:element];
+                [output.delegates addObject:self.delegates];
+                [self.outputs addObject:output];
+            }
+        } else {
+            NSError *error = [NSError errorWithDomain:NSOSStatusErrorDomain code:status userInfo:nil];
+            [self.errors addObject:error];
+        }
+    }
+    return self;
 }
 
 @end

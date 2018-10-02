@@ -8,35 +8,7 @@
 #import <AVFoundation/AVFoundation.h>
 #import <Helpers/Helpers.h>
 
-@class AVEAudioUnit, AVEAudioUnitElement;
-
-
-
-
-
-
-
-
-
-
-@protocol AVEAudioUnitDelegate <HLPOperationDelegate>
-
-@end
-
-
-
-@interface AVEAudioUnit : HLPOperation <AVEAudioUnitDelegate>
-
-@property (readonly) AudioComponentDescription componentDescription;
-@property (readonly) AudioComponent component;
-@property (readonly) AudioUnit unit;
-@property (readonly) AVEAudioUnitElement *global;
-@property (readonly) NSMutableArray<AVEAudioUnitElement *> *inputs;
-@property (readonly) NSMutableArray<AVEAudioUnitElement *> *outputs;
-
-- (instancetype)initWithComponentDescription:(AudioComponentDescription)componentDescription;
-
-@end
+@class AVEAudioUnitElement, AVEAudioUnit;
 
 
 
@@ -75,5 +47,33 @@
 
 - (void)getParameter:(AudioUnitParameterID)parameter value:(AudioUnitParameterValue *)value;
 - (void)setParameter:(AudioUnitParameterID)parameter value:(AudioUnitParameterValue)value;
+
+@end
+
+
+
+
+
+
+
+
+
+
+@protocol AVEAudioUnitDelegate <AVEAudioUnitElementDelegate>
+
+@end
+
+
+
+@interface AVEAudioUnit : HLPOperation <AVEAudioUnitDelegate>
+
+@property (readonly) AudioComponentDescription componentDescription;
+@property (readonly) AudioComponent component;
+@property (readonly) AudioUnit unit;
+@property (readonly) AVEAudioUnitElement *global;
+@property (readonly) NSMutableArray<AVEAudioUnitElement *> *inputs;
+@property (readonly) NSMutableArray<AVEAudioUnitElement *> *outputs;
+
+- (instancetype)initWithComponentDescription:(AudioComponentDescription)componentDescription;
 
 @end
