@@ -7,6 +7,9 @@
 
 #import "AVEAudioUnit.h"
 
+const HLPOperationState AVEAudioUnitStateDidInitialize = 3;
+const HLPOperationState AVEAudioUnitStateDidUninitialize = 4;
+
 
 
 
@@ -232,6 +235,63 @@
         }
     }
     return self;
+}
+
+- (void)initialize {
+    OSStatus status = AudioUnitInitialize(self.unit);
+    if (status == noErr) {
+        [self updateState:AVEAudioUnitStateDidInitialize];
+    } else {
+        NSError *error = [NSError errorWithDomain:NSOSStatusErrorDomain code:status userInfo:nil];
+        [self.errors addObject:error];
+    }
+}
+
+- (void)uninitialize {
+    OSStatus status = AudioUnitUninitialize(self.unit);
+    if (status == noErr) {
+        [self updateState:AVEAudioUnitStateDidUninitialize];
+    } else {
+        NSError *error = [NSError errorWithDomain:NSOSStatusErrorDomain code:status userInfo:nil];
+        [self.errors addObject:error];
+    }
+}
+
+- (void)start {
+    OSStatus status = AudioOutputUnitStart(self.unit);
+    if (status == noErr) {
+        [self updateState:HLPOperationStateDidBegin];
+    } else {
+        NSError *error = [NSError errorWithDomain:NSOSStatusErrorDomain code:status userInfo:nil];
+        [self.errors addObject:error];
+    }
+}
+
+- (void)stop {
+    OSStatus status = AudioOutputUnitStop(self.unit);
+    if (status == noErr) {
+        [self updateState:HLPOperationStateDidEnd];
+    } else {
+        NSError *error = [NSError errorWithDomain:NSOSStatusErrorDomain code:status userInfo:nil];
+        [self.errors addObject:error];
+    }
+}
+
+#pragma mark - Helpers
+
+- (void)updateState:(HLPOperationState)state {
+    [super updateState:state];
+    
+    [self.delegates AVEAudioUnitDidUpdateState:self];
+    if (state == HLPOperationStateDidBegin) {
+        [self.delegates AVEAudioUnitDidBegin:self];
+    } else if (state == HLPOperationStateDidEnd) {
+        [self.delegates AVEAudioUnitDidEnd:self];
+    } else if (state == AVEAudioUnitStateDidInitialize) {
+        [self.delegates AVEAudioUnitDidInitialize:self];
+    } else if (state == AVEAudioUnitStateDidUninitialize) {
+        [self.delegates AVEAudioUnitDidUninitialize:self];
+    }
 }
 
 @end

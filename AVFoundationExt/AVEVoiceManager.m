@@ -48,7 +48,7 @@
         self.unit = [AVEAudioUnit.alloc initWithComponentDescription:description];
         [self.unit.delegates addObject:self.delegates];
         
-//        NSLog(@"ie - %f", self.unit.inputs[0].kAudioUnitProperty_StreamFormat.mSampleRate);
+        NSLog(@"ie - %u", self.unit.inputs[0].kAudioUnitProperty_StreamFormat.mBytesPerPacket);
 //        NSLog(@"oe - %u", unit.outputs[0].kAudioUnitProperty_StreamFormat.mFormatID);
         
 //        unit.inputs[1].kAudioUnitProperty_ElementName = @"xxx";

@@ -10,6 +10,9 @@
 
 @class AVEAudioUnitElement, AVEAudioUnit;
 
+extern const HLPOperationState AVEAudioUnitStateDidInitialize;
+extern const HLPOperationState AVEAudioUnitStateDidUninitialize;
+
 
 
 
@@ -63,6 +66,14 @@
 
 @protocol AVEAudioUnitDelegate <AVEAudioUnitElementDelegate>
 
+@optional
+- (void)AVEAudioUnitDidUpdateState:(AVEAudioUnit *)unit;
+
+- (void)AVEAudioUnitDidBegin:(AVEAudioUnit *)unit;
+- (void)AVEAudioUnitDidEnd:(AVEAudioUnit *)unit;
+- (void)AVEAudioUnitDidInitialize:(AVEAudioUnit *)unit;
+- (void)AVEAudioUnitDidUninitialize:(AVEAudioUnit *)unit;
+
 @end
 
 
@@ -78,5 +89,8 @@
 @property (readonly) NSMutableArray<AVEAudioUnitElement *> *outputs;
 
 - (instancetype)initWithComponentDescription:(AudioComponentDescription)componentDescription;
+
+- (void)initialize;
+- (void)uninitialize;
 
 @end
