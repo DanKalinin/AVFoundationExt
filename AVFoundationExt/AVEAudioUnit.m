@@ -10,6 +10,8 @@
 const HLPOperationState AVEAudioUnitStateDidInitialize = 3;
 const HLPOperationState AVEAudioUnitStateDidUninitialize = 4;
 
+static OSStatus AVEAudioUnitRenderCallback(void *inRefCon, AudioUnitRenderActionFlags *ioActionFlags, const AudioTimeStamp *inTimeStamp, UInt32 inBusNumber, UInt32 inNumberFrames, AudioBufferList *ioData);
+
 
 
 
@@ -24,6 +26,7 @@ const HLPOperationState AVEAudioUnitStateDidUninitialize = 4;
 @property AudioUnit unit;
 @property AudioUnitScope scope;
 @property AudioUnitElement element;
+@property AURenderCallbackStruct renderCallback;
 
 @end
 
@@ -40,6 +43,11 @@ const HLPOperationState AVEAudioUnitStateDidUninitialize = 4;
         self.unit = unit;
         self.scope = scope;
         self.element = element;
+        
+        AURenderCallbackStruct renderCallback = {0};
+        renderCallback.inputProc = AVEAudioUnitRenderCallback;
+        renderCallback.inputProcRefCon = (__bridge void *)self;
+        self.renderCallback = renderCallback;
     }
     return self;
 }
@@ -295,3 +303,16 @@ const HLPOperationState AVEAudioUnitStateDidUninitialize = 4;
 }
 
 @end
+
+
+
+
+
+
+
+
+
+
+static OSStatus AVEAudioUnitRenderCallback(void *inRefCon, AudioUnitRenderActionFlags *ioActionFlags, const AudioTimeStamp *inTimeStamp, UInt32 inBusNumber, UInt32 inNumberFrames, AudioBufferList *ioData) {
+    return noErr;
+}

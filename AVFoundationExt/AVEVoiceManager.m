@@ -48,7 +48,20 @@
         self.unit = [AVEAudioUnit.alloc initWithComponentDescription:description];
         [self.unit.delegates addObject:self.delegates];
         
-        NSLog(@"ie - %u", self.unit.inputs[0].kAudioUnitProperty_StreamFormat.mBytesPerPacket);
+        self.unit.inputs[1].kAudioOutputUnitProperty_EnableIO = 1;
+        
+        AudioStreamBasicDescription inputFormat = self.unit.inputs[1].kAudioUnitProperty_StreamFormat;
+        self.unit.inputs[0].kAudioUnitProperty_StreamFormat = inputFormat;
+        
+        AudioStreamBasicDescription outputFormat = self.unit.outputs[0].kAudioUnitProperty_StreamFormat;
+        self.unit.outputs[1].kAudioUnitProperty_StreamFormat = outputFormat;
+        
+        self.unit.global.kAudioUnitProperty_MaximumFramesPerSlice = 4096;
+        
+        [self.unit initialize];
+        [self.unit start];
+        
+//        NSLog(@"ie - %u", self.unit.inputs[1].kAudioOutputUnitProperty_EnableIO);
 //        NSLog(@"oe - %u", unit.outputs[0].kAudioUnitProperty_StreamFormat.mFormatID);
         
 //        unit.inputs[1].kAudioUnitProperty_ElementName = @"xxx";
@@ -61,6 +74,16 @@
 //        [instantiation waitUntilFinished];
     }
     return self;
+}
+
+#pragma mark - Audio session
+
+- (void)AVEAudioSessionMediaServicesWereLost:(AVEAudioSession *)audioSession {
+    
+}
+
+- (void)AVEAudioSessionMediaServicesWereReset:(AVEAudioSession *)audioSession {
+    
 }
 
 @end

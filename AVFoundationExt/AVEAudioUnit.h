@@ -44,6 +44,7 @@ extern const HLPOperationState AVEAudioUnitStateDidUninitialize;
 @property (readonly) AudioUnit unit;
 @property (readonly) AudioUnitScope scope;
 @property (readonly) AudioUnitElement element;
+@property (readonly) AURenderCallbackStruct renderCallback;
 
 - (instancetype)initWithUnit:(AudioUnit)unit scope:(AudioUnitScope)scope element:(AudioUnitElement)element;
 
