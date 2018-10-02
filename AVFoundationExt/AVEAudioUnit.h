@@ -36,6 +36,8 @@
 @property UInt32 kAudioOutputUnitProperty_EnableIO;
 @property AURenderCallbackStruct kAudioOutputUnitProperty_SetInputCallback;
 
+@property (readonly) AVEAudioUnit *parent;
+@property (readonly) HLPArray<AVEAudioUnitElementDelegate> *delegates;
 @property (readonly) AudioUnit unit;
 @property (readonly) AudioUnitScope scope;
 @property (readonly) AudioUnitElement element;
@@ -67,6 +69,7 @@
 
 @interface AVEAudioUnit : HLPOperation <AVEAudioUnitDelegate>
 
+@property (readonly) HLPArray<AVEAudioUnitDelegate> *delegates;
 @property (readonly) AudioComponentDescription componentDescription;
 @property (readonly) AudioComponent component;
 @property (readonly) AudioUnit unit;

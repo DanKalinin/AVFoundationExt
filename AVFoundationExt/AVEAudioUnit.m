@@ -28,6 +28,9 @@
 
 @implementation AVEAudioUnitElement
 
+@dynamic parent;
+@dynamic delegates;
+
 - (instancetype)initWithUnit:(AudioUnit)unit scope:(AudioUnitScope)scope element:(AudioUnitElement)element {
     self = super.init;
     if (self) {
@@ -193,6 +196,8 @@
 
 
 @implementation AVEAudioUnit
+
+@dynamic delegates;
 
 - (instancetype)initWithComponentDescription:(AudioComponentDescription)componentDescription {
     self = super.init;
