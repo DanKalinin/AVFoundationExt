@@ -44,8 +44,8 @@
         NSLog(@"ie - %u", unit.inputs[1].kAudioOutputUnitProperty_EnableIO);
         NSLog(@"oe - %u", unit.outputs[0].kAudioOutputUnitProperty_EnableIO);
         
-        unit.inputs[1].kAudioUnitProperty_ElementName = @"xxx";
-        NSLog(@"name - %@", unit.inputs[1].kAudioUnitProperty_ElementName);
+//        unit.inputs[1].kAudioUnitProperty_ElementName = @"xxx";
+//        NSLog(@"name - %@", unit.inputs[1].kAudioUnitProperty_ElementName);
         
 //        NSLog(@"inputs - %u", unit.global.kAudioUnitProperty_MaximumFramesPerSlice);
 //        NSLog(@"outputs - %i", (int)unit.outputs.count);
