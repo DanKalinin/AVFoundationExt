@@ -13,6 +13,7 @@
 
 @property AVEAudioSession *session;
 @property AVEAudioUnit *unit;
+@property AVEAudioConverter *converter;
 
 @end
 
@@ -39,10 +40,10 @@
         description.componentSubType = kAudioUnitSubType_VoiceProcessingIO;
         description.componentManufacturer = kAudioUnitManufacturer_Apple;
         
-        AVEAudioUnit *unit = [AVEAudioUnit.alloc initWithComponentDescription:description];
+        self.unit = [AVEAudioUnit.alloc initWithComponentDescription:description];
         
-        NSLog(@"ie - %u", unit.inputs[1].kAudioOutputUnitProperty_EnableIO);
-        NSLog(@"oe - %u", unit.outputs[0].kAudioOutputUnitProperty_EnableIO);
+//        NSLog(@"ie - %f", self.unit.inputs[0].kAudioUnitProperty_StreamFormat.mSampleRate);
+//        NSLog(@"oe - %u", unit.outputs[0].kAudioUnitProperty_StreamFormat.mFormatID);
         
 //        unit.inputs[1].kAudioUnitProperty_ElementName = @"xxx";
 //        NSLog(@"name - %@", unit.inputs[1].kAudioUnitProperty_ElementName);

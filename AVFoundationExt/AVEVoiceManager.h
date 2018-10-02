@@ -9,6 +9,7 @@
 #import <AVFoundation/AVFoundation.h>
 #import "AVEAudioSession.h"
 #import "AVEAudioUnit.h"
+#import "AVEAudioConverter.h"
 
 @class AVEVoiceManager;
 
@@ -24,5 +25,6 @@
 
 @property (readonly) AVEAudioSession *session;
 @property (readonly) AVEAudioUnit *unit;
+@property (readonly) AVEAudioConverter *converter;
 
 @end

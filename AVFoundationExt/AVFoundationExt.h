@@ -12,11 +12,7 @@ FOUNDATION_EXPORT double AVFoundationExtVersionNumber;
 FOUNDATION_EXPORT const unsigned char AVFoundationExtVersionString[];
 
 #import <AVFoundationExt/AVEAudioSession.h>
-
-#import <AVFoundationExt/AVEAsset.h>
-
 #import <AVFoundationExt/AVEAudioUnit.h>
 #import <AVFoundationExt/AVEAudioConverter.h>
-//#import <AVFoundationExt/AVEAudioUnitOutput.h>
-//#import <AVFoundationExt/AVEAudioUnitVoiceProcessingIO.h>
 #import <AVFoundationExt/AVEVoiceManager.h>
+#import <AVFoundationExt/AVEAsset.h>
