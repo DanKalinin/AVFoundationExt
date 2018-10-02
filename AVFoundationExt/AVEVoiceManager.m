@@ -58,6 +58,10 @@
         
         self.unit.global.kAudioUnitProperty_MaximumFramesPerSlice = 4096;
         
+        self.unit.inputs[0].kAudioUnitProperty_SetRenderCallback = self.unit.inputs[0].renderCallback;
+        
+        [self.session.audioSession setActive:YES error:NULL];
+        
         [self.unit initialize];
         [self.unit start];
         
