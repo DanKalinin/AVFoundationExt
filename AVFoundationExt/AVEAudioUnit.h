@@ -59,6 +59,7 @@
 @property UInt32 kAudioUnitProperty_ElementCount;
 @property UInt32 kAudioUnitProperty_MaximumFramesPerSlice;
 @property AURenderCallbackStruct kAudioUnitProperty_SetRenderCallback;
+@property NSString *kAudioUnitProperty_ElementName;
 @property UInt32 kAudioOutputUnitProperty_EnableIO;
 @property AURenderCallbackStruct kAudioOutputUnitProperty_SetInputCallback;
 

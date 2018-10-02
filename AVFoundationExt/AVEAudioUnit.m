@@ -180,6 +180,19 @@
     return setRenderCallback;
 }
 
+- (void)setKAudioUnitProperty_ElementName:(NSString *)elementName {
+    CFStringRef cfElementName = (__bridge_retained CFStringRef)elementName;
+    [self setProperty:kAudioUnitProperty_ElementName data:&cfElementName size:sizeof(cfElementName)];
+}
+
+- (NSString *)kAudioUnitProperty_ElementName {
+    CFStringRef cfElementName = NULL;
+    UInt32 size = sizeof(cfElementName);
+    [self getProperty:kAudioUnitProperty_ElementName data:&cfElementName size:&size];
+    NSString *elementName = (__bridge_transfer NSString *)cfElementName;
+    return elementName;
+}
+
 - (void)setKAudioOutputUnitProperty_EnableIO:(UInt32)enableIO {
     [self setProperty:kAudioOutputUnitProperty_EnableIO data:&enableIO size:sizeof(enableIO)];
 }
