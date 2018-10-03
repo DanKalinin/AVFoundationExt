@@ -13,6 +13,13 @@
 extern const HLPOperationState AVEAudioUnitStateDidInitialize;
 extern const HLPOperationState AVEAudioUnitStateDidUninitialize;
 
+extern NSErrorDomain const AVEAudioUnitErrorDomain;
+
+NS_ERROR_ENUM(AVEAudioUnitErrorDomain) {
+    AVEAudioUnitErrorUnknown = 0,
+    AVEAudioUnitErrorNotFound = 1
+};
+
 
 
 
