@@ -33,57 +33,84 @@
 - (instancetype)init {
     self = super.init;
     if (self) {
-        @try {
-            self.session = AVEAudioSession.shared;
-            [self.session.delegates addObject:self.delegates];
-            
-            NSError *error = nil;
-            [self.session.audioSession setCategory:AVAudioSessionCategoryPlayAndRecord mode:AVAudioSessionModeVoiceChat options:0 error:&error];
-            [HLPException raiseWithError:error];
-            [self.session.audioSession setPreferredIOBufferDuration:0.005 error:&error];
-            [HLPException raiseWithError:error];
-            [self.session.audioSession setPreferredSampleRate:44100.0 error:&error];
-            [HLPException raiseWithError:error];
-            
-            AudioComponentDescription description = {0};
-            description.componentType = kAudioUnitType_Output;
-            description.componentSubType = kAudioUnitSubType_VoiceProcessingIO;
-            description.componentManufacturer = kAudioUnitManufacturer_Apple;
-            
-            self.unit = [AVEAudioUnit.alloc initWithComponentDescription:description];
-            [HLPException raiseWithError:self.unit.errors.firstObject];
-            [self.unit.delegates addObject:self.delegates];
-            
-            self.unit.inputs[1].kAudioOutputUnitProperty_EnableIO = 1;
-            [HLPException raiseWithError:self.unit.inputs[1].errors.firstObject];
-            
-            AudioStreamBasicDescription inputFormat = self.unit.inputs[1].kAudioUnitProperty_StreamFormat;
-            [HLPException raiseWithError:self.unit.inputs[1].errors.firstObject];
-            self.unit.inputs[0].kAudioUnitProperty_StreamFormat = inputFormat;
-            [HLPException raiseWithError:self.unit.inputs[0].errors.firstObject];
-            
-            AudioStreamBasicDescription outputFormat = self.unit.outputs[0].kAudioUnitProperty_StreamFormat;
-            [HLPException raiseWithError:self.unit.outputs[0].errors.firstObject];
-            self.unit.outputs[1].kAudioUnitProperty_StreamFormat = outputFormat;
-            [HLPException raiseWithError:self.unit.outputs[1].errors.firstObject];
-            
-            self.unit.global.kAudioUnitProperty_MaximumFramesPerSlice = 4096;
-            [HLPException raiseWithError:self.unit.global.errors.firstObject];
-            
-            self.unit.inputs[0].kAudioUnitProperty_SetRenderCallback = self.unit.inputs[0].renderCallback;
-            [HLPException raiseWithError:self.unit.inputs[0].errors.firstObject];
-            
-            [self.unit initialize];
-            [HLPException raiseWithError:self.unit.errors.firstObject];
-            
-//            [self.session.audioSession setActive:YES error:NULL];
-//
-//            [self.unit initialize];
-//            [self.unit start];
-            
-//            NSLog(@"ie - %u", self.unit.inputs[1].kAudioOutputUnitProperty_EnableIO);
-        } @catch (HLPException *exception) {
-            [self.errors addObject:exception.error];
+        self.session = AVEAudioSession.shared;
+        [self.session.delegates addObject:self.delegates];
+        
+        NSError *error = nil;
+        BOOL success = [self.session.audioSession setCategory:AVAudioSessionCategoryPlayAndRecord mode:AVAudioSessionModeVoiceChat options:0 error:&error];
+        if (success) {
+            success = [self.session.audioSession setPreferredIOBufferDuration:0.005 error:&error];
+            if (success) {
+                success = [self.session.audioSession setPreferredSampleRate:44100.0 error:&error];
+                if (success) {
+                    AudioComponentDescription description = {0};
+                    description.componentType = kAudioUnitType_Output;
+                    description.componentSubType = kAudioUnitSubType_VoiceProcessingIO;
+                    description.componentManufacturer = kAudioUnitManufacturer_Apple;
+                    
+                    self.unit = [AVEAudioUnit.alloc initWithComponentDescription:description];
+                    if (self.unit.errors.count > 0) {
+                        [self.errors addObjectsFromArray:self.unit.errors];
+                    } else {
+                        [self.unit.delegates addObject:self.delegates];
+                        
+                        self.unit.inputs[1].kAudioOutputUnitProperty_EnableIO = 1;
+                        if (self.unit.inputs[1].errors.count > 0) {
+                            [self.errors addObjectsFromArray:self.unit.inputs[1].errors];
+                        } else {
+                            AudioStreamBasicDescription inputFormat = self.unit.inputs[1].kAudioUnitProperty_StreamFormat;
+                            if (self.unit.inputs[1].errors.count > 0) {
+                                [self.errors addObjectsFromArray:self.unit.inputs[1].errors];
+                            } else {
+                                self.unit.inputs[0].kAudioUnitProperty_StreamFormat = inputFormat;
+                                if (self.unit.inputs[0].errors.count > 0) {
+                                    [self.errors addObjectsFromArray:self.unit.inputs[0].errors];
+                                } else {
+                                    AudioStreamBasicDescription outputFormat = self.unit.outputs[0].kAudioUnitProperty_StreamFormat;
+                                    if (self.unit.outputs[0].errors.count > 0) {
+                                        [self.errors addObjectsFromArray:self.unit.outputs[0].errors];
+                                    } else {
+                                        self.unit.outputs[1].kAudioUnitProperty_StreamFormat = outputFormat;
+                                        if (self.unit.outputs[1].errors.count > 0) {
+                                            [self.errors addObjectsFromArray:self.unit.outputs[1].errors];
+                                        } else {
+                                            self.unit.global.kAudioUnitProperty_MaximumFramesPerSlice = 4096;
+                                            if (self.unit.global.errors.count > 0) {
+                                                [self.errors addObjectsFromArray:self.unit.global.errors];
+                                            } else {
+                                                self.unit.inputs[0].kAudioUnitProperty_SetRenderCallback = self.unit.inputs[0].renderCallback;
+                                                if (self.unit.inputs[0].errors.count > 0) {
+                                                    [self.errors addObjectsFromArray:self.unit.inputs[0].errors];
+                                                } else {
+                                                    [self.unit initialize];
+                                                    if (self.unit.errors.count > 0) {
+                                                        [self.errors addObjectsFromArray:self.unit.errors];
+                                                    } else {
+                                                        NSLog(@"ok");
+                                                    }
+                                                    
+                                                    //            [self.session.audioSession setActive:YES error:NULL];
+                                                    //
+                                                    //            [self.unit initialize];
+                                                    //            [self.unit start];
+                                                    
+                                                    //            NSLog(@"ie - %u", self.unit.inputs[1].kAudioOutputUnitProperty_EnableIO);
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                } else {
+                    [self.errors addObject:error];
+                }
+            } else {
+                [self.errors addObject:error];
+            }
+        } else {
+            [self.errors addObject:error];
         }
     }
     return self;
