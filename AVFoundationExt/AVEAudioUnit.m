@@ -222,6 +222,7 @@ static OSStatus AVEAudioUnitRenderCallback(void *inRefCon, AudioUnitRenderAction
             OSStatus status = AudioComponentInstanceNew(self.component, &_unit);
             if (status == noErr) {
                 self.global = [AVEAudioUnitElement.alloc initWithUnit:self.unit scope:kAudioUnitScope_Global element:0];
+                [self.global.delegates addObject:self.delegates];
                 
                 AVEAudioUnitElement *input = [AVEAudioUnitElement.alloc initWithUnit:self.unit scope:kAudioUnitScope_Input element:0];
                 UInt32 inputElementCount = input.kAudioUnitProperty_ElementCount;
