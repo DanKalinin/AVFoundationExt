@@ -37,9 +37,16 @@
             self.session = AVEAudioSession.shared;
             [self.session.delegates addObject:self.delegates];
             
-            [self.session.audioSession setCategory:AVAudioSessionCategoryPlayAndRecord mode:AVAudioSessionModeVoiceChat options:0 error:NULL];
-            [self.session.audioSession setPreferredIOBufferDuration:0.005 error:NULL];
-            [self.session.audioSession setPreferredSampleRate:44100.0 error:NULL];
+            NSError *error = nil;
+            
+            [self.session.audioSession setCategory:AVAudioSessionCategoryPlayAndRecord mode:AVAudioSessionModeVoiceChat options:0 error:&error];
+            [HLPException raiseWithError:error];
+            
+            [self.session.audioSession setPreferredIOBufferDuration:0.005 error:&error];
+            [HLPException raiseWithError:error];
+            
+            [self.session.audioSession setPreferredSampleRate:44100.0 error:&error];
+            [HLPException raiseWithError:error];
             
             AudioComponentDescription description = {0};
             description.componentType = kAudioUnitType_Output;
@@ -61,14 +68,14 @@
             
             self.unit.inputs[0].kAudioUnitProperty_SetRenderCallback = self.unit.inputs[0].renderCallback;
             
-            [self.session.audioSession setActive:YES error:NULL];
-            
-            [self.unit initialize];
-            [self.unit start];
+//            [self.session.audioSession setActive:YES error:NULL];
+//
+//            [self.unit initialize];
+//            [self.unit start];
             
 //            NSLog(@"ie - %u", self.unit.inputs[1].kAudioOutputUnitProperty_EnableIO);
-        } @catch (NSException *exception) {
-            
+        } @catch (HLPException *exception) {
+            NSLog(@"ex - %@", exception.reason);
         } @finally {
             
         }
