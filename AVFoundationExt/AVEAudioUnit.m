@@ -256,46 +256,42 @@ static OSStatus AVEAudioUnitRenderCallback(void *inRefCon, AudioUnitRenderAction
 }
 
 - (void)initialize {
-    @try {
-        OSStatus status = AudioUnitInitialize(self.unit);
-        [HLPException raiseWithStatus:status];
-        
+    OSStatus status = AudioUnitInitialize(self.unit);
+    if (status == noErr) {
         [self updateState:AVEAudioUnitStateDidInitialize];
-    } @catch (HLPException *exception) {
-        [self.errors addObject:exception.error];
+    } else {
+        NSError *error = [NSError errorWithDomain:NSOSStatusErrorDomain code:status userInfo:nil];
+        [self.errors addObject:error];
     }
 }
 
 - (void)uninitialize {
-    @try {
-        OSStatus status = AudioUnitUninitialize(self.unit);
-        [HLPException raiseWithStatus:status];
-        
+    OSStatus status = AudioUnitUninitialize(self.unit);
+    if (status == noErr) {
         [self updateState:AVEAudioUnitStateDidUninitialize];
-    } @catch (HLPException *exception) {
-        [self.errors addObject:exception.error];
+    } else {
+        NSError *error = [NSError errorWithDomain:NSOSStatusErrorDomain code:status userInfo:nil];
+        [self.errors addObject:error];
     }
 }
 
 - (void)start {
-    @try {
-        OSStatus status = AudioOutputUnitStart(self.unit);
-        [HLPException raiseWithStatus:status];
-        
+    OSStatus status = AudioOutputUnitStart(self.unit);
+    if (status == noErr) {
         [self updateState:HLPOperationStateDidBegin];
-    } @catch (HLPException *exception) {
-        [self.errors addObject:exception.error];
+    } else {
+        NSError *error = [NSError errorWithDomain:NSOSStatusErrorDomain code:status userInfo:nil];
+        [self.errors addObject:error];
     }
 }
 
 - (void)stop {
-    @try {
-        OSStatus status = AudioOutputUnitStop(self.unit);
-        [HLPException raiseWithStatus:status];
-        
+    OSStatus status = AudioOutputUnitStop(self.unit);
+    if (status == noErr) {
         [self updateState:HLPOperationStateDidEnd];
-    } @catch (HLPException *exception) {
-        [self.errors addObject:exception.error];
+    } else {
+        NSError *error = [NSError errorWithDomain:NSOSStatusErrorDomain code:status userInfo:nil];
+        [self.errors addObject:error];
     }
 }
 
