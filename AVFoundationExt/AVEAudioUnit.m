@@ -221,29 +221,32 @@ static OSStatus AVEAudioUnitRenderCallback(void *inRefCon, AudioUnitRenderAction
             self.component = AudioComponentFindNext(NULL, &componentDescription);
             if (self.component) {
                 OSStatus status = AudioComponentInstanceNew(self.component, &_unit);
-                if (status == noErr) {
-                    self.global = [AVEAudioUnitElement.alloc initWithUnit:self.unit scope:kAudioUnitScope_Global element:0];
-                    
-                    self.inputs = NSMutableArray.array;
-                    AVEAudioUnitElement *input = [AVEAudioUnitElement.alloc initWithUnit:self.unit scope:kAudioUnitScope_Input element:0];
-                    for (AudioUnitElement element = 0; element < input.kAudioUnitProperty_ElementCount; element++) {
-                        input = [AVEAudioUnitElement.alloc initWithUnit:self.unit scope:kAudioUnitScope_Input element:element];
-                        [input.delegates addObject:self.delegates];
-                        [self.inputs addObject:input];
-                    }
-                    
-                    self.outputs = NSMutableArray.array;
-                    AVEAudioUnitElement *output = [AVEAudioUnitElement.alloc initWithUnit:self.unit scope:kAudioUnitScope_Output element:0];
-                    for (AudioUnitElement element = 0; element < output.kAudioUnitProperty_ElementCount; element++) {
-                        output = [AVEAudioUnitElement.alloc initWithUnit:self.unit scope:kAudioUnitScope_Output element:element];
-                        [output.delegates addObject:self.delegates];
-                        [self.outputs addObject:output];
-                    }
-                } else {
-                    NSError *error = [NSError errorWithDomain:NSOSStatusErrorDomain code:status userInfo:nil];
-                    [self.errors addObject:error];
+                [HLPException raiseWithStatus:status];
+                
+                self.global = [AVEAudioUnitElement.alloc initWithUnit:self.unit scope:kAudioUnitScope_Global element:0];
+                
+                self.inputs = NSMutableArray.array;
+                AVEAudioUnitElement *input = [AVEAudioUnitElement.alloc initWithUnit:self.unit scope:kAudioUnitScope_Input element:0];
+                UInt32 inputElementCount = input.kAudioUnitProperty_ElementCount;
+                [HLPException raiseWithError:input.errors.firstObject];
+                for (AudioUnitElement element = 0; element < inputElementCount; element++) {
+                    input = [AVEAudioUnitElement.alloc initWithUnit:self.unit scope:kAudioUnitScope_Input element:element];
+                    [input.delegates addObject:self.delegates];
+                    [self.inputs addObject:input];
+                }
+                
+                self.outputs = NSMutableArray.array;
+                AVEAudioUnitElement *output = [AVEAudioUnitElement.alloc initWithUnit:self.unit scope:kAudioUnitScope_Output element:0];
+                UInt32 outputElementCount = output.kAudioUnitProperty_ElementCount;
+                [HLPException raiseWithError:output.errors.firstObject];
+                for (AudioUnitElement element = 0; element < outputElementCount; element++) {
+                    output = [AVEAudioUnitElement.alloc initWithUnit:self.unit scope:kAudioUnitScope_Output element:element];
+                    [output.delegates addObject:self.delegates];
+                    [self.outputs addObject:output];
                 }
             } else {
+                NSError *error = [NSError errorWithDomain:AVEAudioUnitErrorDomain code:AVEAudioUnitErrorNotFound userInfo:nil];
+                [HLPException raiseWithError:error];
             }
         } @catch (HLPException *exception) {
             [self.errors addObject:exception.error];
