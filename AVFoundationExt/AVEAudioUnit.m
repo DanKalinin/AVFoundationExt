@@ -57,20 +57,20 @@ static OSStatus AVEAudioUnitRenderCallback(void *inRefCon, AudioUnitRenderAction
 #pragma mark - Helpers
 
 - (void)getProperty:(AudioUnitPropertyID)property data:(void *)data size:(UInt32 *)size {
-    @try {
-        OSStatus status = AudioUnitGetProperty(self.unit, property, self.scope, self.element, data, size);
-        [HLPException raiseWithStatus:status];
-    } @catch (HLPException *exception) {
-        [self.errors addObject:exception.error];
+    OSStatus status = AudioUnitGetProperty(self.unit, property, self.scope, self.element, data, size);
+    if (status == noErr) {
+    } else {
+        NSError *error = [NSError errorWithDomain:NSOSStatusErrorDomain code:status userInfo:nil];
+        [self.errors addObject:error];
     }
 }
 
 - (void)setProperty:(AudioUnitPropertyID)property data:(void *)data size:(UInt32)size {
-    @try {
-        OSStatus status = AudioUnitSetProperty(self.unit, property, self.scope, self.element, data, size);
-        [HLPException raiseWithStatus:status];
-    } @catch (HLPException *exception) {
-        [self.errors addObject:exception.error];
+    OSStatus status = AudioUnitSetProperty(self.unit, property, self.scope, self.element, data, size);
+    if (status == noErr) {
+    } else {
+        NSError *error = [NSError errorWithDomain:NSOSStatusErrorDomain code:status userInfo:nil];
+        [self.errors addObject:error];
     }
 }
 
