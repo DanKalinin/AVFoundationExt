@@ -184,6 +184,13 @@ static OSStatus AVEAudioUnitRenderCallback(void *inRefCon, AudioUnitRenderAction
     return setInputCallback;
 }
 
+#pragma mark - Element
+
+- (OSStatus)AVEAudioUnitElementDidRender:(AudioUnitRenderActionFlags *)ioActionFlags inTimeStamp:(const AudioTimeStamp *)inTimeStamp inBusNumber:(UInt32)inBusNumber inNumberFrames:(UInt32)inNumberFrames ioData:(AudioBufferList *)ioData {
+    AudioUnitRender(self.unit, ioActionFlags, inTimeStamp, 1, inNumberFrames, ioData);
+    return noErr;
+}
+
 @end
 
 
@@ -330,6 +337,12 @@ static OSStatus AVEAudioUnitRenderCallback(void *inRefCon, AudioUnitRenderAction
 
 
 static OSStatus AVEAudioUnitRenderCallback(void *inRefCon, AudioUnitRenderActionFlags *ioActionFlags, const AudioTimeStamp *inTimeStamp, UInt32 inBusNumber, UInt32 inNumberFrames, AudioBufferList *ioData) {
+//    AVEAudioUnitElement *element = (__bridge AVEAudioUnitElement *)inRefCon;
+//    OSStatus status = [element.delegates AVEAudioUnitElementDidRender:ioActionFlags inTimeStamp:inTimeStamp inBusNumber:inBusNumber inNumberFrames:inNumberFrames ioData:ioData];
+//    return status;
+//
+//    NSLog(@"bus - %u", inBusNumber);
+    
     AVEAudioUnitElement *element = (__bridge AVEAudioUnitElement *)inRefCon;
     AudioUnitRender(element.unit, ioActionFlags, inTimeStamp, 1, inNumberFrames, ioData);
     return noErr;

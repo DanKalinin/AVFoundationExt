@@ -11,7 +11,40 @@
 #import "AVEAudioUnit.h"
 #import "AVEAudioConverter.h"
 
-@class AVEVoiceManager;
+@class AVEVoiceAudioSession, AVEVoiceAudioUnit, AVEVoiceManager;
+
+
+
+
+
+
+
+
+
+
+@interface AVEVoiceAudioSession : AVEAudioSession
+
+@end
+
+
+
+
+
+
+
+
+
+
+@interface AVEVoiceAudioUnit : AVEAudioUnit
+
+@end
+
+
+
+
+
+
+
 
 
 
@@ -26,5 +59,10 @@
 @property (readonly) AVEAudioSession *session;
 @property (readonly) AVEAudioUnit *unit;
 @property (readonly) AVEAudioConverter *converter;
+
+- (void)initAudio;
+- (void)initSession;
+- (void)initUnit;
+- (void)initConverter;
 
 @end

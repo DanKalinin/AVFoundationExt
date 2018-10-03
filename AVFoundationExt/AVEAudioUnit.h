@@ -31,6 +31,9 @@ NS_ERROR_ENUM(AVEAudioUnitErrorDomain) {
 
 @protocol AVEAudioUnitElementDelegate <HLPOperationDelegate>
 
+@optional
+- (OSStatus)AVEAudioUnitElementDidRender:(AudioUnitRenderActionFlags *)ioActionFlags inTimeStamp:(const AudioTimeStamp *)inTimeStamp inBusNumber:(UInt32)inBusNumber inNumberFrames:(UInt32)inNumberFrames ioData:(AudioBufferList *)ioData;
+
 @end
 
 
