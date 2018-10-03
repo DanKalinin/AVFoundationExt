@@ -215,11 +215,11 @@ static OSStatus AVEAudioUnitRenderCallback(void *inRefCon, AudioUnitRenderAction
 - (instancetype)initWithComponentDescription:(AudioComponentDescription)componentDescription {
     self = super.init;
     if (self) {
-        @try {
-            self.componentDescription = componentDescription;
-            
-            self.component = AudioComponentFindNext(NULL, &componentDescription);
-            if (self.component) {
+        self.componentDescription = componentDescription;
+        
+        self.component = AudioComponentFindNext(NULL, &componentDescription);
+        if (self.component) {
+            @try {
                 OSStatus status = AudioComponentInstanceNew(self.component, &_unit);
                 [HLPException raiseWithStatus:status];
                 
@@ -244,54 +244,58 @@ static OSStatus AVEAudioUnitRenderCallback(void *inRefCon, AudioUnitRenderAction
                     [output.delegates addObject:self.delegates];
                     [self.outputs addObject:output];
                 }
-            } else {
-                NSError *error = [NSError errorWithDomain:AVEAudioUnitErrorDomain code:AVEAudioUnitErrorNotFound userInfo:nil];
-                [HLPException raiseWithError:error];
+            } @catch (HLPException *exception) {
+                [self.errors addObject:exception.error];
             }
-        } @catch (HLPException *exception) {
-            [self.errors addObject:exception.error];
+        } else {
+            NSError *error = [NSError errorWithDomain:AVEAudioUnitErrorDomain code:AVEAudioUnitErrorNotFound userInfo:nil];
+            [self.errors addObject:error];
         }
     }
     return self;
 }
 
 - (void)initialize {
-    OSStatus status = AudioUnitInitialize(self.unit);
-    if (status == noErr) {
+    @try {
+        OSStatus status = AudioUnitInitialize(self.unit);
+        [HLPException raiseWithStatus:status];
+        
         [self updateState:AVEAudioUnitStateDidInitialize];
-    } else {
-        NSError *error = [NSError errorWithDomain:NSOSStatusErrorDomain code:status userInfo:nil];
-        [self.errors addObject:error];
+    } @catch (HLPException *exception) {
+        [self.errors addObject:exception.error];
     }
 }
 
 - (void)uninitialize {
-    OSStatus status = AudioUnitUninitialize(self.unit);
-    if (status == noErr) {
+    @try {
+        OSStatus status = AudioUnitUninitialize(self.unit);
+        [HLPException raiseWithStatus:status];
+        
         [self updateState:AVEAudioUnitStateDidUninitialize];
-    } else {
-        NSError *error = [NSError errorWithDomain:NSOSStatusErrorDomain code:status userInfo:nil];
-        [self.errors addObject:error];
+    } @catch (HLPException *exception) {
+        [self.errors addObject:exception.error];
     }
 }
 
 - (void)start {
-    OSStatus status = AudioOutputUnitStart(self.unit);
-    if (status == noErr) {
+    @try {
+        OSStatus status = AudioOutputUnitStart(self.unit);
+        [HLPException raiseWithStatus:status];
+        
         [self updateState:HLPOperationStateDidBegin];
-    } else {
-        NSError *error = [NSError errorWithDomain:NSOSStatusErrorDomain code:status userInfo:nil];
-        [self.errors addObject:error];
+    } @catch (HLPException *exception) {
+        [self.errors addObject:exception.error];
     }
 }
 
 - (void)stop {
-    OSStatus status = AudioOutputUnitStop(self.unit);
-    if (status == noErr) {
+    @try {
+        OSStatus status = AudioOutputUnitStop(self.unit);
+        [HLPException raiseWithStatus:status];
+        
         [self updateState:HLPOperationStateDidEnd];
-    } else {
-        NSError *error = [NSError errorWithDomain:NSOSStatusErrorDomain code:status userInfo:nil];
-        [self.errors addObject:error];
+    } @catch (HLPException *exception) {
+        [self.errors addObject:exception.error];
     }
 }
 
