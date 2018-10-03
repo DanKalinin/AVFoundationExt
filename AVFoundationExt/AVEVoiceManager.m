@@ -75,7 +75,7 @@
             
 //            NSLog(@"ie - %u", self.unit.inputs[1].kAudioOutputUnitProperty_EnableIO);
         } @catch (HLPException *exception) {
-            NSLog(@"ex - %@", exception.reason);
+            [self.errors addObject:exception.error];
         } @finally {
             
         }
