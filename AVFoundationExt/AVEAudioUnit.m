@@ -75,20 +75,20 @@ static OSStatus AVEAudioUnitRenderCallback(void *inRefCon, AudioUnitRenderAction
 }
 
 - (void)getParameter:(AudioUnitParameterID)parameter value:(AudioUnitParameterValue *)value {
-    @try {
-        OSStatus status = AudioUnitGetParameter(self.unit, parameter, self.scope, self.element, value);
-        [HLPException raiseWithStatus:status];
-    } @catch (HLPException *exception) {
-        [self.errors addObject:exception.error];
+    OSStatus status = AudioUnitGetParameter(self.unit, parameter, self.scope, self.element, value);
+    if (status == noErr) {
+    } else {
+        NSError *error = [NSError errorWithDomain:NSOSStatusErrorDomain code:status userInfo:nil];
+        [self.errors addObject:error];
     }
 }
 
 - (void)setParameter:(AudioUnitParameterID)parameter value:(AudioUnitParameterValue)value {
-    @try {
-        OSStatus status = AudioUnitSetParameter(self.unit, parameter, self.scope, self.element, value, 0);
-        [HLPException raiseWithStatus:status];
-    } @catch (HLPException *exception) {
-        [self.errors addObject:exception.error];
+    OSStatus status = AudioUnitSetParameter(self.unit, parameter, self.scope, self.element, value, 0);
+    if (status == noErr) {
+    } else {
+        NSError *error = [NSError errorWithDomain:NSOSStatusErrorDomain code:status userInfo:nil];
+        [self.errors addObject:error];
     }
 }
 
