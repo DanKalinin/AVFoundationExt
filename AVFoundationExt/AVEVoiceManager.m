@@ -87,6 +87,25 @@
 
 
 
+@interface AVEVoiceAudioConverter ()
+
+@end
+
+
+
+@implementation AVEVoiceAudioConverter
+
+@end
+
+
+
+
+
+
+
+
+
+
 @interface AVEVoiceManager ()
 
 @property AVEAudioSession *session;
