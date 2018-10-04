@@ -10,16 +10,6 @@
 
 @class AVEAudioUnitElement, AVEAudioUnit;
 
-extern const HLPOperationState AVEAudioUnitStateDidInitialize;
-extern const HLPOperationState AVEAudioUnitStateDidUninitialize;
-
-extern NSErrorDomain const AVEAudioUnitErrorDomain;
-
-NS_ERROR_ENUM(AVEAudioUnitErrorDomain) {
-    AVEAudioUnitErrorUnknown = 0,
-    AVEAudioUnitErrorNotFound = 1
-};
-
 
 
 
@@ -77,14 +67,6 @@ NS_ERROR_ENUM(AVEAudioUnitErrorDomain) {
 
 @protocol AVEAudioUnitDelegate <AVEAudioUnitElementDelegate>
 
-@optional
-- (void)AVEAudioUnitDidUpdateState:(AVEAudioUnit *)unit;
-
-- (void)AVEAudioUnitDidBegin:(AVEAudioUnit *)unit;
-- (void)AVEAudioUnitDidEnd:(AVEAudioUnit *)unit;
-- (void)AVEAudioUnitDidInitialize:(AVEAudioUnit *)unit;
-- (void)AVEAudioUnitDidUninitialize:(AVEAudioUnit *)unit;
-
 @end
 
 
@@ -100,6 +82,9 @@ NS_ERROR_ENUM(AVEAudioUnitErrorDomain) {
 @property (readonly) NSMutableArray<AVEAudioUnitElement *> *outputs;
 
 - (instancetype)initWithComponentDescription:(AudioComponentDescription)componentDescription;
+
+- (void)instantiate;
+- (void)dispose;
 
 - (void)initialize;
 - (void)uninitialize;
