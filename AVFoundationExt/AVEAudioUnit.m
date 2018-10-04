@@ -214,6 +214,16 @@ static OSStatus AVEAudioUnitRenderCallback(void *inRefCon, AudioUnitRenderAction
 
 @dynamic delegates;
 
++ (instancetype)voiceProcessingIO {
+    AudioComponentDescription description = {0};
+    description.componentType = kAudioUnitType_Output;
+    description.componentSubType = kAudioUnitSubType_VoiceProcessingIO;
+    description.componentManufacturer = kAudioUnitManufacturer_Apple;
+    
+    AVEAudioUnit *unit = [self.alloc initWithComponentDescription:description];
+    return unit;
+}
+
 - (instancetype)initWithComponentDescription:(AudioComponentDescription)componentDescription {
     self = super.init;
     if (self) {

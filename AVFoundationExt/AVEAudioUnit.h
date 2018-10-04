@@ -81,6 +81,8 @@
 @property (readonly) NSMutableArray<AVEAudioUnitElement *> *inputs;
 @property (readonly) NSMutableArray<AVEAudioUnitElement *> *outputs;
 
++ (instancetype)voiceProcessingIO;
+
 - (instancetype)initWithComponentDescription:(AudioComponentDescription)componentDescription;
 
 - (void)instantiate;

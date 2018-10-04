@@ -5,7 +5,7 @@
 //  Created by Dan Kalinin on 9/15/18.
 //
 
-#import "AVEVoiceManager.h"
+#import "AVEVoIPManager.h"
 
 
 
@@ -16,15 +16,17 @@
 
 
 
-@interface AVEVoiceAudioSession ()
+@interface AVEVoIPAudioSession ()
 
 @end
 
 
 
-@implementation AVEVoiceAudioSession
+@implementation AVEVoIPAudioSession
 
 - (void)start {
+    [super start];
+    
     NSError *error = nil;
     BOOL success = [self.audioSession setCategory:AVAudioSessionCategoryPlayAndRecord mode:AVAudioSessionModeVoiceChat options:0 error:&error];
     if (success) {
@@ -32,7 +34,6 @@
         if (success) {
             success = [self.audioSession setPreferredSampleRate:44100.0 error:&error];
             if (success) {
-                [super start];
             } else {
                 [self.errors addObject:error];
             }
@@ -55,25 +56,18 @@
 
 
 
-@interface AVEVoiceAudioUnit ()
+@interface AVEVoIPAudioUnit ()
 
 @end
 
 
 
-@implementation AVEVoiceAudioUnit
+@implementation AVEVoIPAudioUnit
 
-- (instancetype)init {
-    AudioComponentDescription description = {0};
-    description.componentType = kAudioUnitType_Output;
-    description.componentSubType = kAudioUnitSubType_VoiceProcessingIO;
-    description.componentManufacturer = kAudioUnitManufacturer_Apple;
+- (void)start {
+    [super start];
     
-    self = [super initWithComponentDescription:description];
-    if (self) {
-        
-    }
-    return self;
+    
 }
 
 @end
@@ -87,13 +81,13 @@
 
 
 
-@interface AVEVoiceAudioConverter ()
+@interface AVEVoIPAudioConverter ()
 
 @end
 
 
 
-@implementation AVEVoiceAudioConverter
+@implementation AVEVoIPAudioConverter
 
 @end
 
@@ -106,7 +100,7 @@
 
 
 
-@interface AVEVoiceManager ()
+@interface AVEVoIPManager ()
 
 @property AVEAudioSession *session;
 @property AVEAudioUnit *unit;
@@ -116,10 +110,10 @@
 
 
 
-@implementation AVEVoiceManager
+@implementation AVEVoIPManager
 
 + (instancetype)shared {
-    static AVEVoiceManager *shared = nil;
+    static AVEVoIPManager *shared = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         shared = self.new;
@@ -130,7 +124,9 @@
 - (instancetype)init {
     self = super.init;
     if (self) {
-        [self initAudio];
+        self.sessionClass = AVEVoIPAudioSession.class;
+        self.unitClass = AVEVoIPAudioUnit.class;
+        self.converterClass = AVEVoIPAudioConverter.class;
     }
     return self;
 }
