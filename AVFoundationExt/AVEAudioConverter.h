@@ -50,6 +50,8 @@
 @interface AVEAudioConverter : HLPOperation <AVEAudioConverterDelegate>
 
 @property (readonly) HLPArray<AVEAudioConverterDelegate> *delegates;
+@property (readonly) AVAudioFormat *fromFormat;
+@property (readonly) AVAudioFormat *toFormat;
 @property (readonly) AVEAudioConverter *converter;
 
 - (instancetype)initFromFormat:(AVAudioFormat *)fromFormat toFormat:(AVAudioFormat *)toFormat;

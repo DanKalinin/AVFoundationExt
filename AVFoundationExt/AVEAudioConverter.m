@@ -40,6 +40,8 @@
 
 @interface AVEAudioConverter ()
 
+@property AVAudioFormat *fromFormat;
+@property AVAudioFormat *toFormat;
 @property AVEAudioConverter *converter;
 
 @end
@@ -53,7 +55,8 @@
 - (instancetype)initFromFormat:(AVAudioFormat *)fromFormat toFormat:(AVAudioFormat *)toFormat {
     self = super.init;
     if (self) {
-        self.converter = [AVEAudioConverter.alloc initFromFormat:fromFormat toFormat:toFormat];
+        self.fromFormat = fromFormat;
+        self.toFormat = toFormat;
     }
     return self;
 }

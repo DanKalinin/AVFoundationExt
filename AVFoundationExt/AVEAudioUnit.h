@@ -10,6 +10,12 @@
 
 @class AVEAudioUnitElement, AVEAudioUnit;
 
+extern const HLPOperationState AVEAudioUnitStateDidFind;
+extern const HLPOperationState AVEAudioUnitStateDidInstantiate;
+extern const HLPOperationState AVEAudioUnitStateDidDispose;
+extern const HLPOperationState AVEAudioUnitStateDidInitialize;
+extern const HLPOperationState AVEAudioUnitStateDidUninitialize;
+
 extern NSErrorDomain const AVEAudioUnitErrorDomain;
 
 NS_ERROR_ENUM(AVEAudioUnitErrorDomain) {

@@ -146,11 +146,14 @@
     return shared;
 }
 
-- (instancetype)init {
+- (instancetype)initWithSession:(AVEAudioSession *)session unit:(AVEAudioUnit *)unit converter:(AVEAudioConverter *)converter {
     self = super.init;
     if (self) {
-        self.session = AVEAudioSession.shared;
+        self.session = session;
         [self.session.delegates addObject:self.delegates];
+        
+        self.unit = unit;
+        [self.unit.delegates addObject:self.delegates];
     }
     return self;
 }

@@ -7,6 +7,12 @@
 
 #import "AVEAudioUnit.h"
 
+const HLPOperationState AVEAudioUnitStateDidFind = 3;
+const HLPOperationState AVEAudioUnitStateDidInstantiate = 4;
+const HLPOperationState AVEAudioUnitStateDidDispose = 5;
+const HLPOperationState AVEAudioUnitStateDidInitialize = 6;
+const HLPOperationState AVEAudioUnitStateDidUninitialize = 7;
+
 NSErrorDomain const AVEAudioUnitErrorDomain = @"AVEAudioUnit";
 
 static OSStatus AVEAudioUnitRenderCallback(void *inRefCon, AudioUnitRenderActionFlags *ioActionFlags, const AudioTimeStamp *inTimeStamp, UInt32 inBusNumber, UInt32 inNumberFrames, AudioBufferList *ioData);
