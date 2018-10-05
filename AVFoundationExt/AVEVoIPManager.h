@@ -77,9 +77,4 @@
 @property (readonly) AVEAudioUnit *unit;
 @property (readonly) AVEAudioConverter *converter;
 
-- (void)initAudio;
-- (void)initSession;
-- (void)initUnit;
-- (void)initConverter;
-
 @end
