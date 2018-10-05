@@ -67,25 +67,27 @@
 - (void)instantiate {
     [super instantiate];
     
-    self.global.kAudioUnitProperty_MaximumFramesPerSlice = 4096;
-    if (self.global.errors.count > 0) {
-        [self.errors addObjectsFromArray:self.global.errors];
-    } else {
-        self.global.kAudioOutputUnitProperty_SetInputCallback = self.global.renderCallback;
+    if (self.errors.count == 0) {
+        self.global.kAudioUnitProperty_MaximumFramesPerSlice = 4096;
         if (self.global.errors.count > 0) {
             [self.errors addObjectsFromArray:self.global.errors];
         } else {
-            self.inputs[0].kAudioUnitProperty_SetRenderCallback = self.inputs[0].renderCallback;
-            if (self.inputs[0].errors.count > 0) {
-                [self.errors addObjectsFromArray:self.inputs[0].errors];
+            self.global.kAudioOutputUnitProperty_SetInputCallback = self.global.renderCallback;
+            if (self.global.errors.count > 0) {
+                [self.errors addObjectsFromArray:self.global.errors];
             } else {
-                self.inputs[1].kAudioOutputUnitProperty_EnableIO = 1;
-                if (self.inputs[1].errors.count > 0) {
-                    [self.errors addObjectsFromArray:self.inputs[1].errors];
+                self.inputs[0].kAudioUnitProperty_SetRenderCallback = self.inputs[0].renderCallback;
+                if (self.inputs[0].errors.count > 0) {
+                    [self.errors addObjectsFromArray:self.inputs[0].errors];
                 } else {
-                    self.outputs[1].kAudioUnitProperty_ShouldAllocateBuffer = 0;
-                    if (self.outputs[1].errors.count > 0) {
-                        [self.errors addObjectsFromArray:self.outputs[1].errors];
+                    self.inputs[1].kAudioOutputUnitProperty_EnableIO = 1;
+                    if (self.inputs[1].errors.count > 0) {
+                        [self.errors addObjectsFromArray:self.inputs[1].errors];
+                    } else {
+                        self.outputs[1].kAudioUnitProperty_ShouldAllocateBuffer = 0;
+                        if (self.outputs[1].errors.count > 0) {
+                            [self.errors addObjectsFromArray:self.outputs[1].errors];
+                        }
                     }
                 }
             }
