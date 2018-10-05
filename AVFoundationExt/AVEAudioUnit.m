@@ -246,6 +246,7 @@ static OSStatus AVEAudioUnitRenderCallback(void *inRefCon, AudioUnitRenderAction
 - (void)find {
     self.component = AudioComponentFindNext(NULL, &_componentDescription);
     if (self.component) {
+        self.state = AVEAudioUnitStateDidFind;
         [self updateState:AVEAudioUnitStateDidFind];
     } else {
         NSError *error = [NSError errorWithDomain:AVEAudioUnitErrorDomain code:AVEAudioUnitErrorNotFound userInfo:nil];
@@ -283,6 +284,7 @@ static OSStatus AVEAudioUnitRenderCallback(void *inRefCon, AudioUnitRenderAction
                     [self.outputs addObject:output];
                 }
                 
+                self.state = AVEAudioUnitStateDidInstantiate;
                 [self updateState:AVEAudioUnitStateDidInstantiate];
             }
         }
