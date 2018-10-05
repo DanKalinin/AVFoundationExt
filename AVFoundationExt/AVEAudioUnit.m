@@ -231,10 +231,16 @@ static OSStatus AVEAudioUnitRenderCallback(void *inRefCon, AudioUnitRenderAction
         
         self.inputs = NSMutableArray.array;
         self.outputs = NSMutableArray.array;
-        
-        self.component = AudioComponentFindNext(NULL, &componentDescription);
     }
     return self;
+}
+
+- (void)find {
+    self.component = AudioComponentFindNext(NULL, &_componentDescription);
+    if (self.component) {
+    } else {
+        
+    }
 }
 
 - (void)instantiate {
@@ -275,6 +281,9 @@ static OSStatus AVEAudioUnitRenderCallback(void *inRefCon, AudioUnitRenderAction
 - (void)dispose {
     OSStatus status = AudioComponentInstanceDispose(self.unit);
     if (status == noErr) {
+        [self.states removeAllObjects];
+        [self.errors removeAllObjects];
+        
         self.global = nil;
         [self.inputs removeAllObjects];
         [self.outputs removeAllObjects];

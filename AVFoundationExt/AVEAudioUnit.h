@@ -85,6 +85,8 @@
 
 - (instancetype)initWithComponentDescription:(AudioComponentDescription)componentDescription;
 
+- (void)find;
+
 - (void)instantiate;
 - (void)dispose;
 

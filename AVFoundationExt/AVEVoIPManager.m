@@ -64,8 +64,8 @@
 
 @implementation AVEVoIPAudioUnit
 
-- (void)start {
-    [super start];
+- (void)instantiate {
+    [super instantiate];
     
     self.global.kAudioUnitProperty_MaximumFramesPerSlice = 4096;
     if (self.global.errors.count > 0) {
@@ -155,11 +155,25 @@
 }
 
 - (void)start {
+    self.session = self.sessionClass.new;
+    [self.session.delegates addObject:self.delegates];
+    [self.session start];
     
+    self.unit = [self.unitClass voiceProcessingIO];
+    [self.unit.delegates addObject:self.delegates];
+    [self.unit find];
+    [self.unit instantiate];
+    [self.unit initialize];
+    
+    self.converter = self.converterClass.new;
+    [self.converter.delegates addObject:self.delegates];
 }
 
 - (void)cancel {
+    [self.session stop];
     
+    [self.unit uninitialize];
+    [self.unit dispose];
 }
 
 #pragma mark - Audio session
