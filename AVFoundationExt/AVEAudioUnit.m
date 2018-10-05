@@ -215,6 +215,7 @@ static OSStatus AVEAudioUnitRenderCallback(void *inRefCon, AudioUnitRenderAction
 @property AVEAudioUnitElement *global;
 @property NSMutableArray<AVEAudioUnitElement *> *inputs;
 @property NSMutableArray<AVEAudioUnitElement *> *outputs;
+@property AVEAudioSession *session;
 
 @end
 
@@ -241,6 +242,9 @@ static OSStatus AVEAudioUnitRenderCallback(void *inRefCon, AudioUnitRenderAction
         
         self.inputs = NSMutableArray.array;
         self.outputs = NSMutableArray.array;
+        
+        self.session = AVEAudioSession.shared;
+        [self.session.delegates addObject:self];
     }
     return self;
 }
@@ -352,6 +356,29 @@ static OSStatus AVEAudioUnitRenderCallback(void *inRefCon, AudioUnitRenderAction
     } else {
         NSError *error = [NSError errorWithDomain:NSOSStatusErrorDomain code:status userInfo:nil];
         [self.errors addObject:error];
+    }
+}
+
+#pragma mark - Audio session
+
+- (void)AVEAudioSessionMediaServicesWereReset:(AVEAudioSession *)audioSession {
+    if (self.state >= AVEAudioUnitStateDidFind) {
+        [self find];
+        if (self.errors.count == 0) {
+            if (self.state >= AVEAudioUnitStateDidInstantiate) {
+                [self instantiate];
+                if (self.errors.count == 0) {
+                    if (self.state >= AVEAudioUnitStateDidInitialize) {
+                        [self initialize];
+                        if (self.errors.count == 0) {
+                            if (self.state >= AVEAudioUnitStateDidBegin) {
+                                [self start];
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 }
 
