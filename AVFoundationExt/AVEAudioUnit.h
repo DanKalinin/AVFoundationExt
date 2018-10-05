@@ -15,6 +15,8 @@ extern const HLPOperationState AVEAudioUnitStateDidInstantiate;
 extern const HLPOperationState AVEAudioUnitStateDidDispose;
 extern const HLPOperationState AVEAudioUnitStateDidInitialize;
 extern const HLPOperationState AVEAudioUnitStateDidUninitialize;
+extern const HLPOperationState AVEAudioUnitStateDidBegin;
+extern const HLPOperationState AVEAudioUnitStateDidEnd;
 
 extern NSErrorDomain const AVEAudioUnitErrorDomain;
 

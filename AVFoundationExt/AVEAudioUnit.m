@@ -7,11 +7,13 @@
 
 #import "AVEAudioUnit.h"
 
-const HLPOperationState AVEAudioUnitStateDidFind = 3;
-const HLPOperationState AVEAudioUnitStateDidInstantiate = 4;
-const HLPOperationState AVEAudioUnitStateDidDispose = 5;
-const HLPOperationState AVEAudioUnitStateDidInitialize = 6;
-const HLPOperationState AVEAudioUnitStateDidUninitialize = 7;
+const HLPOperationState AVEAudioUnitStateDidFind = 0;
+const HLPOperationState AVEAudioUnitStateDidInstantiate = 1;
+const HLPOperationState AVEAudioUnitStateDidDispose = 2;
+const HLPOperationState AVEAudioUnitStateDidInitialize = 3;
+const HLPOperationState AVEAudioUnitStateDidUninitialize = 4;
+const HLPOperationState AVEAudioUnitStateDidBegin = 5;
+const HLPOperationState AVEAudioUnitStateDidEnd = 6;
 
 NSErrorDomain const AVEAudioUnitErrorDomain = @"AVEAudioUnit";
 
@@ -301,6 +303,7 @@ static OSStatus AVEAudioUnitRenderCallback(void *inRefCon, AudioUnitRenderAction
         [self.inputs removeAllObjects];
         [self.outputs removeAllObjects];
         
+        self.state = AVEAudioUnitStateDidFind;
         [self updateState:AVEAudioUnitStateDidDispose];
     } else {
         NSError *error = [NSError errorWithDomain:NSOSStatusErrorDomain code:status userInfo:nil];
@@ -311,6 +314,7 @@ static OSStatus AVEAudioUnitRenderCallback(void *inRefCon, AudioUnitRenderAction
 - (void)initialize {
     OSStatus status = AudioUnitInitialize(self.unit);
     if (status == noErr) {
+        self.state = AVEAudioUnitStateDidInitialize;
         [self updateState:AVEAudioUnitStateDidInitialize];
     } else {
         NSError *error = [NSError errorWithDomain:NSOSStatusErrorDomain code:status userInfo:nil];
@@ -321,6 +325,7 @@ static OSStatus AVEAudioUnitRenderCallback(void *inRefCon, AudioUnitRenderAction
 - (void)uninitialize {
     OSStatus status = AudioUnitUninitialize(self.unit);
     if (status == noErr) {
+        self.state = AVEAudioUnitStateDidInstantiate;
         [self updateState:AVEAudioUnitStateDidUninitialize];
     } else {
         NSError *error = [NSError errorWithDomain:NSOSStatusErrorDomain code:status userInfo:nil];
@@ -331,6 +336,7 @@ static OSStatus AVEAudioUnitRenderCallback(void *inRefCon, AudioUnitRenderAction
 - (void)start {
     OSStatus status = AudioOutputUnitStart(self.unit);
     if (status == noErr) {
+        self.state = HLPOperationStateDidBegin;
         [self updateState:HLPOperationStateDidBegin];
     } else {
         NSError *error = [NSError errorWithDomain:NSOSStatusErrorDomain code:status userInfo:nil];
@@ -341,6 +347,7 @@ static OSStatus AVEAudioUnitRenderCallback(void *inRefCon, AudioUnitRenderAction
 - (void)cancel {
     OSStatus status = AudioOutputUnitStop(self.unit);
     if (status == noErr) {
+        self.state = AVEAudioUnitStateDidInitialize;
         [self updateState:HLPOperationStateDidEnd];
     } else {
         NSError *error = [NSError errorWithDomain:NSOSStatusErrorDomain code:status userInfo:nil];
