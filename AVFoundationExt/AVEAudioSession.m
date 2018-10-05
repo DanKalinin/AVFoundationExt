@@ -157,6 +157,28 @@
     [self updateState:HLPOperationStateDidBegin];
 }
 
+- (void)setProperties {
+    
+}
+
+- (void)activate {
+    NSError *error = nil;
+    BOOL success = [self.audioSession setActive:YES withOptions:0 error:&error];
+    if (success) {
+    } else {
+        [self.errors addObject:error];
+    }
+}
+
+- (void)deactivate {
+    NSError *error = nil;
+    BOOL success = [self.audioSession setActive:YES withOptions:AVAudioSessionSetActiveOptionNotifyOthersOnDeactivation error:&error];
+    if (success) {
+    } else {
+        [self.errors addObject:error];
+    }
+}
+
 #pragma mark - Notifications
 
 - (void)AVAudioSessionInterruptionNotification:(NSNotification *)notification {

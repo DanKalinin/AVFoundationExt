@@ -100,4 +100,9 @@
 @property (readonly) AVEAudioSessionRouteChangeInfo *routeChangeInfo;
 @property (readonly) AVEAudioSessionSilenceSecondaryAudioHintInfo *silenceSecondaryAudioHintInfo;
 
+- (void)setProperties;
+
+- (void)activate;
+- (void)deactivate;
+
 @end

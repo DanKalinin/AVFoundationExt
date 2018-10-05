@@ -7,13 +7,13 @@
 
 #import "AVEAudioUnit.h"
 
-const HLPOperationState AVEAudioUnitStateDidFind = 0;
-const HLPOperationState AVEAudioUnitStateDidInstantiate = 1;
-const HLPOperationState AVEAudioUnitStateDidDispose = 2;
-const HLPOperationState AVEAudioUnitStateDidInitialize = 3;
-const HLPOperationState AVEAudioUnitStateDidUninitialize = 4;
-const HLPOperationState AVEAudioUnitStateDidBegin = 5;
-const HLPOperationState AVEAudioUnitStateDidEnd = 6;
+const HLPOperationState AVEAudioUnitStateDidFind = 1;
+const HLPOperationState AVEAudioUnitStateDidInstantiate = 2;
+const HLPOperationState AVEAudioUnitStateDidDispose = 3;
+const HLPOperationState AVEAudioUnitStateDidInitialize = 4;
+const HLPOperationState AVEAudioUnitStateDidUninitialize = 5;
+const HLPOperationState AVEAudioUnitStateDidBegin = 6;
+const HLPOperationState AVEAudioUnitStateDidEnd = 7;
 
 NSErrorDomain const AVEAudioUnitErrorDomain = @"AVEAudioUnit";
 
