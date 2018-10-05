@@ -10,6 +10,13 @@
 
 @class AVEAudioUnitElement, AVEAudioUnit;
 
+extern NSErrorDomain const AVEAudioUnitErrorDomain;
+
+NS_ERROR_ENUM(AVEAudioUnitErrorDomain) {
+    AVEAudioUnitErrorUnknown = 0,
+    AVEAudioUnitErrorNotFound = 1
+};
+
 
 
 
