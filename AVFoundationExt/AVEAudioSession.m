@@ -138,8 +138,13 @@
     self = super.init;
     if (self) {
         self.audioSession = AVAudioSession.sharedInstance;
+        [self start];
     }
     return self;
+}
+
+- (void)dealloc {
+    [self stop];
 }
 
 - (void)start {

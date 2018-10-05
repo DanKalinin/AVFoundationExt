@@ -149,37 +149,39 @@
 - (instancetype)init {
     self = super.init;
     if (self) {
-        self.sessionClass = AVEVoIPAudioSession.class;
-        self.unitClass = AVEVoIPAudioUnit.class;
-        self.converterClass = AVEVoIPAudioConverter.class;
+//        self.sessionClass = AVEVoIPAudioSession.class;
+//        self.unitClass = AVEVoIPAudioUnit.class;
+//        self.converterClass = AVEVoIPAudioConverter.class;
+        self.session = AVEAudioSession.shared;
+        [self.session start];
     }
     return self;
 }
 
-- (void)start {
-    self.session = self.sessionClass.new;
-    [self.session.delegates addObject:self.delegates];
-    [self.session start];
-    
-    self.unit = [self.unitClass voiceProcessingIO];
-    [self.unit.delegates addObject:self.delegates];
-    [self.unit find];
-    [self.unit instantiate];
-    [self.unit initialize];
-    
-    self.converter = self.converterClass.new;
-    [self.converter.delegates addObject:self.delegates];
-}
-
-- (void)cancel {
-    [self.session stop];
-    
-    [self.unit uninitialize];
-    [self.unit dispose];
-}
-
-#pragma mark - Audio session
-
-#pragma mark - Helpers
+//- (void)start {
+//    self.session = self.sessionClass.new;
+//    [self.session.delegates addObject:self.delegates];
+//    [self.session start];
+//
+//    self.unit = [self.unitClass voiceProcessingIO];
+//    [self.unit.delegates addObject:self.delegates];
+//    [self.unit find];
+//    [self.unit instantiate];
+//    [self.unit initialize];
+//
+//    self.converter = self.converterClass.new;
+//    [self.converter.delegates addObject:self.delegates];
+//}
+//
+//- (void)cancel {
+//    [self.session stop];
+//
+//    [self.unit uninitialize];
+//    [self.unit dispose];
+//}
+//
+//#pragma mark - Audio session
+//
+//#pragma mark - Helpers
 
 @end

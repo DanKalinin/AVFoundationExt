@@ -7,6 +7,7 @@
 
 #import <AVFoundation/AVFoundation.h>
 #import <Helpers/Helpers.h>
+#import "AVEAudioSession.h"
 
 @class AVEAudioUnitElement, AVEAudioUnit;
 
@@ -87,6 +88,7 @@ NS_ERROR_ENUM(AVEAudioUnitErrorDomain) {
 @property (readonly) AVEAudioUnitElement *global;
 @property (readonly) NSMutableArray<AVEAudioUnitElement *> *inputs;
 @property (readonly) NSMutableArray<AVEAudioUnitElement *> *outputs;
+@property (readonly) AVEAudioSession *session;
 
 + (instancetype)voiceProcessingIO;
 

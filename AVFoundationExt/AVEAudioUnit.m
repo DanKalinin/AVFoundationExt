@@ -207,6 +207,7 @@ static OSStatus AVEAudioUnitRenderCallback(void *inRefCon, AudioUnitRenderAction
 @property AVEAudioUnitElement *global;
 @property NSMutableArray<AVEAudioUnitElement *> *inputs;
 @property NSMutableArray<AVEAudioUnitElement *> *outputs;
+@property AVEAudioSession *session;
 
 @end
 
