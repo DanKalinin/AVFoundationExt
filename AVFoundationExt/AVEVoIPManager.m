@@ -149,11 +149,8 @@
 - (instancetype)init {
     self = super.init;
     if (self) {
-//        self.sessionClass = AVEVoIPAudioSession.class;
-//        self.unitClass = AVEVoIPAudioUnit.class;
-//        self.converterClass = AVEVoIPAudioConverter.class;
         self.session = AVEAudioSession.shared;
-        [self.session start];
+        [self.session.delegates addObject:self.delegates];
     }
     return self;
 }

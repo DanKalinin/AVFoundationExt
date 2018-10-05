@@ -207,7 +207,6 @@ static OSStatus AVEAudioUnitRenderCallback(void *inRefCon, AudioUnitRenderAction
 @property AVEAudioUnitElement *global;
 @property NSMutableArray<AVEAudioUnitElement *> *inputs;
 @property NSMutableArray<AVEAudioUnitElement *> *outputs;
-@property AVEAudioSession *session;
 
 @end
 
@@ -285,9 +284,6 @@ static OSStatus AVEAudioUnitRenderCallback(void *inRefCon, AudioUnitRenderAction
 - (void)dispose {
     OSStatus status = AudioComponentInstanceDispose(self.unit);
     if (status == noErr) {
-        [self.states removeAllObjects];
-        [self.errors removeAllObjects];
-        
         self.global = nil;
         [self.inputs removeAllObjects];
         [self.outputs removeAllObjects];
