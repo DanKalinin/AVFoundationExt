@@ -161,6 +161,8 @@
 }
 
 - (void)initialize {
+    [self.errors removeAllObjects];
+    
     [self.session configure];
     if (self.session.errors.count > 0) {
         [self.errors addObjectsFromArray:self.session.errors];
@@ -190,6 +192,8 @@
 }
 
 - (void)start {
+    [self.errors removeAllObjects];
+    
     [self.session activate];
     if (self.session.errors.count > 0) {
         [self.errors addObjectsFromArray:self.session.errors];

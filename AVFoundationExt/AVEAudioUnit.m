@@ -63,6 +63,7 @@ static OSStatus AVEAudioUnitRenderCallback(void *inRefCon, AudioUnitRenderAction
 
 - (void)getProperty:(AudioUnitPropertyID)property data:(void *)data size:(UInt32 *)size {
     [self.errors removeAllObjects];
+    
     OSStatus status = AudioUnitGetProperty(self.unit, property, self.scope, self.element, data, size);
     if (status == noErr) {
     } else {
@@ -73,6 +74,7 @@ static OSStatus AVEAudioUnitRenderCallback(void *inRefCon, AudioUnitRenderAction
 
 - (void)setProperty:(AudioUnitPropertyID)property data:(void *)data size:(UInt32)size {
     [self.errors removeAllObjects];
+    
     OSStatus status = AudioUnitSetProperty(self.unit, property, self.scope, self.element, data, size);
     if (status == noErr) {
     } else {
@@ -83,6 +85,7 @@ static OSStatus AVEAudioUnitRenderCallback(void *inRefCon, AudioUnitRenderAction
 
 - (void)getParameter:(AudioUnitParameterID)parameter value:(AudioUnitParameterValue *)value {
     [self.errors removeAllObjects];
+    
     OSStatus status = AudioUnitGetParameter(self.unit, parameter, self.scope, self.element, value);
     if (status == noErr) {
     } else {
@@ -93,6 +96,7 @@ static OSStatus AVEAudioUnitRenderCallback(void *inRefCon, AudioUnitRenderAction
 
 - (void)setParameter:(AudioUnitParameterID)parameter value:(AudioUnitParameterValue)value {
     [self.errors removeAllObjects];
+    
     OSStatus status = AudioUnitSetParameter(self.unit, parameter, self.scope, self.element, value, 0);
     if (status == noErr) {
     } else {
@@ -255,6 +259,7 @@ static OSStatus AVEAudioUnitRenderCallback(void *inRefCon, AudioUnitRenderAction
 
 - (void)find {
     [self.errors removeAllObjects];
+    
     self.component = AudioComponentFindNext(NULL, &_componentDescription);
     if (self.component) {
         self.state = AVEAudioUnitStateDidFind;
@@ -267,6 +272,7 @@ static OSStatus AVEAudioUnitRenderCallback(void *inRefCon, AudioUnitRenderAction
 
 - (void)instantiate {
     [self.errors removeAllObjects];
+    
     OSStatus status = AudioComponentInstanceNew(self.component, &_unit);
     if (status == noErr) {
         self.global = [AVEAudioUnitElement.alloc initWithUnit:self.unit scope:kAudioUnitScope_Global element:0];
@@ -308,6 +314,7 @@ static OSStatus AVEAudioUnitRenderCallback(void *inRefCon, AudioUnitRenderAction
 
 - (void)dispose {
     [self.errors removeAllObjects];
+    
     OSStatus status = AudioComponentInstanceDispose(self.unit);
     if (status == noErr) {
         self.global = nil;
@@ -324,6 +331,7 @@ static OSStatus AVEAudioUnitRenderCallback(void *inRefCon, AudioUnitRenderAction
 
 - (void)initialize {
     [self.errors removeAllObjects];
+    
     OSStatus status = AudioUnitInitialize(self.unit);
     if (status == noErr) {
         self.state = AVEAudioUnitStateDidInitialize;
@@ -336,6 +344,7 @@ static OSStatus AVEAudioUnitRenderCallback(void *inRefCon, AudioUnitRenderAction
 
 - (void)uninitialize {
     [self.errors removeAllObjects];
+    
     OSStatus status = AudioUnitUninitialize(self.unit);
     if (status == noErr) {
         self.state = AVEAudioUnitStateDidInstantiate;
@@ -348,6 +357,7 @@ static OSStatus AVEAudioUnitRenderCallback(void *inRefCon, AudioUnitRenderAction
 
 - (void)start {
     [self.errors removeAllObjects];
+    
     OSStatus status = AudioOutputUnitStart(self.unit);
     if (status == noErr) {
         self.state = AVEAudioUnitStateDidStart;
@@ -360,6 +370,7 @@ static OSStatus AVEAudioUnitRenderCallback(void *inRefCon, AudioUnitRenderAction
 
 - (void)stop {
     [self.errors removeAllObjects];
+    
     OSStatus status = AudioOutputUnitStop(self.unit);
     if (status == noErr) {
         self.state = AVEAudioUnitStateDidInitialize;
