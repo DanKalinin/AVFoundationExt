@@ -78,4 +78,7 @@
 - (void)initialize;
 - (void)unitialize;
 
+- (void)start;
+- (void)stop;
+
 @end

@@ -192,6 +192,13 @@
     }
 }
 
+- (void)unitialize {
+    [self.states removeAllObjects];
+    [self.errors removeAllObjects];
+    
+    
+}
+
 - (void)start {
     [self.states removeAllObjects];
     [self.errors removeAllObjects];
@@ -203,6 +210,21 @@
         [self.unit start];
         if (self.unit.errors.count > 0) {
             [self.errors addObjectsFromArray:self.unit.errors];
+        }
+    }
+}
+
+- (void)stop {
+    [self.states removeAllObjects];
+    [self.errors removeAllObjects];
+    
+    [self.unit stop];
+    if (self.unit.errors.count > 0) {
+        [self.errors addObjectsFromArray:self.unit.errors];
+    } else {
+        [self.session deactivate];
+        if (self.session.errors.count > 0) {
+            [self.errors addObjectsFromArray:self.session.errors];
         }
     }
 }

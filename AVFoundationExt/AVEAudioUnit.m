@@ -7,13 +7,15 @@
 
 #import "AVEAudioUnit.h"
 
+const HLPOperationState AVEAudioUnitStateDidInit = 0;
 const HLPOperationState AVEAudioUnitStateDidFind = 1;
-const HLPOperationState AVEAudioUnitStateDidInstantiate = 2;
-const HLPOperationState AVEAudioUnitStateDidDispose = 3;
-const HLPOperationState AVEAudioUnitStateDidInitialize = 4;
-const HLPOperationState AVEAudioUnitStateDidUninitialize = 5;
-const HLPOperationState AVEAudioUnitStateDidStart = 6;
-const HLPOperationState AVEAudioUnitStateDidStop = 7;
+const HLPOperationState AVEAudioUnitStateDidLoose = 2;
+const HLPOperationState AVEAudioUnitStateDidInstantiate = 3;
+const HLPOperationState AVEAudioUnitStateDidDispose = 4;
+const HLPOperationState AVEAudioUnitStateDidInitialize = 5;
+const HLPOperationState AVEAudioUnitStateDidUninitialize = 6;
+const HLPOperationState AVEAudioUnitStateDidStart = 7;
+const HLPOperationState AVEAudioUnitStateDidStop = 8;
 
 NSErrorDomain const AVEAudioUnitErrorDomain = @"AVEAudioUnit";
 
@@ -269,6 +271,15 @@ static OSStatus AVEAudioUnitRenderCallback(void *inRefCon, AudioUnitRenderAction
         NSError *error = [NSError errorWithDomain:AVEAudioUnitErrorDomain code:AVEAudioUnitErrorNotFound userInfo:nil];
         [self.errors addObject:error];
     }
+}
+
+- (void)loose {
+    [self.states removeAllObjects];
+    
+    self.component = NULL;
+    
+    self.state = AVEAudioUnitStateDidInit;
+    [self updateState:AVEAudioUnitStateDidLoose];
 }
 
 - (void)instantiate {

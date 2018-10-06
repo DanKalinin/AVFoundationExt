@@ -11,7 +11,9 @@
 
 @class AVEAudioUnitElement, AVEAudioUnit;
 
+extern const HLPOperationState AVEAudioUnitStateDidInit;
 extern const HLPOperationState AVEAudioUnitStateDidFind;
+extern const HLPOperationState AVEAudioUnitStateDidLoose;
 extern const HLPOperationState AVEAudioUnitStateDidInstantiate;
 extern const HLPOperationState AVEAudioUnitStateDidDispose;
 extern const HLPOperationState AVEAudioUnitStateDidInitialize;
@@ -103,6 +105,7 @@ NS_ERROR_ENUM(AVEAudioUnitErrorDomain) {
 - (instancetype)initWithComponentDescription:(AudioComponentDescription)componentDescription;
 
 - (void)find;
+- (void)loose;
 
 - (void)instantiate;
 - (void)dispose;

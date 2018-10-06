@@ -7,8 +7,9 @@
 
 #import "AVEAudioConverter.h"
 
-const HLPOperationState AVEAudioConverterDidBegin = 1;
-const HLPOperationState AVEAudioConverterDidEnd = 2;
+const HLPOperationState AVEAudioConverterDidStart = 1;
+
+NSErrorDomain const AVEAudioConverterErrorDomain = @"AVEAudioConverter";
 
 
 
@@ -69,11 +70,16 @@ const HLPOperationState AVEAudioConverterDidEnd = 2;
 }
 
 - (void)start {
+    [self.states removeAllObjects];
+    [self.errors removeAllObjects];
     
-}
-
-- (void)cancel {
-    self.converter = nil;
+    self.converter = [AVAudioConverter.alloc initFromFormat:self.fromFormat toFormat:self.toFormat];
+    if (self.converter) {
+        [self updateState:AVEAudioConverterDidStart];
+    } else {
+        NSError *error = [NSError errorWithDomain:AVEAudioConverterErrorDomain code:AVEAudioConverterErrorConversionImpossible userInfo:nil];
+        [self.errors addObject:error];
+    }
 }
 
 #pragma mark - Audio session
