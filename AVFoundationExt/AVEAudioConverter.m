@@ -7,6 +7,9 @@
 
 #import "AVEAudioConverter.h"
 
+const HLPOperationState AVEAudioConverterDidBegin = 1;
+const HLPOperationState AVEAudioConverterDidEnd = 2;
+
 
 
 
@@ -42,7 +45,8 @@
 
 @property AVAudioFormat *fromFormat;
 @property AVAudioFormat *toFormat;
-@property AVEAudioConverter *converter;
+@property AVAudioConverter *converter;
+@property AVEAudioSession *session;
 
 @end
 
@@ -57,8 +61,25 @@
     if (self) {
         self.fromFormat = fromFormat;
         self.toFormat = toFormat;
+        
+        self.session = AVEAudioSession.shared;
+        [self.session.delegates addObject:self];
     }
     return self;
+}
+
+- (void)start {
+    
+}
+
+- (void)cancel {
+    self.converter = nil;
+}
+
+#pragma mark - Audio session
+
+- (void)AVEAudioSessionMediaServicesWereReset:(AVEAudioSession *)audioSession {
+    HLPOperationState state = self.state;
 }
 
 @end

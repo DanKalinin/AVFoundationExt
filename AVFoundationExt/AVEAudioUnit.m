@@ -340,8 +340,8 @@ static OSStatus AVEAudioUnitRenderCallback(void *inRefCon, AudioUnitRenderAction
 - (void)start {
     OSStatus status = AudioOutputUnitStart(self.unit);
     if (status == noErr) {
-        self.state = HLPOperationStateDidBegin;
-        [self updateState:HLPOperationStateDidBegin];
+        self.state = AVEAudioUnitStateDidBegin;
+        [self updateState:AVEAudioUnitStateDidBegin];
     } else {
         NSError *error = [NSError errorWithDomain:NSOSStatusErrorDomain code:status userInfo:nil];
         [self.errors addObject:error];
@@ -352,7 +352,7 @@ static OSStatus AVEAudioUnitRenderCallback(void *inRefCon, AudioUnitRenderAction
     OSStatus status = AudioOutputUnitStop(self.unit);
     if (status == noErr) {
         self.state = AVEAudioUnitStateDidInitialize;
-        [self updateState:HLPOperationStateDidEnd];
+        [self updateState:AVEAudioUnitStateDidEnd];
     } else {
         NSError *error = [NSError errorWithDomain:NSOSStatusErrorDomain code:status userInfo:nil];
         [self.errors addObject:error];
@@ -362,17 +362,21 @@ static OSStatus AVEAudioUnitRenderCallback(void *inRefCon, AudioUnitRenderAction
 #pragma mark - Audio session
 
 - (void)AVEAudioSessionMediaServicesWereReset:(AVEAudioSession *)audioSession {
-    if (self.state >= AVEAudioUnitStateDidFind) {
+    HLPOperationState state = self.state;
+    if (state >= AVEAudioUnitStateDidFind) {
         [self find];
         if (self.errors.count == 0) {
-            if (self.state >= AVEAudioUnitStateDidInstantiate) {
-                [self instantiate];
+            if (state >= AVEAudioUnitStateDidInstantiate) {
+                [self dispose];
                 if (self.errors.count == 0) {
-                    if (self.state >= AVEAudioUnitStateDidInitialize) {
-                        [self initialize];
-                        if (self.errors.count == 0) {
-                            if (self.state >= AVEAudioUnitStateDidBegin) {
-                                [self start];
+                    [self instantiate];
+                    if (self.errors.count == 0) {
+                        if (state >= AVEAudioUnitStateDidInitialize) {
+                            [self initialize];
+                            if (self.errors.count == 0) {
+                                if (state >= AVEAudioUnitStateDidBegin) {
+                                    [self start];
+                                }
                             }
                         }
                     }

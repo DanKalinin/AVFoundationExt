@@ -7,8 +7,12 @@
 
 #import <AVFoundation/AVFoundation.h>
 #import <Helpers/Helpers.h>
+#import "AVEAudioSession.h"
 
 @class AVEAudioConversion, AVEAudioConverter;
+
+extern const HLPOperationState AVEAudioConverterDidBegin;
+extern const HLPOperationState AVEAudioConverterDidEnd;
 
 
 
@@ -47,12 +51,13 @@
 
 
 
-@interface AVEAudioConverter : HLPOperation <AVEAudioConverterDelegate>
+@interface AVEAudioConverter : HLPOperation <AVEAudioConverterDelegate, AVEAudioSessionDelegate>
 
 @property (readonly) HLPArray<AVEAudioConverterDelegate> *delegates;
 @property (readonly) AVAudioFormat *fromFormat;
 @property (readonly) AVAudioFormat *toFormat;
-@property (readonly) AVEAudioConverter *converter;
+@property (readonly) AVAudioConverter *converter;
+@property (readonly) AVEAudioSession *session;
 
 - (instancetype)initFromFormat:(AVAudioFormat *)fromFormat toFormat:(AVAudioFormat *)toFormat;
 

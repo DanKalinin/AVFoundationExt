@@ -216,10 +216,11 @@ const HLPOperationState AVEAudioSessionDidDeactivate = 3;
 #pragma mark - Audio session
 
 - (void)AVEAudioSessionMediaServicesWereReset:(AVEAudioSession *)audioSession {
-    if (self.state >= AVEAudioSessionDidConfigure) {
+    HLPOperationState state = self.state;
+    if (state >= AVEAudioSessionDidConfigure) {
         [self configure];
         if (self.errors.count == 0) {
-            if (self.state >= AVEAudioSessionDidActivate) {
+            if (state >= AVEAudioSessionDidActivate) {
                 [self activate];
             }
         }

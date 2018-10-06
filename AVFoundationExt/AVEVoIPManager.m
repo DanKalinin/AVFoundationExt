@@ -24,8 +24,8 @@
 
 @implementation AVEVoIPAudioSession
 
-- (void)start {
-    [super start];
+- (void)configure {
+    [super configure];
     
     NSError *error = nil;
     BOOL success = [self.audioSession setCategory:AVAudioSessionCategoryPlayAndRecord mode:AVAudioSessionModeVoiceChat options:0 error:&error];
@@ -141,30 +141,65 @@
     static AVEVoIPManager *shared = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        shared = self.new;
+        shared = [self.alloc initWithSession:AVEVoIPAudioSession.shared unit:AVEVoIPAudioUnit.voiceProcessingIO converter:AVEVoIPAudioConverter.new];
     });
     return shared;
 }
 
-- (instancetype)init {
+- (instancetype)initWithSession:(AVEAudioSession *)session unit:(AVEAudioUnit *)unit converter:(AVEAudioConverter *)converter {
     self = super.init;
     if (self) {
-        self.session = AVEAudioSession.shared;
+        self.session = session;
+        [self.session.delegates addObject:self.delegates];
+
+        self.unit = unit;
+        [self.unit.delegates addObject:self.delegates];
+        //
+        [self initialize];
     }
     return self;
 }
 
-//- (instancetype)initWithSession:(AVEAudioSession *)session unit:(AVEAudioUnit *)unit converter:(AVEAudioConverter *)converter {
-//    self = super.init;
-//    if (self) {
-//        self.session = session;
-//        [self.session.delegates addObject:self.delegates];
-//
-//        self.unit = unit;
-//        [self.unit.delegates addObject:self.delegates];
-//    }
-//    return self;
-//}
+- (void)initialize {
+    [self.session configure];
+    if (self.session.errors.count > 0) {
+        [self.errors addObjectsFromArray:self.session.errors];
+    } else {
+        [self.unit find];
+        if (self.unit.errors.count > 0) {
+            [self.errors addObjectsFromArray:self.unit.errors];
+        } else {
+            [self.unit instantiate];
+            if (self.unit.errors.count > 0) {
+                [self.errors addObjectsFromArray:self.unit.errors];
+            } else {
+                [self.unit initialize];
+                if (self.unit.errors.count > 0) {
+                    [self.errors addObjectsFromArray:self.unit.errors];
+                } else {
+                    [self.converter start];
+                    if (self.converter.errors.count > 0) {
+                        [self.errors addObjectsFromArray:self.converter.errors];
+                    } else {
+                        [self start];
+                    }
+                }
+            }
+        }
+    }
+}
+
+- (void)start {
+    [self.session activate];
+    if (self.session.errors.count > 0) {
+        [self.errors addObjectsFromArray:self.session.errors];
+    } else {
+        [self.unit start];
+        if (self.unit.errors.count > 0) {
+            [self.errors addObjectsFromArray:self.unit.errors];
+        }
+    }
+}
 
 //- (void)start {
 //    self.session = self.sessionClass.new;
