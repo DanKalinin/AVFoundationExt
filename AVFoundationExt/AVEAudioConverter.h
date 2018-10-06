@@ -12,6 +12,7 @@
 @class AVEAudioConversion, AVEAudioConverter;
 
 extern const HLPOperationState AVEAudioConverterDidStart;
+extern const HLPOperationState AVEAudioConverterDidStop;
 
 extern NSErrorDomain const AVEAudioConverterErrorDomain;
 

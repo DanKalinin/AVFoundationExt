@@ -8,6 +8,7 @@
 #import "AVEAudioConverter.h"
 
 const HLPOperationState AVEAudioConverterDidStart = 1;
+const HLPOperationState AVEAudioConverterDidStop = 2;
 
 NSErrorDomain const AVEAudioConverterErrorDomain = @"AVEAudioConverter";
 

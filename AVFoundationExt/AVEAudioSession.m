@@ -8,9 +8,11 @@
 
 #import "AVEAudioSession.h"
 
+const HLPOperationState AVEAudioSessionDidInit = 0;
 const HLPOperationState AVEAudioSessionDidConfigure = 1;
-const HLPOperationState AVEAudioSessionDidActivate = 2;
-const HLPOperationState AVEAudioSessionDidDeactivate = 3;
+const HLPOperationState AVEAudioSessionDidDeconfigure = 2;
+const HLPOperationState AVEAudioSessionDidActivate = 3;
+const HLPOperationState AVEAudioSessionDidDeactivate = 4;
 
 
 
@@ -167,6 +169,13 @@ const HLPOperationState AVEAudioSessionDidDeactivate = 3;
     
     self.state = AVEAudioSessionDidConfigure;
     [self updateState:AVEAudioSessionDidConfigure];
+}
+
+- (void)deconfigure {
+    [self.states removeAllObjects];
+    
+    self.state = AVEAudioSessionDidInit;
+    [self updateState:AVEAudioSessionDidDeconfigure];
 }
 
 - (void)activate {
