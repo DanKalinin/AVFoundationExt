@@ -36,7 +36,7 @@
     [self.notificationCenter addObserver:self selector:@selector(AVAssetChapterMetadataGroupsDidChangeNotification:) name:AVAssetChapterMetadataGroupsDidChangeNotification object:self.asset];
     [self.notificationCenter addObserver:self selector:@selector(AVAssetMediaSelectionGroupsDidChangeNotification:) name:AVAssetMediaSelectionGroupsDidChangeNotification object:self.asset];
     
-    [self updateState:HLPOperationStateDidBegin];
+    [self updateState:HLPOperationStateDidStart];
 }
 
 #pragma mark - Notifications
