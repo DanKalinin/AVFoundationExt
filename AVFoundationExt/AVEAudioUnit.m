@@ -443,8 +443,9 @@ static OSStatus AVEAudioUnitRenderCallback(void *inRefCon, AudioUnitRenderAction
 //    return status;
 //
 //    NSLog(@"bus - %u", inBusNumber);
-    
     AVEAudioUnitElement *element = (__bridge AVEAudioUnitElement *)inRefCon;
-    AudioUnitRender(element.unit, ioActionFlags, inTimeStamp, 1, inNumberFrames, ioData);
+    if (inBusNumber == 0) {
+        AudioUnitRender(element.unit, ioActionFlags, inTimeStamp, 1, inNumberFrames, ioData);
+    }
     return noErr;
 }
