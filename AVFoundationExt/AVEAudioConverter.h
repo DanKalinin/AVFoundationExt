@@ -11,6 +11,7 @@
 
 @class AVEAudioConversion, AVEAudioConverter;
 
+extern const HLPOperationState AVEAudioConverterDidInit;
 extern const HLPOperationState AVEAudioConverterDidStart;
 extern const HLPOperationState AVEAudioConverterDidStop;
 
