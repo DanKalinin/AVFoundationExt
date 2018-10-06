@@ -146,17 +146,25 @@
     return shared;
 }
 
-- (instancetype)initWithSession:(AVEAudioSession *)session unit:(AVEAudioUnit *)unit converter:(AVEAudioConverter *)converter {
+- (instancetype)init {
     self = super.init;
     if (self) {
-        self.session = session;
-        [self.session.delegates addObject:self.delegates];
-        
-        self.unit = unit;
-        [self.unit.delegates addObject:self.delegates];
+        self.session = AVEAudioSession.shared;
     }
     return self;
 }
+
+//- (instancetype)initWithSession:(AVEAudioSession *)session unit:(AVEAudioUnit *)unit converter:(AVEAudioConverter *)converter {
+//    self = super.init;
+//    if (self) {
+//        self.session = session;
+//        [self.session.delegates addObject:self.delegates];
+//
+//        self.unit = unit;
+//        [self.unit.delegates addObject:self.delegates];
+//    }
+//    return self;
+//}
 
 //- (void)start {
 //    self.session = self.sessionClass.new;

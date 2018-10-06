@@ -8,6 +8,10 @@
 
 #import "AVEAudioSession.h"
 
+const HLPOperationState AVEAudioSessionDidConfigure = 1;
+const HLPOperationState AVEAudioSessionDidActivate = 2;
+const HLPOperationState AVEAudioSessionDidDeactivate = 3;
+
 
 
 
@@ -157,14 +161,17 @@
     [self updateState:HLPOperationStateDidBegin];
 }
 
-- (void)setProperties {
-    
+- (void)configure {
+    self.state = AVEAudioSessionDidConfigure;
+    [self updateState:AVEAudioSessionDidConfigure];
 }
 
 - (void)activate {
     NSError *error = nil;
     BOOL success = [self.audioSession setActive:YES withOptions:0 error:&error];
     if (success) {
+        self.state = AVEAudioSessionDidActivate;
+        [self updateState:AVEAudioSessionDidActivate];
     } else {
         [self.errors addObject:error];
     }
@@ -174,6 +181,8 @@
     NSError *error = nil;
     BOOL success = [self.audioSession setActive:YES withOptions:AVAudioSessionSetActiveOptionNotifyOthersOnDeactivation error:&error];
     if (success) {
+        self.state = AVEAudioSessionDidConfigure;
+        [self updateState:AVEAudioSessionDidDeactivate];
     } else {
         [self.errors addObject:error];
     }
@@ -204,16 +213,16 @@
     [self.delegates AVEAudioSessionSilenceSecondaryAudioHint:self];
 }
 
-#pragma mark - Helpers
+#pragma mark - Audio session
 
-- (void)updateState:(HLPOperationState)state {
-    [super updateState:state];
-    
-    [self.delegates AVEAudioSessionDidUpdateState:self];
-    if (state == HLPOperationStateDidBegin) {
-        [self.delegates AVEAudioSessionDidBegin:self];
-    } else if (state == HLPOperationStateDidEnd) {
-        [self.delegates AVEAudioSessionDidEnd:self];
+- (void)AVEAudioSessionMediaServicesWereReset:(AVEAudioSession *)audioSession {
+    if (self.state >= AVEAudioSessionDidConfigure) {
+        [self configure];
+        if (self.errors.count == 0) {
+            if (self.state >= AVEAudioSessionDidActivate) {
+                [self activate];
+            }
+        }
     }
 }
 
