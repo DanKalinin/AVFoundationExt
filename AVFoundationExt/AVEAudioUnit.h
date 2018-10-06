@@ -16,8 +16,8 @@ extern const HLPOperationState AVEAudioUnitStateDidInstantiate;
 extern const HLPOperationState AVEAudioUnitStateDidDispose;
 extern const HLPOperationState AVEAudioUnitStateDidInitialize;
 extern const HLPOperationState AVEAudioUnitStateDidUninitialize;
-extern const HLPOperationState AVEAudioUnitStateDidBegin;
-extern const HLPOperationState AVEAudioUnitStateDidEnd;
+extern const HLPOperationState AVEAudioUnitStateDidStart;
+extern const HLPOperationState AVEAudioUnitStateDidStop;
 
 extern NSErrorDomain const AVEAudioUnitErrorDomain;
 
@@ -109,5 +109,8 @@ NS_ERROR_ENUM(AVEAudioUnitErrorDomain) {
 
 - (void)initialize;
 - (void)uninitialize;
+
+- (void)start;
+- (void)stop;
 
 @end

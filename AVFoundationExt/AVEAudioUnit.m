@@ -12,8 +12,8 @@ const HLPOperationState AVEAudioUnitStateDidInstantiate = 2;
 const HLPOperationState AVEAudioUnitStateDidDispose = 3;
 const HLPOperationState AVEAudioUnitStateDidInitialize = 4;
 const HLPOperationState AVEAudioUnitStateDidUninitialize = 5;
-const HLPOperationState AVEAudioUnitStateDidBegin = 6;
-const HLPOperationState AVEAudioUnitStateDidEnd = 7;
+const HLPOperationState AVEAudioUnitStateDidStart = 6;
+const HLPOperationState AVEAudioUnitStateDidStop = 7;
 
 NSErrorDomain const AVEAudioUnitErrorDomain = @"AVEAudioUnit";
 
@@ -340,19 +340,19 @@ static OSStatus AVEAudioUnitRenderCallback(void *inRefCon, AudioUnitRenderAction
 - (void)start {
     OSStatus status = AudioOutputUnitStart(self.unit);
     if (status == noErr) {
-        self.state = AVEAudioUnitStateDidBegin;
-        [self updateState:AVEAudioUnitStateDidBegin];
+        self.state = AVEAudioUnitStateDidStart;
+        [self updateState:AVEAudioUnitStateDidStart];
     } else {
         NSError *error = [NSError errorWithDomain:NSOSStatusErrorDomain code:status userInfo:nil];
         [self.errors addObject:error];
     }
 }
 
-- (void)cancel {
+- (void)stop {
     OSStatus status = AudioOutputUnitStop(self.unit);
     if (status == noErr) {
         self.state = AVEAudioUnitStateDidInitialize;
-        [self updateState:AVEAudioUnitStateDidEnd];
+        [self updateState:AVEAudioUnitStateDidStop];
     } else {
         NSError *error = [NSError errorWithDomain:NSOSStatusErrorDomain code:status userInfo:nil];
         [self.errors addObject:error];
@@ -374,7 +374,7 @@ static OSStatus AVEAudioUnitRenderCallback(void *inRefCon, AudioUnitRenderAction
                         if (state >= AVEAudioUnitStateDidInitialize) {
                             [self initialize];
                             if (self.errors.count == 0) {
-                                if (state >= AVEAudioUnitStateDidBegin) {
+                                if (state >= AVEAudioUnitStateDidStart) {
                                     [self start];
                                 }
                             }
