@@ -162,6 +162,7 @@ const HLPOperationState AVEAudioSessionDidDeactivate = 3;
 }
 
 - (void)configure {
+    [self.states removeAllObjects];
     [self.errors removeAllObjects];
     
     self.state = AVEAudioSessionDidConfigure;
@@ -169,6 +170,7 @@ const HLPOperationState AVEAudioSessionDidDeactivate = 3;
 }
 
 - (void)activate {
+    [self.states removeAllObjects];
     [self.errors removeAllObjects];
     
     NSError *error = nil;
@@ -182,6 +184,7 @@ const HLPOperationState AVEAudioSessionDidDeactivate = 3;
 }
 
 - (void)deactivate {
+    [self.states removeAllObjects];
     [self.errors removeAllObjects];
     
     NSError *error = nil;

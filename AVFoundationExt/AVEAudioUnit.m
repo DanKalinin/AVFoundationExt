@@ -258,6 +258,7 @@ static OSStatus AVEAudioUnitRenderCallback(void *inRefCon, AudioUnitRenderAction
 }
 
 - (void)find {
+    [self.states removeAllObjects];
     [self.errors removeAllObjects];
     
     self.component = AudioComponentFindNext(NULL, &_componentDescription);
@@ -271,6 +272,7 @@ static OSStatus AVEAudioUnitRenderCallback(void *inRefCon, AudioUnitRenderAction
 }
 
 - (void)instantiate {
+    [self.states removeAllObjects];
     [self.errors removeAllObjects];
     
     OSStatus status = AudioComponentInstanceNew(self.component, &_unit);
@@ -313,6 +315,7 @@ static OSStatus AVEAudioUnitRenderCallback(void *inRefCon, AudioUnitRenderAction
 }
 
 - (void)dispose {
+    [self.states removeAllObjects];
     [self.errors removeAllObjects];
     
     OSStatus status = AudioComponentInstanceDispose(self.unit);
@@ -330,6 +333,7 @@ static OSStatus AVEAudioUnitRenderCallback(void *inRefCon, AudioUnitRenderAction
 }
 
 - (void)initialize {
+    [self.states removeAllObjects];
     [self.errors removeAllObjects];
     
     OSStatus status = AudioUnitInitialize(self.unit);
@@ -343,6 +347,7 @@ static OSStatus AVEAudioUnitRenderCallback(void *inRefCon, AudioUnitRenderAction
 }
 
 - (void)uninitialize {
+    [self.states removeAllObjects];
     [self.errors removeAllObjects];
     
     OSStatus status = AudioUnitUninitialize(self.unit);
@@ -356,6 +361,7 @@ static OSStatus AVEAudioUnitRenderCallback(void *inRefCon, AudioUnitRenderAction
 }
 
 - (void)start {
+    [self.states removeAllObjects];
     [self.errors removeAllObjects];
     
     OSStatus status = AudioOutputUnitStart(self.unit);
@@ -369,6 +375,7 @@ static OSStatus AVEAudioUnitRenderCallback(void *inRefCon, AudioUnitRenderAction
 }
 
 - (void)stop {
+    [self.states removeAllObjects];
     [self.errors removeAllObjects];
     
     OSStatus status = AudioOutputUnitStop(self.unit);

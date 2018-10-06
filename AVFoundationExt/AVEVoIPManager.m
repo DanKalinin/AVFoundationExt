@@ -161,6 +161,7 @@
 }
 
 - (void)initialize {
+    [self.states removeAllObjects];
     [self.errors removeAllObjects];
     
     [self.session configure];
@@ -192,6 +193,7 @@
 }
 
 - (void)start {
+    [self.states removeAllObjects];
     [self.errors removeAllObjects];
     
     [self.session activate];
