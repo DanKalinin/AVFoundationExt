@@ -11,11 +11,10 @@
 
 @class AVEAudioSessionInterruptionInfo, AVEAudioSessionRouteChangeInfo, AVEAudioSessionSilenceSecondaryAudioHintInfo, AVEAudioSession;
 
-extern const HLPOperationState AVEAudioSessionDidInit;
-extern const HLPOperationState AVEAudioSessionDidConfigure;
-extern const HLPOperationState AVEAudioSessionDidDeconfigure;
-extern const HLPOperationState AVEAudioSessionDidActivate;
-extern const HLPOperationState AVEAudioSessionDidDeactivate;
+extern const HLPOperationState AVEAudioSessionStateDidConfigure;
+extern const HLPOperationState AVEAudioSessionStateDidDeconfigure;
+extern const HLPOperationState AVEAudioSessionStateDidActivate;
+extern const HLPOperationState AVEAudioSessionStateDidDeactivate;
 
 
 

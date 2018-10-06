@@ -11,10 +11,6 @@
 
 @class AVEAudioConversion, AVEAudioConverter;
 
-extern const HLPOperationState AVEAudioConverterDidInit;
-extern const HLPOperationState AVEAudioConverterDidStart;
-extern const HLPOperationState AVEAudioConverterDidStop;
-
 extern NSErrorDomain const AVEAudioConverterErrorDomain;
 
 NS_ERROR_ENUM(AVEAudioConverterErrorDomain) {
@@ -68,8 +64,5 @@ NS_ERROR_ENUM(AVEAudioConverterErrorDomain) {
 @property (readonly) AVEAudioSession *session;
 
 - (instancetype)initFromFormat:(AVAudioFormat *)fromFormat toFormat:(AVAudioFormat *)toFormat;
-
-- (void)start;
-- (void)stop;
 
 @end

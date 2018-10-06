@@ -8,11 +8,10 @@
 
 #import "AVEAudioSession.h"
 
-const HLPOperationState AVEAudioSessionDidInit = 0;
-const HLPOperationState AVEAudioSessionDidConfigure = 1;
-const HLPOperationState AVEAudioSessionDidDeconfigure = 2;
-const HLPOperationState AVEAudioSessionDidActivate = 3;
-const HLPOperationState AVEAudioSessionDidDeactivate = 4;
+const HLPOperationState AVEAudioSessionStateDidConfigure = 6;
+const HLPOperationState AVEAudioSessionStateDidDeconfigure = 7;
+const HLPOperationState AVEAudioSessionStateDidActivate = 8;
+const HLPOperationState AVEAudioSessionStateDidDeactivate = 9;
 
 
 
@@ -167,15 +166,15 @@ const HLPOperationState AVEAudioSessionDidDeactivate = 4;
     [self.states removeAllObjects];
     [self.errors removeAllObjects];
     
-    self.state = AVEAudioSessionDidConfigure;
-    [self updateState:AVEAudioSessionDidConfigure];
+    self.state = AVEAudioSessionStateDidConfigure;
+    [self updateState:AVEAudioSessionStateDidConfigure];
 }
 
 - (void)deconfigure {
     [self.states removeAllObjects];
     
-    self.state = AVEAudioSessionDidInit;
-    [self updateState:AVEAudioSessionDidDeconfigure];
+    self.state = HLPOperationStateDidStart;
+    [self updateState:AVEAudioSessionStateDidDeconfigure];
 }
 
 - (void)activate {
@@ -185,8 +184,8 @@ const HLPOperationState AVEAudioSessionDidDeactivate = 4;
     NSError *error = nil;
     BOOL success = [self.audioSession setActive:YES withOptions:0 error:&error];
     if (success) {
-        self.state = AVEAudioSessionDidActivate;
-        [self updateState:AVEAudioSessionDidActivate];
+        self.state = AVEAudioSessionStateDidActivate;
+        [self updateState:AVEAudioSessionStateDidActivate];
     } else {
         [self.errors addObject:error];
     }
@@ -199,8 +198,8 @@ const HLPOperationState AVEAudioSessionDidDeactivate = 4;
     NSError *error = nil;
     BOOL success = [self.audioSession setActive:YES withOptions:AVAudioSessionSetActiveOptionNotifyOthersOnDeactivation error:&error];
     if (success) {
-        self.state = AVEAudioSessionDidConfigure;
-        [self updateState:AVEAudioSessionDidDeactivate];
+        self.state = AVEAudioSessionStateDidConfigure;
+        [self updateState:AVEAudioSessionStateDidDeactivate];
     } else {
         [self.errors addObject:error];
     }
@@ -235,10 +234,10 @@ const HLPOperationState AVEAudioSessionDidDeactivate = 4;
 
 - (void)AVEAudioSessionMediaServicesWereReset:(AVEAudioSession *)audioSession {
     HLPOperationState state = self.state;
-    if (state >= AVEAudioSessionDidConfigure) {
+    if (state >= AVEAudioSessionStateDidConfigure) {
         [self configure];
         if (self.errors.count == 0) {
-            if (state >= AVEAudioSessionDidActivate) {
+            if (state >= AVEAudioSessionStateDidActivate) {
                 [self activate];
             }
         }

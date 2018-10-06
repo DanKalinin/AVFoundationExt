@@ -75,10 +75,7 @@
 
 - (instancetype)initWithSession:(AVEAudioSession *)session unit:(AVEAudioUnit *)unit converter:(AVEAudioConverter *)converter;
 
-- (void)initialize;
-- (void)unitialize;
-
-- (void)start;
-- (void)stop;
+- (void)play;
+- (void)pause;
 
 @end

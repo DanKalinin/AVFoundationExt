@@ -155,12 +155,12 @@
         self.unit = unit;
         [self.unit.delegates addObject:self.delegates];
         //
-        [self initialize];
+        [self start];
     }
     return self;
 }
 
-- (void)initialize {
+- (void)start {
     [self.states removeAllObjects];
     [self.errors removeAllObjects];
     
@@ -168,7 +168,7 @@
     if (self.session.errors.count > 0) {
         [self.errors addObjectsFromArray:self.session.errors];
     } else {
-        [self.unit find];
+        [self.unit start];
         if (self.unit.errors.count > 0) {
             [self.errors addObjectsFromArray:self.unit.errors];
         } else {
@@ -184,32 +184,11 @@
                     if (self.converter.errors.count > 0) {
                         [self.errors addObjectsFromArray:self.converter.errors];
                     } else {
-                        [self start];
+                        //
+                        [self play];
                     }
                 }
             }
-        }
-    }
-}
-
-- (void)unitialize {
-    [self.states removeAllObjects];
-    [self.errors removeAllObjects];
-    
-    
-}
-
-- (void)start {
-    [self.states removeAllObjects];
-    [self.errors removeAllObjects];
-    
-    [self.session activate];
-    if (self.session.errors.count > 0) {
-        [self.errors addObjectsFromArray:self.session.errors];
-    } else {
-        [self.unit start];
-        if (self.unit.errors.count > 0) {
-            [self.errors addObjectsFromArray:self.unit.errors];
         }
     }
 }
@@ -218,7 +197,29 @@
     [self.states removeAllObjects];
     [self.errors removeAllObjects];
     
-    [self.unit stop];
+    
+}
+
+- (void)play {
+    [self.states removeAllObjects];
+    [self.errors removeAllObjects];
+    
+    [self.session activate];
+    if (self.session.errors.count > 0) {
+        [self.errors addObjectsFromArray:self.session.errors];
+    } else {
+        [self.unit play];
+        if (self.unit.errors.count > 0) {
+            [self.errors addObjectsFromArray:self.unit.errors];
+        }
+    }
+}
+
+- (void)pause {
+    [self.states removeAllObjects];
+    [self.errors removeAllObjects];
+    
+    [self.unit pause];
     if (self.unit.errors.count > 0) {
         [self.errors addObjectsFromArray:self.unit.errors];
     } else {
