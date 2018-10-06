@@ -197,7 +197,24 @@
     [self.states removeAllObjects];
     [self.errors removeAllObjects];
     
+    [self.converter stop];
     
+    [self.unit uninitialize];
+    if (self.unit.errors.count > 0) {
+        [self.errors addObjectsFromArray:self.unit.errors];
+    } else {
+        [self.unit dispose];
+        if (self.unit.errors.count > 0) {
+            [self.errors addObjectsFromArray:self.unit.errors];
+        } else {
+            [self.unit stop];
+            
+            [self.session deconfigure];
+            if (self.session.errors.count > 0) {
+                [self.errors addObjectsFromArray:self.session.errors];
+            }
+        }
+    }
 }
 
 - (void)play {
