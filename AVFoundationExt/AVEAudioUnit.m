@@ -262,8 +262,8 @@ static OSStatus AVEAudioUnitRenderCallback(void *inRefCon, AudioUnitRenderAction
     
     self.component = AudioComponentFindNext(NULL, &_componentDescription);
     if (self.component) {
-        self.state = HLPOperationStateDidStart;
-        [self updateState:HLPOperationStateDidStart];
+        self.state = HLPOperationStateDidBegin;
+        [self updateState:HLPOperationStateDidBegin];
     } else {
         NSError *error = [NSError errorWithDomain:AVEAudioUnitErrorDomain code:AVEAudioUnitErrorNotFound userInfo:nil];
         [self.errors addObject:error];
@@ -276,7 +276,7 @@ static OSStatus AVEAudioUnitRenderCallback(void *inRefCon, AudioUnitRenderAction
     self.component = NULL;
     
     self.state = HLPOperationStateDidInit;
-    [self updateState:HLPOperationStateDidStop];
+    [self updateState:HLPOperationStateDidEnd];
 }
 
 - (void)instantiate {
@@ -332,7 +332,7 @@ static OSStatus AVEAudioUnitRenderCallback(void *inRefCon, AudioUnitRenderAction
         [self.inputs removeAllObjects];
         [self.outputs removeAllObjects];
         
-        self.state = HLPOperationStateDidStart;
+        self.state = HLPOperationStateDidBegin;
         [self updateState:AVEAudioUnitStateDidDispose];
     } else {
         NSError *error = [NSError errorWithDomain:NSOSStatusErrorDomain code:status userInfo:nil];
@@ -400,7 +400,7 @@ static OSStatus AVEAudioUnitRenderCallback(void *inRefCon, AudioUnitRenderAction
 
 - (void)AVEAudioSessionMediaServicesWereReset:(AVEAudioSession *)audioSession {
     HLPOperationState state = self.state;
-    if (state >= HLPOperationStateDidStart) {
+    if (state >= HLPOperationStateDidBegin) {
         [self start];
         if (self.errors.count == 0) {
             if (state >= AVEAudioUnitStateDidInstantiate) {

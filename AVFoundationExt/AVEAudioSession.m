@@ -159,7 +159,7 @@ const HLPOperationState AVEAudioSessionStateDidDeactivate = 9;
     [self.notificationCenter addObserver:self selector:@selector(AVAudioSessionMediaServicesWereResetNotification:) name:AVAudioSessionMediaServicesWereResetNotification object:self.audioSession];
     [self.notificationCenter addObserver:self selector:@selector(AVAudioSessionSilenceSecondaryAudioHintNotification:) name:AVAudioSessionSilenceSecondaryAudioHintNotification object:self.audioSession];
     
-    [self updateState:HLPOperationStateDidStart];
+    [self updateState:HLPOperationStateDidBegin];
 }
 
 - (void)configure {
@@ -173,7 +173,7 @@ const HLPOperationState AVEAudioSessionStateDidDeactivate = 9;
 - (void)deconfigure {
     [self.states removeAllObjects];
     
-    self.state = HLPOperationStateDidStart;
+    self.state = HLPOperationStateDidBegin;
     [self updateState:AVEAudioSessionStateDidDeconfigure];
 }
 
