@@ -64,8 +64,8 @@
 
 @implementation AVEVoIPAudioUnit
 
-- (void)instantiate {
-    [super instantiate];
+- (void)audioComponentInstanceNew {
+    [super audioComponentInstanceNew];
     
     if (self.errors.count == 0) {
         self.global.kAudioUnitProperty_MaximumFramesPerSlice = 4096;
@@ -161,22 +161,21 @@
 }
 
 - (void)start {
-    [self.states removeAllObjects];
     [self.errors removeAllObjects];
     
     [self.session configure];
     if (self.session.errors.count > 0) {
         [self.errors addObjectsFromArray:self.session.errors];
     } else {
-        [self.unit start];
+        [self.unit audioComponentFindNext];
         if (self.unit.errors.count > 0) {
             [self.errors addObjectsFromArray:self.unit.errors];
         } else {
-            [self.unit instantiate];
+            [self.unit audioComponentInstanceNew];
             if (self.unit.errors.count > 0) {
                 [self.errors addObjectsFromArray:self.unit.errors];
             } else {
-                [self.unit initialize];
+                [self.unit audioUnitInitialize];
                 if (self.unit.errors.count > 0) {
                     [self.errors addObjectsFromArray:self.unit.errors];
                 } else {
@@ -194,33 +193,29 @@
 }
 
 - (void)stop {
-    [self.states removeAllObjects];
     [self.errors removeAllObjects];
     
     [self.converter stop];
     
-    [self.unit uninitialize];
+    [self.unit audioUnitUninitialize];
     if (self.unit.errors.count > 0) {
         [self.errors addObjectsFromArray:self.unit.errors];
     } else {
-        [self.unit dispose];
+        [self.unit audioComponentInstanceDispose];
         if (self.unit.errors.count > 0) {
             [self.errors addObjectsFromArray:self.unit.errors];
-        } else {
-            [self.unit stop];
         }
     }
 }
 
 - (void)play {
-    [self.states removeAllObjects];
     [self.errors removeAllObjects];
     
     [self.session setActive:YES withOptions:0];
     if (self.session.errors.count > 0) {
         [self.errors addObjectsFromArray:self.session.errors];
     } else {
-        [self.unit play];
+        [self.unit audioOutputUnitStart];
         if (self.unit.errors.count > 0) {
             [self.errors addObjectsFromArray:self.unit.errors];
         }
@@ -228,10 +223,9 @@
 }
 
 - (void)pause {
-    [self.states removeAllObjects];
     [self.errors removeAllObjects];
     
-    [self.unit pause];
+    [self.unit audioOutputUnitStop];
     if (self.unit.errors.count > 0) {
         [self.errors addObjectsFromArray:self.unit.errors];
     } else {

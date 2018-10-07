@@ -12,8 +12,8 @@
 @class AVEAudioSessionInterruptionInfo, AVEAudioSessionRouteChangeInfo, AVEAudioSessionSilenceSecondaryAudioHintInfo, AVEAudioSession;
 
 extern const HLPOperationState AVEAudioSessionStateDidConfigure;
-extern const HLPOperationState AVEAudioSessionStateDidActivate;
-extern const HLPOperationState AVEAudioSessionStateDidDeactivate;
+extern const HLPOperationState AVEAudioSessionStateDidSetActiveYES;
+extern const HLPOperationState AVEAudioSessionStateDidSetActiveNO;
 
 
 

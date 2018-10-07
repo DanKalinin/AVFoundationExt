@@ -11,12 +11,13 @@
 
 @class AVEAudioUnitElement, AVEAudioUnit;
 
-extern const HLPOperationState AVEAudioUnitStateDidInstantiate;
+extern const HLPOperationState AVEAudioUnitStateDidFindNext;
+extern const HLPOperationState AVEAudioUnitStateDidNew;
 extern const HLPOperationState AVEAudioUnitStateDidDispose;
 extern const HLPOperationState AVEAudioUnitStateDidInitialize;
 extern const HLPOperationState AVEAudioUnitStateDidUninitialize;
-extern const HLPOperationState AVEAudioUnitStateDidPlay;
-extern const HLPOperationState AVEAudioUnitStateDidPause;
+extern const HLPOperationState AVEAudioUnitStateDidStart;
+extern const HLPOperationState AVEAudioUnitStateDidStop;
 
 extern NSErrorDomain const AVEAudioUnitErrorDomain;
 
@@ -101,13 +102,15 @@ NS_ERROR_ENUM(AVEAudioUnitErrorDomain) {
 
 - (instancetype)initWithComponentDescription:(AudioComponentDescription)componentDescription;
 
-- (void)instantiate;
-- (void)dispose;
+- (void)audioComponentFindNext;
 
-- (void)initialize;
-- (void)uninitialize;
+- (void)audioComponentInstanceNew;
+- (void)audioComponentInstanceDispose;
 
-- (void)play;
-- (void)pause;
+- (void)audioUnitInitialize;
+- (void)audioUnitUninitialize;
+
+- (void)audioOutputUnitStart;
+- (void)audioOutputUnitStop;
 
 @end
