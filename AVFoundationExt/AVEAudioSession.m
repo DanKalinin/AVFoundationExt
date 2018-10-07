@@ -9,9 +9,8 @@
 #import "AVEAudioSession.h"
 
 const HLPOperationState AVEAudioSessionStateDidConfigure = 6;
-const HLPOperationState AVEAudioSessionStateDidDeconfigure = 7;
-const HLPOperationState AVEAudioSessionStateDidActivate = 8;
-const HLPOperationState AVEAudioSessionStateDidDeactivate = 9;
+const HLPOperationState AVEAudioSessionStateDidActivate = 7;
+const HLPOperationState AVEAudioSessionStateDidDeactivate = 8;
 
 
 
@@ -163,22 +162,13 @@ const HLPOperationState AVEAudioSessionStateDidDeactivate = 9;
 }
 
 - (void)configure {
-    [self.states removeAllObjects];
     [self.errors removeAllObjects];
     
     self.state = AVEAudioSessionStateDidConfigure;
     [self updateState:AVEAudioSessionStateDidConfigure];
 }
 
-- (void)deconfigure {
-    [self.states removeAllObjects];
-    
-    self.state = HLPOperationStateDidBegin;
-    [self updateState:AVEAudioSessionStateDidDeconfigure];
-}
-
 - (void)setActive:(BOOL)active withOptions:(AVAudioSessionSetActiveOptions)options {
-    [self.states removeAllObjects];
     [self.errors removeAllObjects];
     
     NSError *error = nil;

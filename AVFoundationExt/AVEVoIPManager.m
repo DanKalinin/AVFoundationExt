@@ -208,11 +208,6 @@
             [self.errors addObjectsFromArray:self.unit.errors];
         } else {
             [self.unit stop];
-            
-            [self.session deconfigure];
-            if (self.session.errors.count > 0) {
-                [self.errors addObjectsFromArray:self.session.errors];
-            }
         }
     }
 }
