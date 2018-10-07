@@ -221,7 +221,7 @@
     [self.states removeAllObjects];
     [self.errors removeAllObjects];
     
-    [self.session activate];
+    [self.session setActive:YES withOptions:0];
     if (self.session.errors.count > 0) {
         [self.errors addObjectsFromArray:self.session.errors];
     } else {
@@ -240,7 +240,7 @@
     if (self.unit.errors.count > 0) {
         [self.errors addObjectsFromArray:self.unit.errors];
     } else {
-        [self.session deactivate];
+        [self.session setActive:NO withOptions:AVAudioSessionSetActiveOptionNotifyOthersOnDeactivation];
         if (self.session.errors.count > 0) {
             [self.errors addObjectsFromArray:self.session.errors];
         }

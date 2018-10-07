@@ -108,7 +108,6 @@ extern const HLPOperationState AVEAudioSessionStateDidDeactivate;
 - (void)configure;
 - (void)deconfigure;
 
-- (void)activate;
-- (void)deactivate;
+- (void)setActive:(BOOL)active withOptions:(AVAudioSessionSetActiveOptions)options;
 
 @end

@@ -177,29 +177,20 @@ const HLPOperationState AVEAudioSessionStateDidDeactivate = 9;
     [self updateState:AVEAudioSessionStateDidDeconfigure];
 }
 
-- (void)activate {
+- (void)setActive:(BOOL)active withOptions:(AVAudioSessionSetActiveOptions)options {
     [self.states removeAllObjects];
     [self.errors removeAllObjects];
     
     NSError *error = nil;
-    BOOL success = [self.audioSession setActive:YES withOptions:0 error:&error];
+    BOOL success = [self.audioSession setActive:active withOptions:options error:&error];
     if (success) {
-        self.state = AVEAudioSessionStateDidActivate;
-        [self updateState:AVEAudioSessionStateDidActivate];
-    } else {
-        [self.errors addObject:error];
-    }
-}
-
-- (void)deactivate {
-    [self.states removeAllObjects];
-    [self.errors removeAllObjects];
-    
-    NSError *error = nil;
-    BOOL success = [self.audioSession setActive:YES withOptions:AVAudioSessionSetActiveOptionNotifyOthersOnDeactivation error:&error];
-    if (success) {
-        self.state = AVEAudioSessionStateDidConfigure;
-        [self updateState:AVEAudioSessionStateDidDeactivate];
+        if (active) {
+            self.state = AVEAudioSessionStateDidActivate;
+            [self updateState:AVEAudioSessionStateDidActivate];
+        } else {
+            self.state = AVEAudioSessionStateDidConfigure;
+            [self updateState:AVEAudioSessionStateDidDeactivate];
+        }
     } else {
         [self.errors addObject:error];
     }
@@ -238,7 +229,7 @@ const HLPOperationState AVEAudioSessionStateDidDeactivate = 9;
         [self configure];
         if (self.errors.count == 0) {
             if (state >= AVEAudioSessionStateDidActivate) {
-                [self activate];
+                [self setActive:YES withOptions:0];
             }
         }
     }
