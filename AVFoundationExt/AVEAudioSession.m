@@ -8,9 +8,9 @@
 
 #import "AVEAudioSession.h"
 
-const HLPOperationState AVEAudioSessionStateDidConfigure = 6;
-const HLPOperationState AVEAudioSessionStateDidSetActiveNO = 7;
-const HLPOperationState AVEAudioSessionStateDidSetActiveYES = 8;
+const HLPOperationState AVEAudioSessionStateDidConfigure = 4;
+const HLPOperationState AVEAudioSessionStateDidSetActiveNO = 5;
+const HLPOperationState AVEAudioSessionStateDidSetActiveYES = 6;
 
 
 
