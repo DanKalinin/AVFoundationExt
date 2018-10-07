@@ -162,8 +162,6 @@ const HLPOperationState AVEAudioSessionStateDidSetActiveYES = 6;
 }
 
 - (void)configure {
-    [self.errors removeAllObjects];
-    
     [self updateState:AVEAudioSessionStateDidConfigure];
 }
 

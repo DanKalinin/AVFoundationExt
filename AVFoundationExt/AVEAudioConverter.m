@@ -79,12 +79,6 @@ NSErrorDomain const AVEAudioConverterErrorDomain = @"AVEAudioConverter";
     }
 }
 
-- (void)stop {
-    self.converter = nil;
-    
-    [self updateState:HLPOperationStateDidEnd];
-}
-
 #pragma mark - Audio session
 
 - (void)AVEAudioSessionMediaServicesWereReset:(AVEAudioSession *)audioSession {
