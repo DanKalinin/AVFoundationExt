@@ -25,7 +25,7 @@
 @implementation AVEVoIPAudioSession
 
 - (void)configure {
-    [self.errors removeAllObjects];
+    [super configure];
     
     NSError *error = nil;
     BOOL success = [self.audioSession setCategory:AVAudioSessionCategoryPlayAndRecord mode:AVAudioSessionModeVoiceChat options:0 error:&error];
@@ -34,7 +34,6 @@
         if (success) {
             success = [self.audioSession setPreferredSampleRate:44100.0 error:&error];
             if (success) {
-                [self updateState:AVEAudioSessionStateDidConfigure];
             } else {
                 [self.errors addObject:error];
             }
