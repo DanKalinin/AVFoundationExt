@@ -155,8 +155,8 @@
         self.unit = unit;
         [self.unit.delegates addObject:self.delegates];
         
-        self.converter = converter;
-        [self.converter.delegates addObject:self.delegates];
+        // self.converter = converter;
+        // [self.converter.delegates addObject:self.delegates];
         //
         [self start];
     }
