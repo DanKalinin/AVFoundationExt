@@ -105,7 +105,6 @@ extern const HLPOperationState AVEAudioSessionStateDidDeactivate;
 @property (readonly) AVEAudioSessionSilenceSecondaryAudioHintInfo *silenceSecondaryAudioHintInfo;
 
 - (void)configure;
-
 - (void)setActive:(BOOL)active withOptions:(AVAudioSessionSetActiveOptions)options;
 
 @end
