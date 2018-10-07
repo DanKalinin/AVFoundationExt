@@ -68,12 +68,10 @@ NSErrorDomain const AVEAudioConverterErrorDomain = @"AVEAudioConverter";
 }
 
 - (void)start {
-    [self.states removeAllObjects];
     [self.errors removeAllObjects];
     
     self.converter = [AVAudioConverter.alloc initFromFormat:self.fromFormat toFormat:self.toFormat];
     if (self.converter) {
-        self.state = HLPOperationStateDidBegin;
         [self updateState:HLPOperationStateDidBegin];
     } else {
         NSError *error = [NSError errorWithDomain:AVEAudioConverterErrorDomain code:AVEAudioConverterErrorConversionImpossible userInfo:nil];
@@ -82,18 +80,15 @@ NSErrorDomain const AVEAudioConverterErrorDomain = @"AVEAudioConverter";
 }
 
 - (void)stop {
-    [self.states removeAllObjects];
-    
     self.converter = nil;
     
-    self.state = HLPOperationStateDidInit;
     [self updateState:HLPOperationStateDidEnd];
 }
 
 #pragma mark - Audio session
 
 - (void)AVEAudioSessionMediaServicesWereReset:(AVEAudioSession *)audioSession {
-    HLPOperationState state = self.state;
+    HLPOperationState state = self.states.lastObject.unsignedIntegerValue;
     if (state >= HLPOperationStateDidBegin) {
         [self start];
     }

@@ -9,8 +9,8 @@
 #import "AVEAudioSession.h"
 
 const HLPOperationState AVEAudioSessionStateDidConfigure = 6;
-const HLPOperationState AVEAudioSessionStateDidSetActiveYES = 7;
-const HLPOperationState AVEAudioSessionStateDidSetActiveNO = 8;
+const HLPOperationState AVEAudioSessionStateDidSetActiveNO = 7;
+const HLPOperationState AVEAudioSessionStateDidSetActiveYES = 8;
 
 
 
@@ -164,7 +164,6 @@ const HLPOperationState AVEAudioSessionStateDidSetActiveNO = 8;
 - (void)configure {
     [self.errors removeAllObjects];
     
-    self.state = AVEAudioSessionStateDidConfigure;
     [self updateState:AVEAudioSessionStateDidConfigure];
 }
 
@@ -175,10 +174,8 @@ const HLPOperationState AVEAudioSessionStateDidSetActiveNO = 8;
     BOOL success = [self.audioSession setActive:active withOptions:options error:&error];
     if (success) {
         if (active) {
-            self.state = AVEAudioSessionStateDidSetActiveYES;
             [self updateState:AVEAudioSessionStateDidSetActiveYES];
         } else {
-            self.state = AVEAudioSessionStateDidConfigure;
             [self updateState:AVEAudioSessionStateDidSetActiveNO];
         }
     } else {
@@ -214,7 +211,7 @@ const HLPOperationState AVEAudioSessionStateDidSetActiveNO = 8;
 #pragma mark - Audio session
 
 - (void)AVEAudioSessionMediaServicesWereReset:(AVEAudioSession *)audioSession {
-    HLPOperationState state = self.state;
+    HLPOperationState state = self.states.lastObject.unsignedIntegerValue;
     if (state >= AVEAudioSessionStateDidConfigure) {
         [self configure];
         if (self.errors.count == 0) {

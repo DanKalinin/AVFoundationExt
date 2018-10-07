@@ -12,12 +12,12 @@
 @class AVEAudioUnitElement, AVEAudioUnit;
 
 extern const HLPOperationState AVEAudioUnitStateDidFindNext;
-extern const HLPOperationState AVEAudioUnitStateDidNew;
 extern const HLPOperationState AVEAudioUnitStateDidDispose;
-extern const HLPOperationState AVEAudioUnitStateDidInitialize;
+extern const HLPOperationState AVEAudioUnitStateDidNew;
 extern const HLPOperationState AVEAudioUnitStateDidUninitialize;
-extern const HLPOperationState AVEAudioUnitStateDidStart;
+extern const HLPOperationState AVEAudioUnitStateDidInitialize;
 extern const HLPOperationState AVEAudioUnitStateDidStop;
+extern const HLPOperationState AVEAudioUnitStateDidStart;
 
 extern NSErrorDomain const AVEAudioUnitErrorDomain;
 

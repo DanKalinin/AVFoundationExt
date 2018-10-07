@@ -8,12 +8,12 @@
 #import "AVEAudioUnit.h"
 
 const HLPOperationState AVEAudioUnitStateDidFindNext = 4;
-const HLPOperationState AVEAudioUnitStateDidNew = 5;
-const HLPOperationState AVEAudioUnitStateDidDispose = 6;
-const HLPOperationState AVEAudioUnitStateDidInitialize = 7;
-const HLPOperationState AVEAudioUnitStateDidUninitialize = 8;
-const HLPOperationState AVEAudioUnitStateDidStart = 9;
-const HLPOperationState AVEAudioUnitStateDidStop = 10;
+const HLPOperationState AVEAudioUnitStateDidDispose = 5;
+const HLPOperationState AVEAudioUnitStateDidNew = 6;
+const HLPOperationState AVEAudioUnitStateDidUninitialize = 7;
+const HLPOperationState AVEAudioUnitStateDidInitialize = 8;
+const HLPOperationState AVEAudioUnitStateDidStop = 9;
+const HLPOperationState AVEAudioUnitStateDidStart = 10;
 
 NSErrorDomain const AVEAudioUnitErrorDomain = @"AVEAudioUnit";
 
@@ -262,7 +262,6 @@ static OSStatus AVEAudioUnitRenderCallback(void *inRefCon, AudioUnitRenderAction
     
     self.component = AudioComponentFindNext(NULL, &_componentDescription);
     if (self.component) {
-        self.state = AVEAudioUnitStateDidFindNext;
         [self updateState:AVEAudioUnitStateDidFindNext];
     } else {
         NSError *error = [NSError errorWithDomain:AVEAudioUnitErrorDomain code:AVEAudioUnitErrorNotFound userInfo:nil];
@@ -302,7 +301,6 @@ static OSStatus AVEAudioUnitRenderCallback(void *inRefCon, AudioUnitRenderAction
                     [self.outputs addObject:output];
                 }
                 
-                self.state = AVEAudioUnitStateDidNew;
                 [self updateState:AVEAudioUnitStateDidNew];
             }
         }
@@ -321,7 +319,6 @@ static OSStatus AVEAudioUnitRenderCallback(void *inRefCon, AudioUnitRenderAction
         [self.inputs removeAllObjects];
         [self.outputs removeAllObjects];
         
-        self.state = AVEAudioUnitStateDidFindNext;
         [self updateState:AVEAudioUnitStateDidDispose];
     } else {
         NSError *error = [NSError errorWithDomain:NSOSStatusErrorDomain code:status userInfo:nil];
@@ -334,7 +331,6 @@ static OSStatus AVEAudioUnitRenderCallback(void *inRefCon, AudioUnitRenderAction
     
     OSStatus status = AudioUnitInitialize(self.unit);
     if (status == noErr) {
-        self.state = AVEAudioUnitStateDidInitialize;
         [self updateState:AVEAudioUnitStateDidInitialize];
     } else {
         NSError *error = [NSError errorWithDomain:NSOSStatusErrorDomain code:status userInfo:nil];
@@ -347,7 +343,6 @@ static OSStatus AVEAudioUnitRenderCallback(void *inRefCon, AudioUnitRenderAction
     
     OSStatus status = AudioUnitUninitialize(self.unit);
     if (status == noErr) {
-        self.state = AVEAudioUnitStateDidNew;
         [self updateState:AVEAudioUnitStateDidUninitialize];
     } else {
         NSError *error = [NSError errorWithDomain:NSOSStatusErrorDomain code:status userInfo:nil];
@@ -360,7 +355,6 @@ static OSStatus AVEAudioUnitRenderCallback(void *inRefCon, AudioUnitRenderAction
     
     OSStatus status = AudioOutputUnitStart(self.unit);
     if (status == noErr) {
-        self.state = AVEAudioUnitStateDidStart;
         [self updateState:AVEAudioUnitStateDidStart];
     } else {
         NSError *error = [NSError errorWithDomain:NSOSStatusErrorDomain code:status userInfo:nil];
@@ -373,7 +367,6 @@ static OSStatus AVEAudioUnitRenderCallback(void *inRefCon, AudioUnitRenderAction
     
     OSStatus status = AudioOutputUnitStop(self.unit);
     if (status == noErr) {
-        self.state = AVEAudioUnitStateDidInitialize;
         [self updateState:AVEAudioUnitStateDidStop];
     } else {
         NSError *error = [NSError errorWithDomain:NSOSStatusErrorDomain code:status userInfo:nil];
@@ -384,7 +377,7 @@ static OSStatus AVEAudioUnitRenderCallback(void *inRefCon, AudioUnitRenderAction
 #pragma mark - Audio session
 
 - (void)AVEAudioSessionMediaServicesWereReset:(AVEAudioSession *)audioSession {
-    HLPOperationState state = self.state;
+    HLPOperationState state = self.states.lastObject.unsignedIntegerValue;
     if (state >= AVEAudioUnitStateDidFindNext) {
         [self audioComponentFindNext];
         if (self.errors.count == 0) {
