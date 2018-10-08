@@ -9,8 +9,8 @@
 #import "AVEAudioSession.h"
 
 const HLPOperationState AVEAudioSessionStateDidConfigure = 4;
-const HLPOperationState AVEAudioSessionStateDidSetActiveNO = 5;
-const HLPOperationState AVEAudioSessionStateDidSetActiveYES = 6;
+const HLPOperationState AVEAudioSessionStateDidDeactivate = 5;
+const HLPOperationState AVEAudioSessionStateDidActivate = 6;
 
 
 
@@ -167,17 +167,25 @@ const HLPOperationState AVEAudioSessionStateDidSetActiveYES = 6;
     [self updateState:AVEAudioSessionStateDidConfigure];
 }
 
-- (void)setActive:(BOOL)active withOptions:(AVAudioSessionSetActiveOptions)options {
+- (void)activate {
     [self.errors removeAllObjects];
     
     NSError *error = nil;
-    BOOL success = [self.audioSession setActive:active withOptions:options error:&error];
+    BOOL success = [self.audioSession setActive:YES error:&error];
     if (success) {
-        if (active) {
-            [self updateState:AVEAudioSessionStateDidSetActiveYES];
-        } else {
-            [self updateState:AVEAudioSessionStateDidSetActiveNO];
-        }
+        [self updateState:AVEAudioSessionStateDidActivate];
+    } else {
+        [self.errors addObject:error];
+    }
+}
+
+- (void)deactivate {
+    [self.errors removeAllObjects];
+    
+    NSError *error = nil;
+    BOOL success = [self.audioSession setActive:NO withOptions:AVAudioSessionSetActiveOptionNotifyOthersOnDeactivation error:&error];
+    if (success) {
+        [self updateState:AVEAudioSessionStateDidDeactivate];
     } else {
         [self.errors addObject:error];
     }
@@ -215,8 +223,8 @@ const HLPOperationState AVEAudioSessionStateDidSetActiveYES = 6;
     if (state >= AVEAudioSessionStateDidConfigure) {
         [self configure];
         if (self.errors.count == 0) {
-            if (state >= AVEAudioSessionStateDidSetActiveYES) {
-                [self setActive:YES withOptions:0];
+            if (state >= AVEAudioSessionStateDidActivate) {
+                [self activate];
             }
         }
     }

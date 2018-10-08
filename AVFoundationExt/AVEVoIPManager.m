@@ -212,7 +212,7 @@
 - (void)play {
     [self.errors removeAllObjects];
     
-    [self.session setActive:YES withOptions:0];
+    [self.session deactivate];
     if (self.session.errors.count > 0) {
         [self.errors addObjectsFromArray:self.session.errors];
     } else {
@@ -230,7 +230,7 @@
     if (self.unit.errors.count > 0) {
         [self.errors addObjectsFromArray:self.unit.errors];
     } else {
-        [self.session setActive:NO withOptions:AVAudioSessionSetActiveOptionNotifyOthersOnDeactivation];
+        [self.session activate];
         if (self.session.errors.count > 0) {
             [self.errors addObjectsFromArray:self.session.errors];
         }

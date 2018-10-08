@@ -12,8 +12,8 @@
 @class AVEAudioSessionInterruptionInfo, AVEAudioSessionRouteChangeInfo, AVEAudioSessionSilenceSecondaryAudioHintInfo, AVEAudioSession;
 
 extern const HLPOperationState AVEAudioSessionStateDidConfigure;
-extern const HLPOperationState AVEAudioSessionStateDidSetActiveNO;
-extern const HLPOperationState AVEAudioSessionStateDidSetActiveYES;
+extern const HLPOperationState AVEAudioSessionStateDidDeactivate;
+extern const HLPOperationState AVEAudioSessionStateDidActivate;
 
 
 
@@ -105,6 +105,8 @@ extern const HLPOperationState AVEAudioSessionStateDidSetActiveYES;
 @property (readonly) AVEAudioSessionSilenceSecondaryAudioHintInfo *silenceSecondaryAudioHintInfo;
 
 - (void)configure;
-- (void)setActive:(BOOL)active withOptions:(AVAudioSessionSetActiveOptions)options;
+
+- (void)activate;
+- (void)deactivate;
 
 @end
