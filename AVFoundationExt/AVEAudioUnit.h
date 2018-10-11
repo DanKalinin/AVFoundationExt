@@ -11,13 +11,13 @@
 
 @class AVEAudioUnitElement, AVEAudioUnit;
 
-extern const HLPOperationState AVEAudioUnitStateDidAudioComponentFindNext;
-extern const HLPOperationState AVEAudioUnitStateDidAudioComponentInstanceDispose;
-extern const HLPOperationState AVEAudioUnitStateDidAudioComponentInstanceNew;
-extern const HLPOperationState AVEAudioUnitStateDidAudioUnitUninitialize;
-extern const HLPOperationState AVEAudioUnitStateDidAudioUnitInitialize;
-extern const HLPOperationState AVEAudioUnitStateDidAudioOutputUnitStop;
-extern const HLPOperationState AVEAudioUnitStateDidAudioOutputUnitStart;
+extern const HLPOperationState NSEAudioUnitStateDidAudioComponentFindNext;
+extern const HLPOperationState NSEAudioUnitStateDidAudioComponentInstanceDispose;
+extern const HLPOperationState NSEAudioUnitStateDidAudioComponentInstanceNew;
+extern const HLPOperationState NSEAudioUnitStateDidAudioUnitUninitialize;
+extern const HLPOperationState NSEAudioUnitStateDidAudioUnitInitialize;
+extern const HLPOperationState NSEAudioUnitStateDidAudioOutputUnitStop;
+extern const HLPOperationState NSEAudioUnitStateDidAudioOutputUnitStart;
 
 extern NSErrorDomain const AVEAudioUnitErrorDomain;
 
@@ -35,7 +35,7 @@ NS_ERROR_ENUM(AVEAudioUnitErrorDomain) {
 
 
 
-@protocol AVEAudioUnitElementDelegate <HLPOperationDelegate>
+@protocol AVEAudioUnitElementDelegate <NSEOperationDelegate>
 
 @optional
 - (OSStatus)AVEAudioUnitElementDidRender:(AudioUnitRenderActionFlags *)ioActionFlags inTimeStamp:(const AudioTimeStamp *)inTimeStamp inBusNumber:(UInt32)inBusNumber inNumberFrames:(UInt32)inNumberFrames ioData:(AudioBufferList *)ioData;
@@ -44,7 +44,7 @@ NS_ERROR_ENUM(AVEAudioUnitErrorDomain) {
 
 
 
-@interface AVEAudioUnitElement : HLPOperation <AVEAudioUnitElementDelegate>
+@interface AVEAudioUnitElement : NSEOperation <AVEAudioUnitElementDelegate>
 
 @property AudioStreamBasicDescription kAudioUnitProperty_StreamFormat;
 @property UInt32 kAudioUnitProperty_ElementCount;
@@ -87,7 +87,7 @@ NS_ERROR_ENUM(AVEAudioUnitErrorDomain) {
 
 
 
-@interface AVEAudioUnit : HLPOperation <AVEAudioUnitDelegate, AVEAudioSessionDelegate>
+@interface AVEAudioUnit : NSEOperation <AVEAudioUnitDelegate, AVEAudioSessionDelegate>
 
 @property (readonly) HLPArray<AVEAudioUnitDelegate> *delegates;
 @property (readonly) AudioComponentDescription componentDescription;
@@ -102,15 +102,15 @@ NS_ERROR_ENUM(AVEAudioUnitErrorDomain) {
 
 - (instancetype)initWithComponentDescription:(AudioComponentDescription)componentDescription;
 
-- (void)audioComponentFindNext;
+- (NSError *)audioComponentFindNext;
 
-- (void)audioComponentInstanceNew;
-- (void)audioComponentInstanceDispose;
+- (NSError *)audioComponentInstanceNew;
+- (NSError *)audioComponentInstanceDispose;
 
-- (void)audioUnitInitialize;
-- (void)audioUnitUninitialize;
+- (NSError *)audioUnitInitialize;
+- (NSError *)audioUnitUninitialize;
 
-- (void)audioOutputUnitStart;
-- (void)audioOutputUnitStop;
+- (NSError *)audioOutputUnitStart;
+- (NSError *)audioOutputUnitStop;
 
 @end

@@ -24,27 +24,6 @@
 
 @implementation AVEVoIPAudioSession
 
-//- (void)configure {
-//    [super configure];
-//
-//    NSError *error = nil;
-//    BOOL success = [self.audioSession setCategory:AVAudioSessionCategoryPlayAndRecord mode:AVAudioSessionModeVoiceChat options:0 error:&error];
-//    if (success) {
-//        success = [self.audioSession setPreferredIOBufferDuration:0.005 error:&error];
-//        if (success) {
-//            success = [self.audioSession setPreferredSampleRate:44100.0 error:&error];
-//            if (success) {
-//            } else {
-//                [self.errors addObject:error];
-//            }
-//        } else {
-//            [self.errors addObject:error];
-//        }
-//    } else {
-//        [self.errors addObject:error];
-//    }
-//}
-
 - (NSError *)configure {
     NSError *error = nil;
     BOOL success = [self.audioSession setCategory:AVAudioSessionCategoryPlayAndRecord mode:AVAudioSessionModeVoiceChat options:0 error:&error];
@@ -81,7 +60,7 @@
 
 - (void)audioComponentInstanceNew {
     [super audioComponentInstanceNew];
-    
+
     if (self.errors.count == 0) {
         self.global.kAudioUnitProperty_MaximumFramesPerSlice = 4096;
         if (self.global.errors.count > 0) {
