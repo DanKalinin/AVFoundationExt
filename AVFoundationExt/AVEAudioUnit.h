@@ -107,12 +107,12 @@ NS_ERROR_ENUM(AVEAudioUnitErrorDomain) {
 - (NSError *)audioComponentInstanceNew;
 - (NSError *)audioComponentInstanceDispose;
 
+- (NSError *)configure;
+
 - (NSError *)audioUnitInitialize;
 - (NSError *)audioUnitUninitialize;
 
 - (NSError *)audioOutputUnitStart;
 - (NSError *)audioOutputUnitStop;
-
-- (NSError *)configure;
 
 @end
