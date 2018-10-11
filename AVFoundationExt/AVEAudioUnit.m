@@ -10,10 +10,11 @@
 const NSEOperationState AVEAudioUnitStateDidAudioComponentFindNext = 2;
 const NSEOperationState AVEAudioUnitStateDidAudioComponentInstanceDispose = 3;
 const NSEOperationState AVEAudioUnitStateDidAudioComponentInstanceNew = 4;
-const NSEOperationState AVEAudioUnitStateDidAudioUnitUninitialize = 5;
-const NSEOperationState AVEAudioUnitStateDidAudioUnitInitialize = 6;
-const NSEOperationState AVEAudioUnitStateDidAudioOutputUnitStop = 7;
-const NSEOperationState AVEAudioUnitStateDidAudioOutputUnitStart = 8;
+const NSEOperationState AVEAudioUnitStateDidConfigure = 5;
+const NSEOperationState AVEAudioUnitStateDidAudioUnitUninitialize = 6;
+const NSEOperationState AVEAudioUnitStateDidAudioUnitInitialize = 7;
+const NSEOperationState AVEAudioUnitStateDidAudioOutputUnitStop = 8;
+const NSEOperationState AVEAudioUnitStateDidAudioOutputUnitStart = 9;
 
 NSErrorDomain const AVEAudioUnitErrorDomain = @"AVEAudioUnit";
 
@@ -34,6 +35,7 @@ static OSStatus AVEAudioUnitRenderCallback(void *inRefCon, AudioUnitRenderAction
 @property AudioUnitScope scope;
 @property AudioUnitElement element;
 @property AURenderCallbackStruct renderCallback;
+@property NSError *error;
 
 @end
 
@@ -64,40 +66,36 @@ static OSStatus AVEAudioUnitRenderCallback(void *inRefCon, AudioUnitRenderAction
 - (void)getProperty:(AudioUnitPropertyID)property data:(void *)data size:(UInt32 *)size {
     OSStatus status = AudioUnitGetProperty(self.unit, property, self.scope, self.element, data, size);
     if (status == noErr) {
-        [self.errors removeAllObjects];
+        self.error = nil;
     } else {
-        NSError *error = [NSError errorWithDomain:NSOSStatusErrorDomain code:status userInfo:nil];
-        [self.errors addObject:error];
+        self.error = [NSError errorWithDomain:NSOSStatusErrorDomain code:status userInfo:nil];
     }
 }
 
 - (void)setProperty:(AudioUnitPropertyID)property data:(void *)data size:(UInt32)size {
     OSStatus status = AudioUnitSetProperty(self.unit, property, self.scope, self.element, data, size);
     if (status == noErr) {
-        [self.errors removeAllObjects];
+        self.error = nil;
     } else {
-        NSError *error = [NSError errorWithDomain:NSOSStatusErrorDomain code:status userInfo:nil];
-        [self.errors addObject:error];
+        self.error = [NSError errorWithDomain:NSOSStatusErrorDomain code:status userInfo:nil];
     }
 }
 
 - (void)getParameter:(AudioUnitParameterID)parameter value:(AudioUnitParameterValue *)value {
     OSStatus status = AudioUnitGetParameter(self.unit, parameter, self.scope, self.element, value);
     if (status == noErr) {
-        [self.errors removeAllObjects];
+        self.error = nil;
     } else {
-        NSError *error = [NSError errorWithDomain:NSOSStatusErrorDomain code:status userInfo:nil];
-        [self.errors addObject:error];
+        self.error = [NSError errorWithDomain:NSOSStatusErrorDomain code:status userInfo:nil];
     }
 }
 
 - (void)setParameter:(AudioUnitParameterID)parameter value:(AudioUnitParameterValue)value {
     OSStatus status = AudioUnitSetParameter(self.unit, parameter, self.scope, self.element, value, 0);
     if (status == noErr) {
-        [self.errors removeAllObjects];
+        self.error = nil;
     } else {
-        NSError *error = [NSError errorWithDomain:NSOSStatusErrorDomain code:status userInfo:nil];
-        [self.errors addObject:error];
+        self.error = [NSError errorWithDomain:NSOSStatusErrorDomain code:status userInfo:nil];
     }
 }
 
@@ -247,69 +245,56 @@ static OSStatus AVEAudioUnitRenderCallback(void *inRefCon, AudioUnitRenderAction
 }
 
 - (NSError *)audioComponentFindNext {
+    NSError *error = nil;
     self.component = AudioComponentFindNext(NULL, &_componentDescription);
     if (self.component) {
         [self updateState:AVEAudioUnitStateDidAudioComponentFindNext];
-        return nil;
     } else {
-        NSError *error = [NSError errorWithDomain:AVEAudioUnitErrorDomain code:AVEAudioUnitErrorNotFound userInfo:nil];
-        return error;
+        error = [NSError errorWithDomain:AVEAudioUnitErrorDomain code:AVEAudioUnitErrorNotFound userInfo:nil];
     }
+    return error;
 }
 
-//- (void)audioComponentFindNext {
-//    [self.errors removeAllObjects];
-//    
-//    self.component = AudioComponentFindNext(NULL, &_componentDescription);
-//    if (self.component) {
-//        [self updateState:AVEAudioUnitStateDidAudioComponentFindNext];
-//    } else {
-//        NSError *error = [NSError errorWithDomain:AVEAudioUnitErrorDomain code:AVEAudioUnitErrorNotFound userInfo:nil];
-//        [self.errors addObject:error];
-//    }
-//}
-//
-//- (void)audioComponentInstanceNew {
-//    [self.errors removeAllObjects];
-//    
-//    OSStatus status = AudioComponentInstanceNew(self.component, &_unit);
-//    if (status == noErr) {
-//        self.global = [AVEAudioUnitElement.alloc initWithUnit:self.unit scope:kAudioUnitScope_Global element:0];
-//        [self.global.delegates addObject:self.delegates];
-//        
-//        AVEAudioUnitElement *input = [AVEAudioUnitElement.alloc initWithUnit:self.unit scope:kAudioUnitScope_Input element:0];
-//        UInt32 inputElementCount = input.kAudioUnitProperty_ElementCount;
-//        if (input.errors.count > 0) {
-//            [self.errors addObjectsFromArray:input.errors];
-//        } else {
-//            [self.inputs removeAllObjects];
-//            for (AudioUnitElement element = 0; element < inputElementCount; element++) {
-//                input = [AVEAudioUnitElement.alloc initWithUnit:self.unit scope:kAudioUnitScope_Input element:element];
-//                [input.delegates addObject:self.delegates];
-//                [self.inputs addObject:input];
-//            }
-//
-//            AVEAudioUnitElement *output = [AVEAudioUnitElement.alloc initWithUnit:self.unit scope:kAudioUnitScope_Output element:0];
-//            UInt32 outputElementCount = output.kAudioUnitProperty_ElementCount;
-//            if (output.errors.count > 0) {
-//                [self.errors addObjectsFromArray:output.errors];
-//            } else {
-//                [self.outputs removeAllObjects];
-//                for (AudioUnitElement element = 0; element < outputElementCount; element++) {
-//                    output = [AVEAudioUnitElement.alloc initWithUnit:self.unit scope:kAudioUnitScope_Output element:element];
-//                    [output.delegates addObject:self.delegates];
-//                    [self.outputs addObject:output];
-//                }
-//                
-//                [self updateState:AVEAudioUnitStateDidAudioComponentInstanceNew];
-//            }
-//        }
-//    } else {
-//        NSError *error = [NSError errorWithDomain:NSOSStatusErrorDomain code:status userInfo:nil];
-//        [self.errors addObject:error];
-//    }
-//}
-//
+- (NSError *)audioComponentInstanceNew {
+    NSError *error = nil;
+    OSStatus status = AudioComponentInstanceNew(self.component, &_unit);
+    if (status == noErr) {
+        self.global = [AVEAudioUnitElement.alloc initWithUnit:self.unit scope:kAudioUnitScope_Global element:0];
+        [self.global.delegates addObject:self.delegates];
+        
+        AVEAudioUnitElement *input = [AVEAudioUnitElement.alloc initWithUnit:self.unit scope:kAudioUnitScope_Input element:0];
+        UInt32 inputElementCount = input.kAudioUnitProperty_ElementCount;
+        if (input.error) {
+            error = input.error;
+        } else {
+            [self.inputs removeAllObjects];
+            for (AudioUnitElement element = 0; element < inputElementCount; element++) {
+                input = [AVEAudioUnitElement.alloc initWithUnit:self.unit scope:kAudioUnitScope_Input element:element];
+                [input.delegates addObject:self.delegates];
+                [self.inputs addObject:input];
+            }
+
+            AVEAudioUnitElement *output = [AVEAudioUnitElement.alloc initWithUnit:self.unit scope:kAudioUnitScope_Output element:0];
+            UInt32 outputElementCount = output.kAudioUnitProperty_ElementCount;
+            if (output.error) {
+                error = output.error;
+            } else {
+                [self.outputs removeAllObjects];
+                for (AudioUnitElement element = 0; element < outputElementCount; element++) {
+                    output = [AVEAudioUnitElement.alloc initWithUnit:self.unit scope:kAudioUnitScope_Output element:element];
+                    [output.delegates addObject:self.delegates];
+                    [self.outputs addObject:output];
+                }
+                
+                [self updateState:AVEAudioUnitStateDidAudioComponentInstanceNew];
+            }
+        }
+    } else {
+        error = [NSError errorWithDomain:NSOSStatusErrorDomain code:status userInfo:nil];
+    }
+    return error;
+}
+
 //- (void)audioComponentInstanceDispose {
 //    [self.errors removeAllObjects];
 //    

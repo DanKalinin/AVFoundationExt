@@ -14,6 +14,7 @@
 extern const HLPOperationState NSEAudioUnitStateDidAudioComponentFindNext;
 extern const HLPOperationState NSEAudioUnitStateDidAudioComponentInstanceDispose;
 extern const HLPOperationState NSEAudioUnitStateDidAudioComponentInstanceNew;
+extern const NSEOperationState AVEAudioUnitStateDidConfigure;
 extern const HLPOperationState NSEAudioUnitStateDidAudioUnitUninitialize;
 extern const HLPOperationState NSEAudioUnitStateDidAudioUnitInitialize;
 extern const HLPOperationState NSEAudioUnitStateDidAudioOutputUnitStop;
@@ -61,6 +62,7 @@ NS_ERROR_ENUM(AVEAudioUnitErrorDomain) {
 @property (readonly) AudioUnitScope scope;
 @property (readonly) AudioUnitElement element;
 @property (readonly) AURenderCallbackStruct renderCallback;
+@property (readonly) NSError *error;
 
 - (instancetype)initWithUnit:(AudioUnit)unit scope:(AudioUnitScope)scope element:(AudioUnitElement)element;
 
