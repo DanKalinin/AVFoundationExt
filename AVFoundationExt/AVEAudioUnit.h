@@ -113,4 +113,6 @@ NS_ERROR_ENUM(AVEAudioUnitErrorDomain) {
 - (NSError *)audioOutputUnitStart;
 - (NSError *)audioOutputUnitStop;
 
+- (NSError *)configure;
+
 @end
