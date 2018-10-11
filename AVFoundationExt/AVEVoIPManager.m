@@ -24,9 +24,28 @@
 
 @implementation AVEVoIPAudioSession
 
-- (void)configure {
-    [super configure];
-    
+//- (void)configure {
+//    [super configure];
+//
+//    NSError *error = nil;
+//    BOOL success = [self.audioSession setCategory:AVAudioSessionCategoryPlayAndRecord mode:AVAudioSessionModeVoiceChat options:0 error:&error];
+//    if (success) {
+//        success = [self.audioSession setPreferredIOBufferDuration:0.005 error:&error];
+//        if (success) {
+//            success = [self.audioSession setPreferredSampleRate:44100.0 error:&error];
+//            if (success) {
+//            } else {
+//                [self.errors addObject:error];
+//            }
+//        } else {
+//            [self.errors addObject:error];
+//        }
+//    } else {
+//        [self.errors addObject:error];
+//    }
+//}
+
+- (NSError *)configure {
     NSError *error = nil;
     BOOL success = [self.audioSession setCategory:AVAudioSessionCategoryPlayAndRecord mode:AVAudioSessionModeVoiceChat options:0 error:&error];
     if (success) {
@@ -34,15 +53,11 @@
         if (success) {
             success = [self.audioSession setPreferredSampleRate:44100.0 error:&error];
             if (success) {
-            } else {
-                [self.errors addObject:error];
+                [self updateState:AVEAudioSessionStateDidConfigure];
             }
-        } else {
-            [self.errors addObject:error];
         }
-    } else {
-        [self.errors addObject:error];
     }
+    return error;
 }
 
 @end
@@ -141,126 +156,136 @@
     static AVEVoIPManager *shared = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        shared = [self.alloc initWithSession:AVEVoIPAudioSession.shared unit:AVEVoIPAudioUnit.voiceProcessingIO converter:AVEVoIPAudioConverter.new];
+        shared = self.new;
     });
     return shared;
 }
 
-- (instancetype)initWithSession:(AVEAudioSession *)session unit:(AVEAudioUnit *)unit converter:(AVEAudioConverter *)converter {
+- (instancetype)init {
     self = super.init;
     if (self) {
-        self.session = session;
-        [self.session.delegates addObject:self.delegates];
-
-        self.unit = unit;
-        [self.unit.delegates addObject:self.delegates];
-        
-        // self.converter = converter;
-        // [self.converter.delegates addObject:self.delegates];
-        //
-        [self start];
+        self.session = AVEVoIPAudioSession.shared;
+//        [self.session configure];
+//        [self.session activate];
     }
     return self;
 }
 
-- (void)start {
-    [self.errors removeAllObjects];
-    
-    [self.session configure];
-    if (self.session.errors.count > 0) {
-        [self.errors addObjectsFromArray:self.session.errors];
-    } else {
-        [self.unit audioComponentFindNext];
-        if (self.unit.errors.count > 0) {
-            [self.errors addObjectsFromArray:self.unit.errors];
-        } else {
-            [self.unit audioComponentInstanceNew];
-            if (self.unit.errors.count > 0) {
-                [self.errors addObjectsFromArray:self.unit.errors];
-            } else {
-                [self.unit audioUnitInitialize];
-                if (self.unit.errors.count > 0) {
-                    [self.errors addObjectsFromArray:self.unit.errors];
-                } else {
-                    [self.converter start];
-                    if (self.converter.errors.count > 0) {
-                        [self.errors addObjectsFromArray:self.converter.errors];
-                    } else {
-                        //
-                        [self play];
-                    }
-                }
-            }
-        }
-    }
-}
-
-- (void)stop {
-    [self.errors removeAllObjects];
-    
-    [self.unit audioUnitUninitialize];
-    if (self.unit.errors.count > 0) {
-        [self.errors addObjectsFromArray:self.unit.errors];
-    } else {
-        [self.unit audioComponentInstanceDispose];
-        if (self.unit.errors.count > 0) {
-            [self.errors addObjectsFromArray:self.unit.errors];
-        }
-    }
-}
-
-- (void)play {
-    [self.errors removeAllObjects];
-    
-    [self.session deactivate];
-    if (self.session.errors.count > 0) {
-        [self.errors addObjectsFromArray:self.session.errors];
-    } else {
-        [self.unit audioOutputUnitStart];
-        if (self.unit.errors.count > 0) {
-            [self.errors addObjectsFromArray:self.unit.errors];
-        }
-    }
-}
-
-- (void)pause {
-    [self.errors removeAllObjects];
-    
-    [self.unit audioOutputUnitStop];
-    if (self.unit.errors.count > 0) {
-        [self.errors addObjectsFromArray:self.unit.errors];
-    } else {
-        [self.session activate];
-        if (self.session.errors.count > 0) {
-            [self.errors addObjectsFromArray:self.session.errors];
-        }
-    }
-}
-
+//- (instancetype)initWithSession:(AVEAudioSession *)session unit:(AVEAudioUnit *)unit converter:(AVEAudioConverter *)converter {
+//    self = super.init;
+//    if (self) {
+//        self.session = session;
+//        [self.session.delegates addObject:self.delegates];
+//
+//        self.unit = unit;
+//        [self.unit.delegates addObject:self.delegates];
+//
+//        // self.converter = converter;
+//        // [self.converter.delegates addObject:self.delegates];
+//        //
+//        [self start];
+//    }
+//    return self;
+//}
+//
 //- (void)start {
-//    self.session = self.sessionClass.new;
-//    [self.session.delegates addObject:self.delegates];
-//    [self.session start];
+//    [self.errors removeAllObjects];
 //
-//    self.unit = [self.unitClass voiceProcessingIO];
-//    [self.unit.delegates addObject:self.delegates];
-//    [self.unit find];
-//    [self.unit instantiate];
-//    [self.unit initialize];
-//
-//    self.converter = self.converterClass.new;
-//    [self.converter.delegates addObject:self.delegates];
+//    [self.session configure];
+//    if (self.session.errors.count > 0) {
+//        [self.errors addObjectsFromArray:self.session.errors];
+//    } else {
+//        [self.unit audioComponentFindNext];
+//        if (self.unit.errors.count > 0) {
+//            [self.errors addObjectsFromArray:self.unit.errors];
+//        } else {
+//            [self.unit audioComponentInstanceNew];
+//            if (self.unit.errors.count > 0) {
+//                [self.errors addObjectsFromArray:self.unit.errors];
+//            } else {
+//                [self.unit audioUnitInitialize];
+//                if (self.unit.errors.count > 0) {
+//                    [self.errors addObjectsFromArray:self.unit.errors];
+//                } else {
+//                    [self.converter start];
+//                    if (self.converter.errors.count > 0) {
+//                        [self.errors addObjectsFromArray:self.converter.errors];
+//                    } else {
+//                        //
+//                        [self play];
+//                    }
+//                }
+//            }
+//        }
+//    }
 //}
 //
-//- (void)cancel {
-//    [self.session stop];
+//- (void)stop {
+//    [self.errors removeAllObjects];
 //
-//    [self.unit uninitialize];
-//    [self.unit dispose];
+//    [self.unit audioUnitUninitialize];
+//    if (self.unit.errors.count > 0) {
+//        [self.errors addObjectsFromArray:self.unit.errors];
+//    } else {
+//        [self.unit audioComponentInstanceDispose];
+//        if (self.unit.errors.count > 0) {
+//            [self.errors addObjectsFromArray:self.unit.errors];
+//        }
+//    }
 //}
 //
-//#pragma mark - Audio session
+//- (void)play {
+//    [self.errors removeAllObjects];
 //
-//#pragma mark - Helpers
+//    [self.session deactivate];
+//    if (self.session.errors.count > 0) {
+//        [self.errors addObjectsFromArray:self.session.errors];
+//    } else {
+//        [self.unit audioOutputUnitStart];
+//        if (self.unit.errors.count > 0) {
+//            [self.errors addObjectsFromArray:self.unit.errors];
+//        }
+//    }
+//}
+//
+//- (void)pause {
+//    [self.errors removeAllObjects];
+//
+//    [self.unit audioOutputUnitStop];
+//    if (self.unit.errors.count > 0) {
+//        [self.errors addObjectsFromArray:self.unit.errors];
+//    } else {
+//        [self.session activate];
+//        if (self.session.errors.count > 0) {
+//            [self.errors addObjectsFromArray:self.session.errors];
+//        }
+//    }
+//}
+//
+////- (void)start {
+////    self.session = self.sessionClass.new;
+////    [self.session.delegates addObject:self.delegates];
+////    [self.session start];
+////
+////    self.unit = [self.unitClass voiceProcessingIO];
+////    [self.unit.delegates addObject:self.delegates];
+////    [self.unit find];
+////    [self.unit instantiate];
+////    [self.unit initialize];
+////
+////    self.converter = self.converterClass.new;
+////    [self.converter.delegates addObject:self.delegates];
+////}
+////
+////- (void)cancel {
+////    [self.session stop];
+////
+////    [self.unit uninitialize];
+////    [self.unit dispose];
+////}
+////
+////#pragma mark - Audio session
+////
+////#pragma mark - Helpers
 
 @end

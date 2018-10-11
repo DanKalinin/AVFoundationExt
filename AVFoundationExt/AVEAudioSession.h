@@ -11,9 +11,9 @@
 
 @class AVEAudioSessionInterruptionInfo, AVEAudioSessionRouteChangeInfo, AVEAudioSessionSilenceSecondaryAudioHintInfo, AVEAudioSession;
 
-extern const HLPOperationState AVEAudioSessionStateDidConfigure;
-extern const HLPOperationState AVEAudioSessionStateDidDeactivate;
-extern const HLPOperationState AVEAudioSessionStateDidActivate;
+extern const NSEOperationState AVEAudioSessionStateDidConfigure;
+extern const NSEOperationState AVEAudioSessionStateDidActivate;
+extern const NSEOperationState AVEAudioSessionStateDidDeactivate;
 
 
 
@@ -78,14 +78,9 @@ extern const HLPOperationState AVEAudioSessionStateDidActivate;
 
 
 
-@protocol AVEAudioSessionDelegate <HLPOperationDelegate>
+@protocol AVEAudioSessionDelegate <NSEOperationDelegate>
 
 @optional
-- (void)AVEAudioSessionDidUpdateState:(AVEAudioSession *)audioSession;
-
-- (void)AVEAudioSessionDidBegin:(AVEAudioSession *)audioSession;
-- (void)AVEAudioSessionDidEnd:(AVEAudioSession *)audioSession;
-
 - (void)AVEAudioSessionInterruption:(AVEAudioSession *)audioSession;
 - (void)AVEAudioSessionRouteChange:(AVEAudioSession *)audioSession;
 - (void)AVEAudioSessionMediaServicesWereLost:(AVEAudioSession *)audioSession;
@@ -96,7 +91,10 @@ extern const HLPOperationState AVEAudioSessionStateDidActivate;
 
 
 
-@interface AVEAudioSession : HLPOperation <AVEAudioSessionDelegate>
+@interface AVEAudioSession : NSEOperation <AVEAudioSessionDelegate>
+
+@property AVAudioSessionSetActiveOptions activationOptions;
+@property AVAudioSessionSetActiveOptions deactivationOptions;
 
 @property (readonly) HLPArray<AVEAudioSessionDelegate> *delegates;
 @property (readonly) AVAudioSession *audioSession;
@@ -104,9 +102,9 @@ extern const HLPOperationState AVEAudioSessionStateDidActivate;
 @property (readonly) AVEAudioSessionRouteChangeInfo *routeChangeInfo;
 @property (readonly) AVEAudioSessionSilenceSecondaryAudioHintInfo *silenceSecondaryAudioHintInfo;
 
-- (void)configure;
+- (NSError *)configure;
 
-- (void)activate;
-- (void)deactivate;
+- (NSError *)activate;
+- (NSError *)deactivate;
 
 @end
