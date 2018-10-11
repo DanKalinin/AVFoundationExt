@@ -12,8 +12,8 @@
 @class AVEAudioSessionInterruptionInfo, AVEAudioSessionRouteChangeInfo, AVEAudioSessionSilenceSecondaryAudioHintInfo, AVEAudioSession;
 
 extern const NSEOperationState AVEAudioSessionStateDidConfigure;
-extern const NSEOperationState AVEAudioSessionStateDidActivate;
 extern const NSEOperationState AVEAudioSessionStateDidDeactivate;
+extern const NSEOperationState AVEAudioSessionStateDidActivate;
 
 
 

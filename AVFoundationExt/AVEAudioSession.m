@@ -9,8 +9,8 @@
 #import "AVEAudioSession.h"
 
 const NSEOperationState AVEAudioSessionStateDidConfigure = 2;
-const NSEOperationState AVEAudioSessionStateDidActivate = 3;
-const NSEOperationState AVEAudioSessionStateDidDeactivate = 4;
+const NSEOperationState AVEAudioSessionStateDidDeactivate = 3;
+const NSEOperationState AVEAudioSessionStateDidActivate = 4;
 
 
 
@@ -175,59 +175,6 @@ const NSEOperationState AVEAudioSessionStateDidDeactivate = 4;
     return error;
 }
 
-//- (instancetype)init {
-//    self = super.init;
-//    if (self) {
-//        self.audioSession = AVAudioSession.sharedInstance;
-//        [self start];
-//    }
-//    return self;
-//}
-//
-//- (void)dealloc {
-//    [self stop];
-//}
-//
-//- (void)start {
-//    [self.notificationCenter addObserver:self selector:@selector(AVAudioSessionInterruptionNotification:) name:AVAudioSessionInterruptionNotification object:self.audioSession];
-//    [self.notificationCenter addObserver:self selector:@selector(AVAudioSessionRouteChangeNotification:) name:AVAudioSessionRouteChangeNotification object:self.audioSession];
-//    [self.notificationCenter addObserver:self selector:@selector(AVAudioSessionMediaServicesWereLostNotification:) name:AVAudioSessionMediaServicesWereLostNotification object:self.audioSession];
-//    [self.notificationCenter addObserver:self selector:@selector(AVAudioSessionMediaServicesWereResetNotification:) name:AVAudioSessionMediaServicesWereResetNotification object:self.audioSession];
-//    [self.notificationCenter addObserver:self selector:@selector(AVAudioSessionSilenceSecondaryAudioHintNotification:) name:AVAudioSessionSilenceSecondaryAudioHintNotification object:self.audioSession];
-//
-//    [self updateState:HLPOperationStateDidBegin];
-//}
-//
-//- (void)configure {
-//    [self.errors removeAllObjects];
-//
-//    [self updateState:AVEAudioSessionStateDidConfigure];
-//}
-//
-//- (void)activate {
-//    [self.errors removeAllObjects];
-//
-//    NSError *error = nil;
-//    BOOL success = [self.audioSession setActive:YES error:&error];
-//    if (success) {
-//        [self updateState:AVEAudioSessionStateDidActivate];
-//    } else {
-//        [self.errors addObject:error];
-//    }
-//}
-//
-//- (void)deactivate {
-//    [self.errors removeAllObjects];
-//
-//    NSError *error = nil;
-//    BOOL success = [self.audioSession setActive:NO withOptions:AVAudioSessionSetActiveOptionNotifyOthersOnDeactivation error:&error];
-//    if (success) {
-//        [self updateState:AVEAudioSessionStateDidDeactivate];
-//    } else {
-//        [self.errors addObject:error];
-//    }
-//}
-
 #pragma mark - Notifications
 
 - (void)AVAudioSessionInterruptionNotification:(NSNotification *)notification {
@@ -256,16 +203,22 @@ const NSEOperationState AVEAudioSessionStateDidDeactivate = 4;
 #pragma mark - Audio session
 
 - (void)AVEAudioSessionMediaServicesWereReset:(AVEAudioSession *)audioSession {
-    NSLog(@"Reset");
-//    HLPOperationState state = self.states.lastObject.unsignedIntegerValue;
-//    if (state >= AVEAudioSessionStateDidConfigure) {
-//        [self configure];
-//        if (self.errors.count == 0) {
-//            if (state >= AVEAudioSessionStateDidActivate) {
-//                [self activate];
-//            }
-//        }
-//    }
+    if (self.errors.count == 0) {
+        NSEOperationState state = self.states.lastObject.unsignedIntegerValue;
+        if (state >= AVEAudioSessionStateDidConfigure) {
+            NSError *error = [self configure];
+            if (error) {
+                [self.errors addObject:error];
+            } else {
+                if (state >= AVEAudioSessionStateDidActivate) {
+                    error = [self activate];
+                    if (error) {
+                        [self.errors addObject:error];
+                    }
+                }
+            }
+        }
+    }
 }
 
 @end

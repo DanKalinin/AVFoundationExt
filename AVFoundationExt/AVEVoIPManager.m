@@ -165,8 +165,8 @@
     self = super.init;
     if (self) {
         self.session = AVEVoIPAudioSession.shared;
-//        [self.session configure];
-//        [self.session activate];
+        [self.session configure];
+        [self.session activate];
     }
     return self;
 }
