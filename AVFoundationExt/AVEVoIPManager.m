@@ -58,35 +58,35 @@
 
 @implementation AVEVoIPAudioUnit
 
-- (void)audioComponentInstanceNew {
-    [super audioComponentInstanceNew];
-
-    if (self.errors.count == 0) {
-        self.global.kAudioUnitProperty_MaximumFramesPerSlice = 4096;
-        if (self.global.errors.count > 0) {
-            [self.errors addObjectsFromArray:self.global.errors];
+- (NSError *)configure {
+    NSError *error = nil;
+    self.global.kAudioUnitProperty_MaximumFramesPerSlice = 4096;
+    if (self.global.error) {
+        error = self.global.error;
+    } else {
+        self.global.kAudioOutputUnitProperty_SetInputCallback = self.global.renderCallback;
+        if (self.global.error) {
+            error = self.global.error;
         } else {
-            self.global.kAudioOutputUnitProperty_SetInputCallback = self.global.renderCallback;
-            if (self.global.errors.count > 0) {
-                [self.errors addObjectsFromArray:self.global.errors];
+            self.inputs[0].kAudioUnitProperty_SetRenderCallback = self.inputs[0].renderCallback;
+            if (self.inputs[0].error) {
+                error = self.inputs[0].error;
             } else {
-                self.inputs[0].kAudioUnitProperty_SetRenderCallback = self.inputs[0].renderCallback;
-                if (self.inputs[0].errors.count > 0) {
-                    [self.errors addObjectsFromArray:self.inputs[0].errors];
+                self.inputs[1].kAudioOutputUnitProperty_EnableIO = 1;
+                if (self.inputs[1].error) {
+                    error = self.inputs[1].error;
                 } else {
-                    self.inputs[1].kAudioOutputUnitProperty_EnableIO = 1;
-                    if (self.inputs[1].errors.count > 0) {
-                        [self.errors addObjectsFromArray:self.inputs[1].errors];
+                    self.outputs[1].kAudioUnitProperty_ShouldAllocateBuffer = 0;
+                    if (self.outputs[1].error) {
+                        error = self.outputs[1].error;
                     } else {
-                        self.outputs[1].kAudioUnitProperty_ShouldAllocateBuffer = 0;
-                        if (self.outputs[1].errors.count > 0) {
-                            [self.errors addObjectsFromArray:self.outputs[1].errors];
-                        }
+                        [self updateState:AVEAudioUnitStateDidConfigure];
                     }
                 }
             }
         }
     }
+    return error;
 }
 
 @end
@@ -146,6 +146,13 @@
         self.session = AVEVoIPAudioSession.shared;
         [self.session configure];
         [self.session activate];
+        
+        self.unit = AVEVoIPAudioUnit.voiceProcessingIO;
+        [self.unit audioComponentFindNext];
+        [self.unit audioComponentInstanceNew];
+        [self.unit configure];
+        [self.unit audioUnitInitialize];
+        [self.unit audioOutputUnitStart];
     }
     return self;
 }

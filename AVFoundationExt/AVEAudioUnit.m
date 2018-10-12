@@ -295,96 +295,111 @@ static OSStatus AVEAudioUnitRenderCallback(void *inRefCon, AudioUnitRenderAction
     return error;
 }
 
-//- (void)audioComponentInstanceDispose {
-//    [self.errors removeAllObjects];
-//    
-//    OSStatus status = AudioComponentInstanceDispose(self.unit);
-//    if (status == noErr) {
-//        self.global = nil;
-//        [self.inputs removeAllObjects];
-//        [self.outputs removeAllObjects];
-//        
-//        [self updateState:AVEAudioUnitStateDidAudioComponentInstanceDispose];
-//    } else {
-//        NSError *error = [NSError errorWithDomain:NSOSStatusErrorDomain code:status userInfo:nil];
-//        [self.errors addObject:error];
-//    }
-//}
-//
-//- (void)audioUnitInitialize {
-//    [self.errors removeAllObjects];
-//    
-//    OSStatus status = AudioUnitInitialize(self.unit);
-//    if (status == noErr) {
-//        [self updateState:AVEAudioUnitStateDidAudioUnitInitialize];
-//    } else {
-//        NSError *error = [NSError errorWithDomain:NSOSStatusErrorDomain code:status userInfo:nil];
-//        [self.errors addObject:error];
-//    }
-//}
-//
-//- (void)audioUnitUninitialize {
-//    [self.errors removeAllObjects];
-//    
-//    OSStatus status = AudioUnitUninitialize(self.unit);
-//    if (status == noErr) {
-//        [self updateState:AVEAudioUnitStateDidAudioUnitUninitialize];
-//    } else {
-//        NSError *error = [NSError errorWithDomain:NSOSStatusErrorDomain code:status userInfo:nil];
-//        [self.errors addObject:error];
-//    }
-//}
-//
-//- (void)audioOutputUnitStart {
-//    [self.errors removeAllObjects];
-//    
-//    OSStatus status = AudioOutputUnitStart(self.unit);
-//    if (status == noErr) {
-//        [self updateState:AVEAudioUnitStateDidAudioOutputUnitStart];
-//    } else {
-//        NSError *error = [NSError errorWithDomain:NSOSStatusErrorDomain code:status userInfo:nil];
-//        [self.errors addObject:error];
-//    }
-//}
-//
-//- (void)audioOutputUnitStop {
-//    [self.errors removeAllObjects];
-//    
-//    OSStatus status = AudioOutputUnitStop(self.unit);
-//    if (status == noErr) {
-//        [self updateState:AVEAudioUnitStateDidAudioOutputUnitStop];
-//    } else {
-//        NSError *error = [NSError errorWithDomain:NSOSStatusErrorDomain code:status userInfo:nil];
-//        [self.errors addObject:error];
-//    }
-//}
-//
-//#pragma mark - Audio session
-//
-//- (void)AVEAudioSessionMediaServicesWereReset:(AVEAudioSession *)audioSession {
-//    HLPOperationState state = self.states.lastObject.unsignedIntegerValue;
-//    if (state >= AVEAudioUnitStateDidAudioComponentFindNext) {
-//        [self audioComponentFindNext];
-//        if (self.errors.count == 0) {
-//            if (state >= AVEAudioUnitStateDidAudioComponentInstanceNew) {
-//                [self audioComponentInstanceDispose];
-//                if (self.errors.count == 0) {
-//                    [self audioComponentInstanceNew];
-//                    if (self.errors.count == 0) {
-//                        if (state >= AVEAudioUnitStateDidAudioUnitInitialize) {
-//                            [self audioUnitInitialize];
-//                            if (self.errors.count == 0) {
-//                                if (state >= AVEAudioUnitStateDidAudioOutputUnitStart) {
-//                                    [self audioOutputUnitStart];
-//                                }
-//                            }
-//                        }
-//                    }
-//                }
-//            }
-//        }
-//    }
-//}
+- (NSError *)configure {
+    [self updateState:AVEAudioUnitStateDidConfigure];
+    return nil;
+}
+
+- (NSError *)audioComponentInstanceDispose {
+    NSError *error = nil;
+    OSStatus status = AudioComponentInstanceDispose(self.unit);
+    if (status == noErr) {
+        self.global = nil;
+        [self.inputs removeAllObjects];
+        [self.outputs removeAllObjects];
+        
+        [self updateState:AVEAudioUnitStateDidAudioComponentInstanceDispose];
+    } else {
+        error = [NSError errorWithDomain:NSOSStatusErrorDomain code:status userInfo:nil];
+    }
+    return error;
+}
+
+- (NSError *)audioUnitInitialize {
+    NSError *error = nil;
+    OSStatus status = AudioUnitInitialize(self.unit);
+    if (status == noErr) {
+        [self updateState:AVEAudioUnitStateDidAudioUnitInitialize];
+    } else {
+        error = [NSError errorWithDomain:NSOSStatusErrorDomain code:status userInfo:nil];
+    }
+    return error;
+}
+
+- (NSError *)audioUnitUninitialize {
+    NSError *error = nil;
+    OSStatus status = AudioUnitUninitialize(self.unit);
+    if (status == noErr) {
+        [self updateState:AVEAudioUnitStateDidAudioUnitUninitialize];
+    } else {
+        error = [NSError errorWithDomain:NSOSStatusErrorDomain code:status userInfo:nil];
+    }
+    return error;
+}
+
+- (NSError *)audioOutputUnitStart {
+    NSError *error = nil;
+    OSStatus status = AudioOutputUnitStart(self.unit);
+    if (status == noErr) {
+        [self updateState:AVEAudioUnitStateDidAudioOutputUnitStart];
+    } else {
+        error = [NSError errorWithDomain:NSOSStatusErrorDomain code:status userInfo:nil];
+    }
+    return error;
+}
+
+- (NSError *)audioOutputUnitStop {
+    NSError *error = nil;
+    OSStatus status = AudioOutputUnitStop(self.unit);
+    if (status == noErr) {
+        [self updateState:AVEAudioUnitStateDidAudioOutputUnitStop];
+    } else {
+        error = [NSError errorWithDomain:NSOSStatusErrorDomain code:status userInfo:nil];
+    }
+    return error;
+}
+
+#pragma mark - Audio session
+
+- (void)AVEAudioSessionMediaServicesWereReset:(AVEAudioSession *)audioSession {
+    if (self.errors.count == 0) {
+        NSEOperationState state = self.states.lastObject.unsignedIntegerValue;
+        if (state >= AVEAudioUnitStateDidAudioComponentFindNext) {
+            NSError *error = [self audioComponentFindNext];
+            if (error) {
+                [self.errors addObject:error];
+            } else {
+                if (state >= AVEAudioUnitStateDidAudioComponentInstanceNew) {
+                    error = [self audioComponentInstanceNew];
+                    if (error) {
+                        [self.errors addObject:error];
+                    } else {
+                        if (state >= AVEAudioUnitStateDidConfigure) {
+                            error = [self configure];
+                            if (error) {
+                                [self.errors addObject:error];
+                            } else {
+                                if (state >= AVEAudioUnitStateDidAudioUnitInitialize) {
+                                    error = [self audioUnitInitialize];
+                                    if (error) {
+                                        [self.errors addObject:error];
+                                    } else {
+                                        if (state >= AVEAudioUnitStateDidAudioOutputUnitStart) {
+                                            error = [self audioOutputUnitStart];
+                                            if (error) {
+                                                [self.errors addObject:error];
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
 
 @end
 
