@@ -69,10 +69,10 @@
 
 @interface AVEVoIPManager : HLPOperation <AVEVoIPManagerDelegate>
 
-//@property (readonly) AVEAudioSession *session;
-//@property (readonly) AVEAudioUnit *unit;
-//@property (readonly) AVEAudioConverter *converter;
-//
+@property (readonly) AVEAudioUnit *unit;
+@property (readonly) AVEAudioConverter *converter;
+@property (readonly) AVEAudioSession *session;
+
 //- (instancetype)initWithSession:(AVEAudioSession *)session unit:(AVEAudioUnit *)unit converter:(AVEAudioConverter *)converter;
 //
 //- (void)play;

@@ -7,6 +7,8 @@
 
 #import "AVEAudioConverter.h"
 
+const NSEOperationState AVEAudioConverterStateDidInitialize = 2;
+
 NSErrorDomain const AVEAudioConverterErrorDomain = @"AVEAudioConverter";
 
 
@@ -67,24 +69,28 @@ NSErrorDomain const AVEAudioConverterErrorDomain = @"AVEAudioConverter";
     return self;
 }
 
-- (void)start {
-    [self.errors removeAllObjects];
-    
+- (NSError *)initialize {
+    NSError *error = nil;
     self.converter = [AVAudioConverter.alloc initFromFormat:self.fromFormat toFormat:self.toFormat];
     if (self.converter) {
-        [self updateState:HLPOperationStateDidBegin];
+        [self updateState:AVEAudioConverterStateDidInitialize];
     } else {
-        NSError *error = [NSError errorWithDomain:AVEAudioConverterErrorDomain code:AVEAudioConverterErrorConversionImpossible userInfo:nil];
-        [self.errors addObject:error];
+        error = [NSError errorWithDomain:AVEAudioConverterErrorDomain code:AVEAudioConverterErrorConversionImpossible userInfo:nil];
     }
+    return error;
 }
 
 #pragma mark - Audio session
 
 - (void)AVEAudioSessionMediaServicesWereReset:(AVEAudioSession *)audioSession {
-    HLPOperationState state = self.states.lastObject.unsignedIntegerValue;
-    if (state >= HLPOperationStateDidBegin) {
-        [self start];
+    if (self.errors.count == 0) {
+        NSEOperationState state = self.states.lastObject.unsignedIntegerValue;
+        if (state >= AVEAudioConverterStateDidInitialize) {
+            NSError *error = [self initialize];
+            if (error) {
+                [self.errors addObject:error];
+            }
+        }
     }
 }
 

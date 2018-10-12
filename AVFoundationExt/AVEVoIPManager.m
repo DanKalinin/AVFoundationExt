@@ -121,9 +121,9 @@
 
 @interface AVEVoIPManager ()
 
-@property AVEAudioSession *session;
 @property AVEAudioUnit *unit;
 @property AVEAudioConverter *converter;
+@property AVEAudioSession *session;
 
 @end
 
@@ -143,16 +143,16 @@
 - (instancetype)init {
     self = super.init;
     if (self) {
-        self.session = AVEVoIPAudioSession.shared;
-        [self.session configure];
-        [self.session activate];
-        
         self.unit = AVEVoIPAudioUnit.voiceProcessingIO;
         [self.unit audioComponentFindNext];
         [self.unit audioComponentInstanceNew];
         [self.unit configure];
         [self.unit audioUnitInitialize];
         [self.unit audioOutputUnitStart];
+        
+        self.session = AVEVoIPAudioSession.shared;
+        [self.session configure];
+        [self.session activate];
     }
     return self;
 }
