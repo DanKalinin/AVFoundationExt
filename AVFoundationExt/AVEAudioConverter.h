@@ -12,6 +12,7 @@
 @class AVEAudioConversion, AVEAudioConverter;
 
 extern const NSEOperationState AVEAudioConverterStateDidInitialize;
+extern const NSEOperationState AVEAudioConverterStateDidConfigure;
 
 extern NSErrorDomain const AVEAudioConverterErrorDomain;
 
@@ -68,5 +69,6 @@ NS_ERROR_ENUM(AVEAudioConverterErrorDomain) {
 - (instancetype)initFromFormat:(AVAudioFormat *)fromFormat toFormat:(AVAudioFormat *)toFormat;
 
 - (NSError *)initialize;
+- (NSError *)configure;
 
 @end

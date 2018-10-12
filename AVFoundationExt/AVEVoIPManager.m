@@ -148,6 +148,8 @@
         
         self.session = AVEVoIPAudioSession.shared;
         [self.session.delegates addObject:self.delegates];
+        
+        [self initialize];
     }
     return self;
 }

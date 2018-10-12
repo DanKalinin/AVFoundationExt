@@ -8,6 +8,7 @@
 #import "AVEAudioConverter.h"
 
 const NSEOperationState AVEAudioConverterStateDidInitialize = 2;
+const NSEOperationState AVEAudioConverterStateDidConfigure = 3;
 
 NSErrorDomain const AVEAudioConverterErrorDomain = @"AVEAudioConverter";
 
@@ -80,6 +81,11 @@ NSErrorDomain const AVEAudioConverterErrorDomain = @"AVEAudioConverter";
     return error;
 }
 
+- (NSError *)configure {
+    [self updateState:AVEAudioConverterStateDidConfigure];
+    return nil;
+}
+
 #pragma mark - Audio session
 
 - (void)AVEAudioSessionMediaServicesWereReset:(AVEAudioSession *)audioSession {
@@ -89,6 +95,13 @@ NSErrorDomain const AVEAudioConverterErrorDomain = @"AVEAudioConverter";
             NSError *error = [self initialize];
             if (error) {
                 [self.errors addObject:error];
+            } else {
+                if (state >= AVEAudioConverterStateDidConfigure) {
+                    error = [self configure];
+                    if (error) {
+                        [self.errors addObject:error];
+                    }
+                }
             }
         }
     }
