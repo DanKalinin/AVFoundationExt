@@ -144,17 +144,29 @@
     self = super.init;
     if (self) {
         self.unit = AVEVoIPAudioUnit.voiceProcessingIO;
-        [self.unit audioComponentFindNext];
-        [self.unit audioComponentInstanceNew];
-        [self.unit configure];
-        [self.unit audioUnitInitialize];
-        [self.unit audioOutputUnitStart];
+        [self.unit.delegates addObject:self.delegates];
         
         self.session = AVEVoIPAudioSession.shared;
-        [self.session configure];
-        [self.session activate];
+        [self.session.delegates addObject:self.delegates];
     }
     return self;
+}
+
+- (NSError *)initialize {
+    [self.unit audioComponentFindNext];
+    [self.unit audioComponentInstanceNew];
+    [self.unit configure];
+    [self.unit audioUnitInitialize];
+    [self.unit audioOutputUnitStart];
+    
+    [self.session configure];
+    [self.session activate];
+    
+    return nil;
+}
+
+- (NSError *)uninitialize {
+    return nil;
 }
 
 //- (instancetype)initWithSession:(AVEAudioSession *)session unit:(AVEAudioUnit *)unit converter:(AVEAudioConverter *)converter {

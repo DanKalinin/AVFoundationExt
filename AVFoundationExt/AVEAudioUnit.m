@@ -370,24 +370,29 @@ static OSStatus AVEAudioUnitRenderCallback(void *inRefCon, AudioUnitRenderAction
                 [self.errors addObject:error];
             } else {
                 if (state >= AVEAudioUnitStateDidAudioComponentInstanceNew) {
-                    error = [self audioComponentInstanceNew];
+                    error = [self audioComponentInstanceDispose];
                     if (error) {
                         [self.errors addObject:error];
                     } else {
-                        if (state >= AVEAudioUnitStateDidConfigure) {
-                            error = [self configure];
-                            if (error) {
-                                [self.errors addObject:error];
-                            } else {
-                                if (state >= AVEAudioUnitStateDidAudioUnitInitialize) {
-                                    error = [self audioUnitInitialize];
-                                    if (error) {
-                                        [self.errors addObject:error];
-                                    } else {
-                                        if (state >= AVEAudioUnitStateDidAudioOutputUnitStart) {
-                                            error = [self audioOutputUnitStart];
-                                            if (error) {
-                                                [self.errors addObject:error];
+                        error = [self audioComponentInstanceNew];
+                        if (error) {
+                            [self.errors addObject:error];
+                        } else {
+                            if (state >= AVEAudioUnitStateDidConfigure) {
+                                error = [self configure];
+                                if (error) {
+                                    [self.errors addObject:error];
+                                } else {
+                                    if (state >= AVEAudioUnitStateDidAudioUnitInitialize) {
+                                        error = [self audioUnitInitialize];
+                                        if (error) {
+                                            [self.errors addObject:error];
+                                        } else {
+                                            if (state >= AVEAudioUnitStateDidAudioOutputUnitStart) {
+                                                error = [self audioOutputUnitStart];
+                                                if (error) {
+                                                    [self.errors addObject:error];
+                                                }
                                             }
                                         }
                                     }

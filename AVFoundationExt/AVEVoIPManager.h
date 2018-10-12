@@ -67,11 +67,14 @@
 
 
 
-@interface AVEVoIPManager : HLPOperation <AVEVoIPManagerDelegate>
+@interface AVEVoIPManager : NSEOperation <AVEVoIPManagerDelegate>
 
 @property (readonly) AVEAudioUnit *unit;
 @property (readonly) AVEAudioConverter *converter;
 @property (readonly) AVEAudioSession *session;
+
+- (NSError *)initialize;
+- (NSError *)uninitialize;
 
 //- (instancetype)initWithSession:(AVEAudioSession *)session unit:(AVEAudioUnit *)unit converter:(AVEAudioConverter *)converter;
 //
