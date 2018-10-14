@@ -101,7 +101,6 @@ extern const NSEOperationState AVEAudioSessionStateDidConfigure;
 @property (readonly) BOOL active;
 
 - (NSError *)configure;
-
 - (NSError *)setActive:(BOOL)active withOptions:(AVAudioSessionSetActiveOptions)options;
 
 @end
