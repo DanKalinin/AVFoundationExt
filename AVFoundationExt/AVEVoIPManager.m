@@ -162,7 +162,7 @@
     [self.unit audioOutputUnitStart];
     
     [self.session configure];
-    [self.session activate];
+    [self.session setActive:YES withOptions:0];
     
     return nil;
 }

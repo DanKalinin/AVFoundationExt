@@ -9,8 +9,6 @@
 #import "AVEAudioSession.h"
 
 const NSEOperationState AVEAudioSessionStateDidConfigure = 2;
-const NSEOperationState AVEAudioSessionStateDidDeactivate = 3;
-const NSEOperationState AVEAudioSessionStateDidActivate = 4;
 
 
 
@@ -120,6 +118,7 @@ const NSEOperationState AVEAudioSessionStateDidActivate = 4;
 @property AVEAudioSessionInterruptionInfo *interruptionInfo;
 @property AVEAudioSessionRouteChangeInfo *routeChangeInfo;
 @property AVEAudioSessionSilenceSecondaryAudioHintInfo *silenceSecondaryAudioHintInfo;
+@property BOOL active;
 
 @end
 
@@ -157,20 +156,11 @@ const NSEOperationState AVEAudioSessionStateDidActivate = 4;
     return nil;
 }
 
-- (NSError *)activate {
+- (NSError *)setActive:(BOOL)active withOptions:(AVAudioSessionSetActiveOptions)options {
     NSError *error = nil;
-    BOOL success = [self.audioSession setActive:YES withOptions:self.activationOptions error:&error];
+    BOOL success = [self.audioSession setActive:active withOptions:options error:&error];
     if (success) {
-        [self updateState:AVEAudioSessionStateDidActivate];
-    }
-    return error;
-}
-
-- (NSError *)deactivate {
-    NSError *error = nil;
-    BOOL success = [self.audioSession setActive:NO withOptions:self.deactivationOptions error:&error];
-    if (success) {
-        [self updateState:AVEAudioSessionStateDidDeactivate];
+        self.active = active;
     }
     return error;
 }
@@ -210,8 +200,8 @@ const NSEOperationState AVEAudioSessionStateDidActivate = 4;
             if (error) {
                 [self.errors addObject:error];
             } else {
-                if (state >= AVEAudioSessionStateDidActivate) {
-                    error = [self activate];
+                if (self.active) {
+                    error = [self setActive:YES withOptions:self.activationOptions];
                     if (error) {
                         [self.errors addObject:error];
                     }
