@@ -9,7 +9,10 @@
 #import <AVFoundation/AVFoundation.h>
 #import <Helpers/Helpers.h>
 
-@class AVEAudioSessionInterruptionInfo, AVEAudioSessionRouteChangeInfo, AVEAudioSessionSilenceSecondaryAudioHintInfo, AVEAudioSession;
+@class AVEAudioSessionInterruptionInfo;
+@class AVEAudioSessionRouteChangeInfo;
+@class AVEAudioSessionSilenceSecondaryAudioHintInfo;
+@class AVEAudioSession;
 
 extern const NSEOperationState AVEAudioSessionStateDidConfigure;
 

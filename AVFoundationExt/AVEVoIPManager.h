@@ -11,7 +11,10 @@
 #import "AVEAudioUnit.h"
 #import "AVEAudioConverter.h"
 
-@class AVEVoIPAudioSession, AVEVoIPAudioUnit, AVEVoIPAudioConverter, AVEVoIPManager;
+@class AVEVoIPAudioSession;
+@class AVEVoIPAudioUnit;
+@class AVEVoIPAudioConverter;
+@class AVEVoIPManager;
 
 
 

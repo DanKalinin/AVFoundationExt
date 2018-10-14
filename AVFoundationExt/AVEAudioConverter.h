@@ -9,7 +9,8 @@
 #import <Helpers/Helpers.h>
 #import "AVEAudioSession.h"
 
-@class AVEAudioConversion, AVEAudioConverter;
+@class AVEAudioConversion;
+@class AVEAudioConverter;
 
 extern const NSEOperationState AVEAudioConverterStateDidInitialize;
 extern const NSEOperationState AVEAudioConverterStateDidConfigure;

@@ -9,7 +9,8 @@
 #import <Helpers/Helpers.h>
 #import "AVEAudioSession.h"
 
-@class AVEAudioUnitElement, AVEAudioUnit;
+@class AVEAudioUnitElement;
+@class AVEAudioUnit;
 
 extern const NSEOperationState AVEAudioUnitStateDidAudioComponentFindNext;
 extern const NSEOperationState AVEAudioUnitStateDidAudioComponentInstanceDispose;
