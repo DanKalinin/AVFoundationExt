@@ -162,6 +162,7 @@ const NSEOperationState AVEAudioSessionStateDidConfigure = 2;
     BOOL success = [self.audioSession setActive:active withOptions:options error:&error];
     if (success) {
         self.active = active;
+        self.setActiveOptions = options;
     }
     return error;
 }
