@@ -119,6 +119,7 @@ const NSEOperationState AVEAudioSessionStateDidConfigure = 2;
 @property AVEAudioSessionRouteChangeInfo *routeChangeInfo;
 @property AVEAudioSessionSilenceSecondaryAudioHintInfo *silenceSecondaryAudioHintInfo;
 @property BOOL active;
+@property AVAudioSessionSetActiveOptions setActiveOptions;
 
 @end
 
@@ -201,7 +202,7 @@ const NSEOperationState AVEAudioSessionStateDidConfigure = 2;
                 [self.errors addObject:error];
             } else {
                 if (self.active) {
-                    error = [self setActive:YES withOptions:self.activationOptions];
+                    error = [self setActive:YES withOptions:self.setActiveOptions];
                     if (error) {
                         [self.errors addObject:error];
                     }

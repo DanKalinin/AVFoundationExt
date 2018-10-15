@@ -94,14 +94,13 @@ extern const NSEOperationState AVEAudioSessionStateDidConfigure;
 
 @interface AVEAudioSession : NSEOperation <AVEAudioSessionDelegate>
 
-@property AVAudioSessionSetActiveOptions activationOptions;
-
 @property (readonly) HLPArray<AVEAudioSessionDelegate> *delegates;
 @property (readonly) AVAudioSession *audioSession;
 @property (readonly) AVEAudioSessionInterruptionInfo *interruptionInfo;
 @property (readonly) AVEAudioSessionRouteChangeInfo *routeChangeInfo;
 @property (readonly) AVEAudioSessionSilenceSecondaryAudioHintInfo *silenceSecondaryAudioHintInfo;
 @property (readonly) BOOL active;
+@property (readonly) AVAudioSessionSetActiveOptions setActiveOptions;
 
 - (NSError *)configure;
 - (NSError *)setActive:(BOOL)active withOptions:(AVAudioSessionSetActiveOptions)options;
