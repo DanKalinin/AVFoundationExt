@@ -63,7 +63,6 @@ NS_ERROR_ENUM(AVEAudioUnitErrorDomain) {
 @property (readonly) AudioUnitScope scope;
 @property (readonly) AudioUnitElement element;
 @property (readonly) AURenderCallbackStruct renderCallback;
-@property (readonly) NSError *error;
 
 - (instancetype)initWithUnit:(AudioUnit)unit scope:(AudioUnitScope)scope element:(AudioUnitElement)element;
 

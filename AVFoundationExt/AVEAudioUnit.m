@@ -35,7 +35,6 @@ static OSStatus AVEAudioUnitRenderCallback(void *inRefCon, AudioUnitRenderAction
 @property AudioUnitScope scope;
 @property AudioUnitElement element;
 @property AURenderCallbackStruct renderCallback;
-@property NSError *error;
 
 @end
 
