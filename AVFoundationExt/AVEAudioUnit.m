@@ -113,7 +113,7 @@ OSStatus AVEAudioUnitElementRenderCallback(void *inRefCon, AudioUnitRenderAction
     
     AVEAudioUnitElement *element = (__bridge AVEAudioUnitElement *)inRefCon;
     
-//    NSLog(@"n1 - %i", (int)inBusNumber);
+    NSLog(@"n1 - %i", (int)inBusNumber);
 //    NSLog(@"n2 - %i", (int)element.element);
     
     if (inBusNumber == 0) {
@@ -168,6 +168,15 @@ OSStatus AVEAudioUnitElementRenderCallback(void *inRefCon, AudioUnitRenderAction
 
 - (void)setParameter:(AudioUnitParameterID)parameter value:(AudioUnitParameterValue)value {
     OSStatus status = AudioUnitSetParameter(self.unit, parameter, self.scope, self.element, value, 0);
+    if (status == noErr) {
+        self.threadError = nil;
+    } else {
+        self.threadError = [NSError errorWithDomain:NSOSStatusErrorDomain code:status userInfo:nil];
+    }
+}
+
+- (void)audioUnitRender:(AudioUnitRenderActionFlags *)ioActionFlags inTimeStamp:(const AudioTimeStamp *)inTimeStamp inNumberFrames:(UInt32)inNumberFrames ioData:(AudioBufferList *)ioData {
+    OSStatus status = AudioUnitRender(self.parent.unit, ioActionFlags, inTimeStamp, self.element, inNumberFrames, ioData);
     if (status == noErr) {
         self.threadError = nil;
     } else {

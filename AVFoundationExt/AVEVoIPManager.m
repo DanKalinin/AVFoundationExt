@@ -65,11 +65,11 @@
     if (self.global.threadError) {
         self.threadError = self.global.threadError;
     } else {
-        self.global.kAudioOutputUnitProperty_SetInputCallback = self.global.renderCallback;
+        self.global.kAudioOutputUnitProperty_SetInputCallback = self.global.renderCallback; // 1
         if (self.global.threadError) {
             self.threadError = self.global.threadError;
         } else {
-            self.inputs[0].kAudioUnitProperty_SetRenderCallback = self.inputs[0].renderCallback;
+            self.inputs[0].kAudioUnitProperty_SetRenderCallback = self.inputs[0].renderCallback; // 0
             if (self.inputs[0].threadError) {
                 self.threadError = self.inputs[0].threadError;
             } else {
