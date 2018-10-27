@@ -24,19 +24,21 @@
 
 @implementation AVEVoIPAudioSession
 
-- (NSError *)configure {
+- (void)configure {
     NSError *error = nil;
     BOOL success = [self.audioSession setCategory:AVAudioSessionCategoryPlayAndRecord mode:AVAudioSessionModeVoiceChat options:0 error:&error];
+    self.threadError = error;
     if (success) {
         success = [self.audioSession setPreferredIOBufferDuration:0.005 error:&error];
+        self.threadError = error;
         if (success) {
             success = [self.audioSession setPreferredSampleRate:44100.0 error:&error];
+            self.threadError = error;
             if (success) {
-                [self updateState:AVEAudioSessionStateDidConfigure];
+                [super configure];
             }
         }
     }
-    return error;
 }
 
 @end
@@ -58,35 +60,33 @@
 
 @implementation AVEVoIPAudioUnit
 
-- (NSError *)configure {
-    NSError *error = nil;
+- (void)configure {
     self.global.kAudioUnitProperty_MaximumFramesPerSlice = 4096;
-    if (self.global.error) {
-        error = self.global.error;
+    if (self.global.threadError) {
+        self.threadError = self.global.threadError;
     } else {
         self.global.kAudioOutputUnitProperty_SetInputCallback = self.global.renderCallback;
-        if (self.global.error) {
-            error = self.global.error;
+        if (self.global.threadError) {
+            self.threadError = self.global.threadError;
         } else {
             self.inputs[0].kAudioUnitProperty_SetRenderCallback = self.inputs[0].renderCallback;
-            if (self.inputs[0].error) {
-                error = self.inputs[0].error;
+            if (self.inputs[0].threadError) {
+                self.threadError = self.inputs[0].threadError;
             } else {
                 self.inputs[1].kAudioOutputUnitProperty_EnableIO = 1;
-                if (self.inputs[1].error) {
-                    error = self.inputs[1].error;
+                if (self.inputs[1].threadError) {
+                    self.threadError = self.inputs[1].threadError;
                 } else {
                     self.outputs[1].kAudioUnitProperty_ShouldAllocateBuffer = 0;
-                    if (self.outputs[1].error) {
-                        error = self.outputs[1].error;
+                    if (self.outputs[1].threadError) {
+                        self.threadError = self.outputs[1].threadError;
                     } else {
-                        [self updateState:AVEAudioUnitStateDidConfigure];
+                        [super configure];
                     }
                 }
             }
         }
     }
-    return error;
 }
 
 @end
