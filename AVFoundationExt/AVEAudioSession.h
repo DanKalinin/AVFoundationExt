@@ -12,6 +12,7 @@
 @class AVEAudioSessionInterruptionInfo;
 @class AVEAudioSessionRouteChangeInfo;
 @class AVEAudioSessionSilenceSecondaryAudioHintInfo;
+@class AVEAudioSessionMediaServicesWereResetInfo;
 @class AVEAudioSession;
 
 
@@ -77,6 +78,23 @@
 
 
 
+@interface AVEAudioSessionMediaServicesWereResetInfo : HLPObject
+
+@property (readonly) NSError *error;
+
+- (instancetype)initWithError:(NSError *)error;
+
+@end
+
+
+
+
+
+
+
+
+
+
 @protocol AVEAudioSessionDelegate <NSEOperationDelegate>
 
 @optional
@@ -99,10 +117,11 @@ extern const NSEOperationState AVEAudioSessionStateDidConfigure;
 @property (readonly) AVEAudioSessionInterruptionInfo *interruptionInfo;
 @property (readonly) AVEAudioSessionRouteChangeInfo *routeChangeInfo;
 @property (readonly) AVEAudioSessionSilenceSecondaryAudioHintInfo *silenceSecondaryAudioHintInfo;
+@property (readonly) AVEAudioSessionMediaServicesWereResetInfo *mediaServicesWereResetInfo;
 @property (readonly) BOOL active;
 @property (readonly) AVAudioSessionSetActiveOptions setActiveOptions;
 
-- (NSError *)configure;
-- (NSError *)setActive:(BOOL)active withOptions:(AVAudioSessionSetActiveOptions)options;
+- (void)configure;
+- (void)setActive:(BOOL)active withOptions:(AVAudioSessionSetActiveOptions)options;
 
 @end

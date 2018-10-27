@@ -116,6 +116,7 @@
 @property AVEAudioSessionInterruptionInfo *interruptionInfo;
 @property AVEAudioSessionRouteChangeInfo *routeChangeInfo;
 @property AVEAudioSessionSilenceSecondaryAudioHintInfo *silenceSecondaryAudioHintInfo;
+@property AVEAudioSessionMediaServicesWereResetInfo *mediaServicesWereResetInfo;
 @property BOOL active;
 @property AVAudioSessionSetActiveOptions setActiveOptions;
 
@@ -152,19 +153,19 @@ const NSEOperationState AVEAudioSessionStateDidConfigure = 2;
     return self;
 }
 
-- (NSError *)configure {
+- (void)configure {
+    self.threadError = nil;
     [self updateState:AVEAudioSessionStateDidConfigure];
-    return nil;
 }
 
-- (NSError *)setActive:(BOOL)active withOptions:(AVAudioSessionSetActiveOptions)options {
+- (void)setActive:(BOOL)active withOptions:(AVAudioSessionSetActiveOptions)options {
     NSError *error = nil;
     BOOL success = [self.audioSession setActive:active withOptions:options error:&error];
+    self.threadError = error;
     if (success) {
         self.active = active;
         self.setActiveOptions = options;
     }
-    return error;
 }
 
 #pragma mark - Notifications
@@ -195,22 +196,18 @@ const NSEOperationState AVEAudioSessionStateDidConfigure = 2;
 #pragma mark - Audio session
 
 - (void)AVEAudioSessionMediaServicesWereReset:(AVEAudioSession *)audioSession {
-    if (self.errors.count == 0) {
-        NSEOperationState state = self.states.lastObject.unsignedIntegerValue;
-        if (state >= AVEAudioSessionStateDidConfigure) {
-            NSError *error = [self configure];
-            if (error) {
-                [self.errors addObject:error];
-            } else {
-                if (self.active) {
-                    error = [self setActive:YES withOptions:self.setActiveOptions];
-                    if (error) {
-                        [self.errors addObject:error];
-                    }
-                }
+    NSEOperationState state = self.states.lastObject.unsignedIntegerValue;
+    if (state >= AVEAudioSessionStateDidConfigure) {
+        [self configure];
+        if (self.threadError) {
+        } else {
+            if (self.active) {
+                [self setActive:YES withOptions:self.setActiveOptions];
             }
         }
     }
+    
+    self.mediaServicesWereResetInfo = [AVEAudioSessionMediaServicesWereResetInfo.alloc initWithError:self.threadError];
 }
 
 @end
