@@ -110,6 +110,35 @@
 
 
 
+@interface AVEAudioSessionMediaServicesWereResetInfo ()
+
+@property NSError *error;
+
+@end
+
+
+
+@implementation AVEAudioSessionMediaServicesWereResetInfo
+
+- (instancetype)initWithError:(NSError *)error {
+    self = super.init;
+    if (self) {
+        self.error = error;
+    }
+    return self;
+}
+
+@end
+
+
+
+
+
+
+
+
+
+
 @interface AVEAudioSession ()
 
 @property AVAudioSession *audioSession;
