@@ -9,6 +9,7 @@
 #import <Helpers/Helpers.h>
 #import "AVEAudioSession.h"
 
+@class AVEAudioUnitElementDidRenderInfo;
 @class AVEAudioUnitMediaServicesWereResetInfo;
 @class AVEAudioUnitElement;
 @class AVEAudioUnit;
@@ -100,8 +101,6 @@ extern OSStatus AVEAudioUnitElementRenderCallback(void *inRefCon, AudioUnitRende
 - (void)getParameter:(AudioUnitParameterID)parameter value:(AudioUnitParameterValue *)value;
 - (void)setParameter:(AudioUnitParameterID)parameter value:(AudioUnitParameterValue)value;
 
-- (void)audioUnitRender:(AudioUnitRenderActionFlags *)ioActionFlags inTimeStamp:(const AudioTimeStamp *)inTimeStamp inNumberFrames:(UInt32)inNumberFrames ioData:(AudioBufferList *)ioData;
-
 @end
 
 
@@ -163,5 +162,7 @@ NS_ERROR_ENUM(AVEAudioUnitErrorDomain) {
 
 - (void)audioOutputUnitStart;
 - (void)audioOutputUnitStop;
+
+- (void)audioUnitRender:(AudioUnitRenderActionFlags *)ioActionFlags inTimeStamp:(const AudioTimeStamp *)inTimeStamp inOutputBusNumber:(UInt32)inOutputBusNumber inNumberFrames:(UInt32)inNumberFrames ioData:(AudioBufferList *)ioData;
 
 @end

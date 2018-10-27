@@ -100,26 +100,10 @@
 @dynamic delegates;
 
 OSStatus AVEAudioUnitElementRenderCallback(void *inRefCon, AudioUnitRenderActionFlags *ioActionFlags, const AudioTimeStamp *inTimeStamp, UInt32 inBusNumber, UInt32 inNumberFrames, AudioBufferList *ioData) {
-//    AVEAudioUnitElement *element = (__bridge AVEAudioUnitElement *)inRefCon;
-//    element.didRenderInfo = [AVEAudioUnitElementDidRenderInfo.alloc initWithIOActionFlags:ioActionFlags inTimeStamp:inTimeStamp inBusNumber:inBusNumber inNumberFrames:inNumberFrames ioData:ioData];
-//    [element.delegates AVEAudioUnitElementDidRender:element];
-//    return (OSStatus)element.didRenderInfo.error.code;
-    
-    //    AVEAudioUnitElement *element = (__bridge AVEAudioUnitElement *)inRefCon;
-    //    OSStatus status = [element.delegates AVEAudioUnitElementDidRender:ioActionFlags inTimeStamp:inTimeStamp inBusNumber:inBusNumber inNumberFrames:inNumberFrames ioData:ioData];
-    //    return status;
-    //
-    //    NSLog(@"bus - %u", inBusNumber);
-    
     AVEAudioUnitElement *element = (__bridge AVEAudioUnitElement *)inRefCon;
-    
-    NSLog(@"n1 - %i", (int)inBusNumber);
-//    NSLog(@"n2 - %i", (int)element.element);
-    
-    if (inBusNumber == 0) {
-        AudioUnitRender(element.unit, ioActionFlags, inTimeStamp, 1, inNumberFrames, ioData);
-    }
-    return noErr;
+    element.didRenderInfo = [AVEAudioUnitElementDidRenderInfo.alloc initWithIOActionFlags:ioActionFlags inTimeStamp:inTimeStamp inBusNumber:inBusNumber inNumberFrames:inNumberFrames ioData:ioData];
+    [element.delegates AVEAudioUnitElementDidRender:element];
+    return (OSStatus)element.didRenderInfo.error.code;
 }
 
 - (instancetype)initWithUnit:(AudioUnit)unit scope:(AudioUnitScope)scope element:(AudioUnitElement)element {
@@ -168,15 +152,6 @@ OSStatus AVEAudioUnitElementRenderCallback(void *inRefCon, AudioUnitRenderAction
 
 - (void)setParameter:(AudioUnitParameterID)parameter value:(AudioUnitParameterValue)value {
     OSStatus status = AudioUnitSetParameter(self.unit, parameter, self.scope, self.element, value, 0);
-    if (status == noErr) {
-        self.threadError = nil;
-    } else {
-        self.threadError = [NSError errorWithDomain:NSOSStatusErrorDomain code:status userInfo:nil];
-    }
-}
-
-- (void)audioUnitRender:(AudioUnitRenderActionFlags *)ioActionFlags inTimeStamp:(const AudioTimeStamp *)inTimeStamp inNumberFrames:(UInt32)inNumberFrames ioData:(AudioBufferList *)ioData {
-    OSStatus status = AudioUnitRender(self.parent.unit, ioActionFlags, inTimeStamp, self.element, inNumberFrames, ioData);
     if (status == noErr) {
         self.threadError = nil;
     } else {
@@ -442,6 +417,15 @@ NSErrorDomain const AVEAudioUnitErrorDomain = @"AVEAudioUnit";
     if (status == noErr) {
         self.threadError = nil;
         [self updateState:AVEAudioUnitStateDidAudioOutputUnitStop];
+    } else {
+        self.threadError = [NSError errorWithDomain:NSOSStatusErrorDomain code:status userInfo:nil];
+    }
+}
+
+- (void)audioUnitRender:(AudioUnitRenderActionFlags *)ioActionFlags inTimeStamp:(const AudioTimeStamp *)inTimeStamp inOutputBusNumber:(UInt32)inOutputBusNumber inNumberFrames:(UInt32)inNumberFrames ioData:(AudioBufferList *)ioData {
+    OSStatus status = AudioUnitRender(self.unit, ioActionFlags, inTimeStamp, inOutputBusNumber, inNumberFrames, ioData);
+    if (status == noErr) {
+        self.threadError = nil;
     } else {
         self.threadError = [NSError errorWithDomain:NSOSStatusErrorDomain code:status userInfo:nil];
     }
