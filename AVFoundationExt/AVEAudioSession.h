@@ -14,8 +14,6 @@
 @class AVEAudioSessionSilenceSecondaryAudioHintInfo;
 @class AVEAudioSession;
 
-extern const NSEOperationState AVEAudioSessionStateDidConfigure;
-
 
 
 
@@ -93,6 +91,8 @@ extern const NSEOperationState AVEAudioSessionStateDidConfigure;
 
 
 @interface AVEAudioSession : NSEOperation <AVEAudioSessionDelegate>
+
+extern const NSEOperationState AVEAudioSessionStateDidConfigure;
 
 @property (readonly) HLPArray<AVEAudioSessionDelegate> *delegates;
 @property (readonly) AVAudioSession *audioSession;

@@ -41,9 +41,6 @@
 
 @protocol AVEAudioUnitElementDelegate <NSEOperationDelegate>
 
-@optional
-- (OSStatus)AVEAudioUnitElementDidRender:(AudioUnitRenderActionFlags *)ioActionFlags inTimeStamp:(const AudioTimeStamp *)inTimeStamp inBusNumber:(UInt32)inBusNumber inNumberFrames:(UInt32)inNumberFrames ioData:(AudioBufferList *)ioData;
-
 @end
 
 

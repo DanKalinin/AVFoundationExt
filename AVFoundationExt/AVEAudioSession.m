@@ -8,8 +8,6 @@
 
 #import "AVEAudioSession.h"
 
-const NSEOperationState AVEAudioSessionStateDidConfigure = 2;
-
 
 
 
@@ -126,6 +124,8 @@ const NSEOperationState AVEAudioSessionStateDidConfigure = 2;
 
 
 @implementation AVEAudioSession
+
+const NSEOperationState AVEAudioSessionStateDidConfigure = 2;
 
 @dynamic delegates;
 
