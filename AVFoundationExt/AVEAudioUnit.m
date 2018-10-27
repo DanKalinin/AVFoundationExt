@@ -16,6 +16,35 @@
 
 
 
+@interface AVEAudioUnitMediaServicesWereResetInfo ()
+
+@property NSError *error;
+
+@end
+
+
+
+@implementation AVEAudioUnitMediaServicesWereResetInfo
+
+- (instancetype)initWithError:(NSError *)error {
+    self = super.init;
+    if (self) {
+        self.error = error;
+    }
+    return self;
+}
+
+@end
+
+
+
+
+
+
+
+
+
+
 @interface AVEAudioUnitElement ()
 
 @property AudioUnit unit;
@@ -210,6 +239,7 @@ OSStatus AVEAudioUnitElementRenderCallback(void *inRefCon, AudioUnitRenderAction
 @property NSMutableArray<AVEAudioUnitElement *> *inputs;
 @property NSMutableArray<AVEAudioUnitElement *> *outputs;
 @property AVEAudioSession *session;
+@property AVEAudioUnitMediaServicesWereResetInfo *mediaServicesWereResetInfo;
 
 @end
 
@@ -363,48 +393,40 @@ NSErrorDomain const AVEAudioUnitErrorDomain = @"AVEAudioUnit";
 #pragma mark - Audio session
 
 - (void)AVEAudioSessionMediaServicesWereReset:(AVEAudioSession *)audioSession {
-//    if (self.errors.count == 0) {
-//        NSEOperationState state = self.states.lastObject.unsignedIntegerValue;
-//        if (state >= AVEAudioUnitStateDidAudioComponentFindNext) {
-//            [self audioComponentFindNext];
-//            if (error) {
-//                [self.errors addObject:error];
-//            } else {
-//                if (state >= AVEAudioUnitStateDidAudioComponentInstanceNew) {
-//                    error = [self audioComponentInstanceDispose];
-//                    if (error) {
-//                        [self.errors addObject:error];
-//                    } else {
-//                        error = [self audioComponentInstanceNew];
-//                        if (error) {
-//                            [self.errors addObject:error];
-//                        } else {
-//                            if (state >= AVEAudioUnitStateDidConfigure) {
-//                                error = [self configure];
-//                                if (error) {
-//                                    [self.errors addObject:error];
-//                                } else {
-//                                    if (state >= AVEAudioUnitStateDidAudioUnitInitialize) {
-//                                        error = [self audioUnitInitialize];
-//                                        if (error) {
-//                                            [self.errors addObject:error];
-//                                        } else {
-//                                            if (state >= AVEAudioUnitStateDidAudioOutputUnitStart) {
-//                                                error = [self audioOutputUnitStart];
-//                                                if (error) {
-//                                                    [self.errors addObject:error];
-//                                                }
-//                                            }
-//                                        }
-//                                    }
-//                                }
-//                            }
-//                        }
-//                    }
-//                }
-//            }
-//        }
-//    }
+    NSEOperationState state = self.states.lastObject.unsignedIntegerValue;
+    if (state >= AVEAudioUnitStateDidAudioComponentFindNext) {
+        [self audioComponentFindNext];
+        if (self.threadError) {
+        } else {
+            if (state >= AVEAudioUnitStateDidAudioComponentInstanceNew) {
+                [self audioComponentInstanceDispose];
+                if (self.threadError) {
+                } else {
+                    [self audioComponentInstanceNew];
+                    if (self.threadError) {
+                    } else {
+                        if (state >= AVEAudioUnitStateDidConfigure) {
+                            [self configure];
+                            if (self.threadError) {
+                            } else {
+                                if (state >= AVEAudioUnitStateDidAudioUnitInitialize) {
+                                    [self audioUnitInitialize];
+                                    if (self.threadError) {
+                                    } else {
+                                        if (state >= AVEAudioUnitStateDidAudioOutputUnitStart) {
+                                            [self audioOutputUnitStart];
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    
+    self.mediaServicesWereResetInfo = [AVEAudioUnitMediaServicesWereResetInfo.alloc initWithError:self.threadError];
 }
 
 @end

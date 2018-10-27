@@ -9,8 +9,26 @@
 #import <Helpers/Helpers.h>
 #import "AVEAudioSession.h"
 
+@class AVEAudioUnitMediaServicesWereResetInfo;
 @class AVEAudioUnitElement;
 @class AVEAudioUnit;
+
+
+
+
+
+
+
+
+
+
+@interface AVEAudioUnitMediaServicesWereResetInfo : HLPObject
+
+@property (readonly) NSError *error;
+
+- (instancetype)initWithError:(NSError *)error;
+
+@end
 
 
 
@@ -101,6 +119,7 @@ NS_ERROR_ENUM(AVEAudioUnitErrorDomain) {
 @property (readonly) NSMutableArray<AVEAudioUnitElement *> *inputs;
 @property (readonly) NSMutableArray<AVEAudioUnitElement *> *outputs;
 @property (readonly) AVEAudioSession *session;
+@property (readonly) AVEAudioUnitMediaServicesWereResetInfo *mediaServicesWereResetInfo;
 
 + (instancetype)voiceProcessingIO;
 
