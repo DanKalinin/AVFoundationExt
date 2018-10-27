@@ -12,22 +12,6 @@
 @class AVEAudioUnitElement;
 @class AVEAudioUnit;
 
-extern const NSEOperationState AVEAudioUnitStateDidAudioComponentFindNext;
-extern const NSEOperationState AVEAudioUnitStateDidAudioComponentInstanceDispose;
-extern const NSEOperationState AVEAudioUnitStateDidAudioComponentInstanceNew;
-extern const NSEOperationState AVEAudioUnitStateDidConfigure;
-extern const NSEOperationState AVEAudioUnitStateDidAudioUnitUninitialize;
-extern const NSEOperationState AVEAudioUnitStateDidAudioUnitInitialize;
-extern const NSEOperationState AVEAudioUnitStateDidAudioOutputUnitStop;
-extern const NSEOperationState AVEAudioUnitStateDidAudioOutputUnitStart;
-
-extern NSErrorDomain const AVEAudioUnitErrorDomain;
-
-NS_ERROR_ENUM(AVEAudioUnitErrorDomain) {
-    AVEAudioUnitErrorUnknown = 0,
-    AVEAudioUnitErrorNotFound = 1
-};
-
 
 
 
@@ -47,6 +31,8 @@ NS_ERROR_ENUM(AVEAudioUnitErrorDomain) {
 
 
 @interface AVEAudioUnitElement : NSEOperation <AVEAudioUnitElementDelegate>
+
+extern OSStatus AVEAudioUnitElementRenderCallback(void *inRefCon, AudioUnitRenderActionFlags *ioActionFlags, const AudioTimeStamp *inTimeStamp, UInt32 inBusNumber, UInt32 inNumberFrames, AudioBufferList *ioData);
 
 @property AudioStreamBasicDescription kAudioUnitProperty_StreamFormat;
 @property UInt32 kAudioUnitProperty_ElementCount;
@@ -91,6 +77,22 @@ NS_ERROR_ENUM(AVEAudioUnitErrorDomain) {
 
 @interface AVEAudioUnit : NSEOperation <AVEAudioUnitDelegate, AVEAudioSessionDelegate>
 
+extern const NSEOperationState AVEAudioUnitStateDidAudioComponentFindNext;
+extern const NSEOperationState AVEAudioUnitStateDidAudioComponentInstanceDispose;
+extern const NSEOperationState AVEAudioUnitStateDidAudioComponentInstanceNew;
+extern const NSEOperationState AVEAudioUnitStateDidConfigure;
+extern const NSEOperationState AVEAudioUnitStateDidAudioUnitUninitialize;
+extern const NSEOperationState AVEAudioUnitStateDidAudioUnitInitialize;
+extern const NSEOperationState AVEAudioUnitStateDidAudioOutputUnitStop;
+extern const NSEOperationState AVEAudioUnitStateDidAudioOutputUnitStart;
+
+extern NSErrorDomain const AVEAudioUnitErrorDomain;
+
+NS_ERROR_ENUM(AVEAudioUnitErrorDomain) {
+    AVEAudioUnitErrorUnknown = 0,
+    AVEAudioUnitErrorNotFound = 1
+};
+
 @property (readonly) HLPArray<AVEAudioUnitDelegate> *delegates;
 @property (readonly) AudioComponentDescription componentDescription;
 @property (readonly) AudioComponent component;
@@ -104,17 +106,17 @@ NS_ERROR_ENUM(AVEAudioUnitErrorDomain) {
 
 - (instancetype)initWithComponentDescription:(AudioComponentDescription)componentDescription;
 
-- (NSError *)audioComponentFindNext;
+- (void)audioComponentFindNext;
 
-- (NSError *)audioComponentInstanceNew;
-- (NSError *)audioComponentInstanceDispose;
+- (void)audioComponentInstanceNew;
+- (void)audioComponentInstanceDispose;
 
-- (NSError *)configure;
+- (void)configure;
 
-- (NSError *)audioUnitInitialize;
-- (NSError *)audioUnitUninitialize;
+- (void)audioUnitInitialize;
+- (void)audioUnitUninitialize;
 
-- (NSError *)audioOutputUnitStart;
-- (NSError *)audioOutputUnitStop;
+- (void)audioOutputUnitStart;
+- (void)audioOutputUnitStop;
 
 @end
