@@ -16,6 +16,43 @@
 
 
 
+@interface AVEAudioUnitElementDidRenderInfo ()
+
+@property AudioUnitRenderActionFlags *ioActionFlags;
+@property const AudioTimeStamp *inTimeStamp;
+@property UInt32 inBusNumber;
+@property UInt32 inNumberFrames;
+@property AudioBufferList *ioData;
+
+@end
+
+
+
+@implementation AVEAudioUnitElementDidRenderInfo
+
+- (instancetype)initWithIOActionFlags:(AudioUnitRenderActionFlags *)ioActionFlags inTimeStamp:(const AudioTimeStamp *)inTimeStamp inBusNumber:(UInt32)inBusNumber inNumberFrames:(UInt32)inNumberFrames ioData:(AudioBufferList *)ioData {
+    self = super.init;
+    if (self) {
+        self.ioActionFlags = ioActionFlags;
+        self.inTimeStamp = inTimeStamp;
+        self.inBusNumber = inBusNumber;
+        self.inNumberFrames = inNumberFrames;
+        self.ioData = ioData;
+    }
+    return self;
+}
+
+@end
+
+
+
+
+
+
+
+
+
+
 @interface AVEAudioUnitMediaServicesWereResetInfo ()
 
 @property NSError *error;
@@ -51,6 +88,7 @@
 @property AudioUnitScope scope;
 @property AudioUnitElement element;
 @property AURenderCallbackStruct renderCallback;
+@property AVEAudioUnitElementDidRenderInfo *didRenderInfo;
 
 @end
 
@@ -62,12 +100,22 @@
 @dynamic delegates;
 
 OSStatus AVEAudioUnitElementRenderCallback(void *inRefCon, AudioUnitRenderActionFlags *ioActionFlags, const AudioTimeStamp *inTimeStamp, UInt32 inBusNumber, UInt32 inNumberFrames, AudioBufferList *ioData) {
+//    AVEAudioUnitElement *element = (__bridge AVEAudioUnitElement *)inRefCon;
+//    element.didRenderInfo = [AVEAudioUnitElementDidRenderInfo.alloc initWithIOActionFlags:ioActionFlags inTimeStamp:inTimeStamp inBusNumber:inBusNumber inNumberFrames:inNumberFrames ioData:ioData];
+//    [element.delegates AVEAudioUnitElementDidRender:element];
+//    return (OSStatus)element.didRenderInfo.error.code;
+    
     //    AVEAudioUnitElement *element = (__bridge AVEAudioUnitElement *)inRefCon;
     //    OSStatus status = [element.delegates AVEAudioUnitElementDidRender:ioActionFlags inTimeStamp:inTimeStamp inBusNumber:inBusNumber inNumberFrames:inNumberFrames ioData:ioData];
     //    return status;
     //
     //    NSLog(@"bus - %u", inBusNumber);
+    
     AVEAudioUnitElement *element = (__bridge AVEAudioUnitElement *)inRefCon;
+    
+//    NSLog(@"n1 - %i", (int)inBusNumber);
+//    NSLog(@"n2 - %i", (int)element.element);
+    
     if (inBusNumber == 0) {
         AudioUnitRender(element.unit, ioActionFlags, inTimeStamp, 1, inNumberFrames, ioData);
     }

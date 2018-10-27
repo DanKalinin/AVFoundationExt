@@ -22,6 +22,29 @@
 
 
 
+@interface AVEAudioUnitElementDidRenderInfo : HLPObject
+
+@property NSError *error;
+
+@property (readonly) AudioUnitRenderActionFlags *ioActionFlags;
+@property (readonly) const AudioTimeStamp *inTimeStamp;
+@property (readonly) UInt32 inBusNumber;
+@property (readonly) UInt32 inNumberFrames;
+@property (readonly) AudioBufferList *ioData;
+
+- (instancetype)initWithIOActionFlags:(AudioUnitRenderActionFlags *)ioActionFlags inTimeStamp:(const AudioTimeStamp *)inTimeStamp inBusNumber:(UInt32)inBusNumber inNumberFrames:(UInt32)inNumberFrames ioData:(AudioBufferList *)ioData;
+
+@end
+
+
+
+
+
+
+
+
+
+
 @interface AVEAudioUnitMediaServicesWereResetInfo : HLPObject
 
 @property (readonly) NSError *error;
@@ -40,6 +63,9 @@
 
 
 @protocol AVEAudioUnitElementDelegate <NSEOperationDelegate>
+
+@optional
+- (void)AVEAudioUnitElementDidRender:(AVEAudioUnitElement *)element;
 
 @end
 
@@ -64,6 +90,7 @@ extern OSStatus AVEAudioUnitElementRenderCallback(void *inRefCon, AudioUnitRende
 @property (readonly) AudioUnitScope scope;
 @property (readonly) AudioUnitElement element;
 @property (readonly) AURenderCallbackStruct renderCallback;
+@property (readonly) AVEAudioUnitElementDidRenderInfo *didRenderInfo;
 
 - (instancetype)initWithUnit:(AudioUnit)unit scope:(AudioUnitScope)scope element:(AudioUnitElement)element;
 
