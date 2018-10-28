@@ -177,6 +177,10 @@
     if (element.didRenderInfo.inBusNumber == 0) {
         [element.parent audioUnitRender:element.didRenderInfo.ioActionFlags inTimeStamp:element.didRenderInfo.inTimeStamp inOutputBusNumber:1 inNumberFrames:element.didRenderInfo.inNumberFrames ioData:element.didRenderInfo.ioData];
         element.didRenderInfo.error = element.parent.threadError;
+        // Receive -> Convert -> Play
+    } else {
+        // Render
+        // Record -> Convert -> Send
     }
 }
 
