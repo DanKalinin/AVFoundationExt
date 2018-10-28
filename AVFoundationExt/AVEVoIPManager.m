@@ -174,16 +174,9 @@
 #pragma mark - Unit
 
 - (void)AVEAudioUnitElementDidRender:(AVEAudioUnitElement *)element {
-    //    AVEAudioUnitElement *element = (__bridge AVEAudioUnitElement *)inRefCon;
-    //    OSStatus status = [element.delegates AVEAudioUnitElementDidRender:ioActionFlags inTimeStamp:inTimeStamp inBusNumber:inBusNumber inNumberFrames:inNumberFrames ioData:ioData];
-    //    return status;
-    //
-    //    NSLog(@"bus - %u", inBusNumber);
-    
     if (element.didRenderInfo.inBusNumber == 0) {
         [element.parent audioUnitRender:element.didRenderInfo.ioActionFlags inTimeStamp:element.didRenderInfo.inTimeStamp inOutputBusNumber:1 inNumberFrames:element.didRenderInfo.inNumberFrames ioData:element.didRenderInfo.ioData];
         element.didRenderInfo.error = element.parent.threadError;
-        //        AudioUnitRender(element.unit, ioActionFlags, inTimeStamp, 1, inNumberFrames, ioData);
     }
 }
 
