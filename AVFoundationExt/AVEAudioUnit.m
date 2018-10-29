@@ -96,15 +96,15 @@
 
 @implementation AVEAudioUnitElement
 
-@dynamic parent;
-@dynamic delegates;
-
 OSStatus AVEAudioUnitElementRenderCallback(void *inRefCon, AudioUnitRenderActionFlags *ioActionFlags, const AudioTimeStamp *inTimeStamp, UInt32 inBusNumber, UInt32 inNumberFrames, AudioBufferList *ioData) {
     AVEAudioUnitElement *element = (__bridge AVEAudioUnitElement *)inRefCon;
     element.didRenderInfo = [AVEAudioUnitElementDidRenderInfo.alloc initWithIOActionFlags:ioActionFlags inTimeStamp:inTimeStamp inBusNumber:inBusNumber inNumberFrames:inNumberFrames ioData:ioData];
     [element.delegates AVEAudioUnitElementDidRender:element];
     return (OSStatus)element.didRenderInfo.error.code;
 }
+
+@dynamic parent;
+@dynamic delegates;
 
 - (instancetype)initWithUnit:(AudioUnit)unit scope:(AudioUnitScope)scope element:(AudioUnitElement)element {
     self = super.init;
