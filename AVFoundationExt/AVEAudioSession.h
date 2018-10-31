@@ -26,6 +26,7 @@
 
 @interface AVEAudioSessionInterruptionInfo : HLPObject
 
+@property (readonly) NSDictionary *dictionary;
 @property (readonly) AVAudioSessionInterruptionType type;
 @property (readonly) AVAudioSessionInterruptionOptions option;
 @property (readonly) BOOL wasSuspended;
@@ -45,6 +46,7 @@
 
 @interface AVEAudioSessionRouteChangeInfo : HLPObject
 
+@property (readonly) NSDictionary *dictionary;
 @property (readonly) AVAudioSessionRouteChangeReason reason;
 @property (readonly) AVAudioSessionRouteDescription *previousRoute;
 
@@ -63,6 +65,7 @@
 
 @interface AVEAudioSessionSilenceSecondaryAudioHintInfo : HLPObject
 
+@property (readonly) NSDictionary *dictionary;
 @property (readonly) AVAudioSessionSilenceSecondaryAudioHintType type;
 
 - (instancetype)initWithDictionary:(NSDictionary *)dictionary;

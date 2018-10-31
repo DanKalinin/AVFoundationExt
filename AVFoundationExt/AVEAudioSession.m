@@ -19,6 +19,7 @@
 
 @interface AVEAudioSessionInterruptionInfo ()
 
+@property NSDictionary *dictionary;
 @property AVAudioSessionInterruptionType type;
 @property AVAudioSessionInterruptionOptions option;
 @property BOOL wasSuspended;
@@ -32,9 +33,11 @@
 - (instancetype)initWithDictionary:(NSDictionary *)dictionary {
     self = super.init;
     if (self) {
-        self.type = [dictionary[AVAudioSessionInterruptionTypeKey] unsignedIntegerValue];
-        self.option = [dictionary[AVAudioSessionInterruptionOptionKey] unsignedIntegerValue];
-        self.wasSuspended = [dictionary[AVAudioSessionInterruptionWasSuspendedKey] boolValue];
+        self.dictionary = dictionary;
+        
+        self.type = [self.dictionary[AVAudioSessionInterruptionTypeKey] unsignedIntegerValue];
+        self.option = [self.dictionary[AVAudioSessionInterruptionOptionKey] unsignedIntegerValue];
+        self.wasSuspended = [self.dictionary[AVAudioSessionInterruptionWasSuspendedKey] boolValue];
     }
     return self;
 }
@@ -52,6 +55,7 @@
 
 @interface AVEAudioSessionRouteChangeInfo ()
 
+@property NSDictionary *dictionary;
 @property AVAudioSessionRouteChangeReason reason;
 @property AVAudioSessionRouteDescription *previousRoute;
 
@@ -64,8 +68,10 @@
 - (instancetype)initWithDictionary:(NSDictionary *)dictionary {
     self = super.init;
     if (self) {
-        self.reason = [dictionary[AVAudioSessionRouteChangeReasonKey] unsignedIntegerValue];
-        self.previousRoute = dictionary[AVAudioSessionRouteChangePreviousRouteKey];
+        self.dictionary = dictionary;
+        
+        self.reason = [self.dictionary[AVAudioSessionRouteChangeReasonKey] unsignedIntegerValue];
+        self.previousRoute = self.dictionary[AVAudioSessionRouteChangePreviousRouteKey];
     }
     return self;
 }
@@ -83,6 +89,7 @@
 
 @interface AVEAudioSessionSilenceSecondaryAudioHintInfo ()
 
+@property NSDictionary *dictionary;
 @property AVAudioSessionSilenceSecondaryAudioHintType type;
 
 @end
@@ -94,7 +101,9 @@
 - (instancetype)initWithDictionary:(NSDictionary *)dictionary {
     self = super.init;
     if (self) {
-        self.type = [dictionary[AVAudioSessionSilenceSecondaryAudioHintTypeKey] unsignedIntegerValue];
+        self.dictionary = dictionary;
+        
+        self.type = [self.dictionary[AVAudioSessionSilenceSecondaryAudioHintTypeKey] unsignedIntegerValue];
     }
     return self;
 }
