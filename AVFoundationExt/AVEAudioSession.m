@@ -193,7 +193,7 @@ const NSEOperationState AVEAudioSessionStateDidConfigure = 2;
 
 - (void)configure {
     self.threadError = nil;
-    [self updateState:AVEAudioSessionStateDidConfigure];
+    self.state = AVEAudioSessionStateDidConfigure;
 }
 
 - (void)setActive:(BOOL)active withOptions:(AVAudioSessionSetActiveOptions)options {
@@ -234,7 +234,7 @@ const NSEOperationState AVEAudioSessionStateDidConfigure = 2;
 #pragma mark - Audio session
 
 - (void)AVEAudioSessionMediaServicesWereReset:(AVEAudioSession *)audioSession {
-    NSEOperationState state = self.states.lastObject.unsignedIntegerValue;
+    NSEOperationState state = self.state;
     if (state >= AVEAudioSessionStateDidConfigure) {
         [self configure];
         if (self.threadError) {

@@ -322,7 +322,7 @@ NSErrorDomain const AVEAudioUnitErrorDomain = @"AVEAudioUnit";
     self.component = AudioComponentFindNext(NULL, &_componentDescription);
     if (self.component) {
         self.threadError = nil;
-        [self updateState:AVEAudioUnitStateDidAudioComponentFindNext];
+        self.state = AVEAudioUnitStateDidAudioComponentFindNext;
     } else {
         self.threadError = [NSError errorWithDomain:AVEAudioUnitErrorDomain code:AVEAudioUnitErrorNotFound userInfo:nil];
     }
@@ -357,7 +357,7 @@ NSErrorDomain const AVEAudioUnitErrorDomain = @"AVEAudioUnit";
                 }
                 
                 self.threadError = nil;
-                [self updateState:AVEAudioUnitStateDidAudioComponentInstanceNew];
+                self.state = AVEAudioUnitStateDidAudioComponentInstanceNew;
             }
         }
     } else {
@@ -373,7 +373,7 @@ NSErrorDomain const AVEAudioUnitErrorDomain = @"AVEAudioUnit";
         [self.outputs removeAllObjects];
         
         self.threadError = nil;
-        [self updateState:AVEAudioUnitStateDidAudioComponentInstanceDispose];
+        self.state = AVEAudioUnitStateDidAudioComponentInstanceDispose;
     } else {
         self.threadError = [NSError errorWithDomain:NSOSStatusErrorDomain code:status userInfo:nil];
     }
@@ -381,14 +381,14 @@ NSErrorDomain const AVEAudioUnitErrorDomain = @"AVEAudioUnit";
 
 - (void)configure {
     self.threadError = nil;
-    [self updateState:AVEAudioUnitStateDidConfigure];
+    self.state = AVEAudioUnitStateDidConfigure;
 }
 
 - (void)audioUnitInitialize {
     OSStatus status = AudioUnitInitialize(self.unit);
     if (status == noErr) {
         self.threadError = nil;
-        [self updateState:AVEAudioUnitStateDidAudioUnitInitialize];
+        self.state = AVEAudioUnitStateDidAudioUnitInitialize;
     } else {
         self.threadError = [NSError errorWithDomain:NSOSStatusErrorDomain code:status userInfo:nil];
     }
@@ -398,7 +398,7 @@ NSErrorDomain const AVEAudioUnitErrorDomain = @"AVEAudioUnit";
     OSStatus status = AudioUnitUninitialize(self.unit);
     if (status == noErr) {
         self.threadError = nil;
-        [self updateState:AVEAudioUnitStateDidAudioUnitUninitialize];
+        self.state = AVEAudioUnitStateDidAudioUnitUninitialize;
     } else {
         self.threadError = [NSError errorWithDomain:NSOSStatusErrorDomain code:status userInfo:nil];
     }
@@ -408,7 +408,7 @@ NSErrorDomain const AVEAudioUnitErrorDomain = @"AVEAudioUnit";
     OSStatus status = AudioOutputUnitStart(self.unit);
     if (status == noErr) {
         self.threadError = nil;
-        [self updateState:AVEAudioUnitStateDidAudioOutputUnitStart];
+        self.state = AVEAudioUnitStateDidAudioOutputUnitStart;
     } else {
         self.threadError = [NSError errorWithDomain:NSOSStatusErrorDomain code:status userInfo:nil];
     }
@@ -418,7 +418,7 @@ NSErrorDomain const AVEAudioUnitErrorDomain = @"AVEAudioUnit";
     OSStatus status = AudioOutputUnitStop(self.unit);
     if (status == noErr) {
         self.threadError = nil;
-        [self updateState:AVEAudioUnitStateDidAudioOutputUnitStop];
+        self.state = AVEAudioUnitStateDidAudioOutputUnitStop;
     } else {
         self.threadError = [NSError errorWithDomain:NSOSStatusErrorDomain code:status userInfo:nil];
     }
@@ -436,7 +436,7 @@ NSErrorDomain const AVEAudioUnitErrorDomain = @"AVEAudioUnit";
 #pragma mark - Audio session
 
 - (void)AVEAudioSessionMediaServicesWereReset:(AVEAudioSession *)audioSession {
-    NSEOperationState state = self.states.lastObject.unsignedIntegerValue;
+    NSEOperationState state = self.state;
     if (state >= AVEAudioUnitStateDidAudioComponentFindNext) {
         [self audioComponentFindNext];
         if (self.threadError) {

@@ -90,7 +90,7 @@ NSErrorDomain const AVEAudioConverterErrorDomain = @"AVEAudioConverter";
 
 - (void)AVEAudioSessionMediaServicesWereReset:(AVEAudioSession *)audioSession {
     if (self.errors.count == 0) {
-        NSEOperationState state = self.states.lastObject.unsignedIntegerValue;
+        NSEOperationState state = self.state;
         if (state >= AVEAudioConverterStateDidInitialize) {
             NSError *error = [self initialize];
             if (error) {
