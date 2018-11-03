@@ -27,13 +27,13 @@
 - (void)configure {
     NSError *error = nil;
     BOOL success = [self.audioSession setCategory:AVAudioSessionCategoryPlayAndRecord mode:AVAudioSessionModeVoiceChat options:0 error:&error];
-    self.threadError = error;
+    NSError.threadError = error;
     if (success) {
         success = [self.audioSession setPreferredIOBufferDuration:0.005 error:&error];
-        self.threadError = error;
+        NSError.threadError = error;
         if (success) {
             success = [self.audioSession setPreferredSampleRate:44100.0 error:&error];
-            self.threadError = error;
+            NSError.threadError = error;
             if (success) {
                 [super configure];
             }
@@ -62,24 +62,19 @@
 
 - (void)configure {
     self.global.kAudioUnitProperty_MaximumFramesPerSlice = 4096;
-    if (self.global.threadError) {
-        self.threadError = self.global.threadError;
+    if (NSError.threadError) {
     } else {
         self.global.kAudioOutputUnitProperty_SetInputCallback = self.global.renderCallback; // 1
-        if (self.global.threadError) {
-            self.threadError = self.global.threadError;
+        if (NSError.threadError) {
         } else {
             self.inputs[0].kAudioUnitProperty_SetRenderCallback = self.inputs[0].renderCallback; // 0
-            if (self.inputs[0].threadError) {
-                self.threadError = self.inputs[0].threadError;
+            if (NSError.threadError) {
             } else {
                 self.inputs[1].kAudioOutputUnitProperty_EnableIO = 1;
-                if (self.inputs[1].threadError) {
-                    self.threadError = self.inputs[1].threadError;
+                if (NSError.threadError) {
                 } else {
                     self.outputs[1].kAudioUnitProperty_ShouldAllocateBuffer = 0;
-                    if (self.outputs[1].threadError) {
-                        self.threadError = self.outputs[1].threadError;
+                    if (NSError.threadError) {
                     } else {
                         [super configure];
                     }
@@ -176,7 +171,7 @@
 - (void)AVEAudioUnitElementDidRender:(AVEAudioUnitElement *)element {
     if (element.didRenderInfo.inBusNumber == 0) {
         [element.parent audioUnitRender:element.didRenderInfo.ioActionFlags inTimeStamp:element.didRenderInfo.inTimeStamp inOutputBusNumber:1 inNumberFrames:element.didRenderInfo.inNumberFrames ioData:element.didRenderInfo.ioData];
-        element.didRenderInfo.error = element.parent.threadError;
+        element.didRenderInfo.error = NSError.threadError;
         // Receive -> Convert -> Play
     } else {
         // Render
