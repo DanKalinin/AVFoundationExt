@@ -173,6 +173,10 @@
         [element.parent audioUnitRender:element.didRenderInfo.ioActionFlags inTimeStamp:element.didRenderInfo.inTimeStamp inOutputBusNumber:1 inNumberFrames:element.didRenderInfo.inNumberFrames ioData:element.didRenderInfo.ioData];
         element.didRenderInfo.error = NSError.threadError;
         // Receive -> Convert -> Play
+        
+//        NSLog(@"mNumberBuffers - %u", element.didRenderInfo.ioData->mNumberBuffers); // 1
+//        NSLog(@"mNumberChannels - %u", element.didRenderInfo.ioData->mBuffers[0].mNumberChannels); // 1
+//        NSLog(@"mDataByteSize - %u", element.didRenderInfo.ioData->mBuffers[0].mDataByteSize); // 1024
     } else {
         // Render
         // Record -> Convert -> Send
