@@ -76,7 +76,7 @@
                     self.outputs[1].kAudioUnitProperty_ShouldAllocateBuffer = 0;
                     if (NSError.threadError) {
                     } else {
-                        AVAudioFormat *format = [AVAudioFormat.alloc initWithCommonFormat:AVAudioPCMFormatFloat32 sampleRate:44100.0 channels:2 interleaved:NO];
+                        AVAudioFormat *format = [AVAudioFormat.alloc initWithCommonFormat:AVAudioPCMFormatFloat32 sampleRate:44100.0 channels:1 interleaved:NO];
                         self.inputs[0].kAudioUnitProperty_StreamFormat = *format.streamDescription;
                         if (NSError.threadError) {
                         } else {
