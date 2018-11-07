@@ -83,18 +83,21 @@
         }
     }
     
-//    AudioStreamBasicDescription format = {0};
-//    format.mSampleRate = 44100.0;
-//    format.mFormatID = kAudioFormatLinearPCM;
-//    format.mBytesPerPacket = sizeof(SInt32);
-//    format.mChannelsPerFrame = 2;
-//
-//    AVAudioFormat *f = [AVAudioFormat.alloc initWithStreamDescription:&format];
-//    NSLog(@"format - %@", f);
+    AudioStreamBasicDescription asbd = {0};
+    asbd.mSampleRate = 44100.0;
+    asbd.mFormatID = kAudioFormatLinearPCM;
+    asbd.mFormatFlags = kAudioFormatFlagIsFloat | kAudioFormatFlagsNativeEndian | kAudioFormatFlagIsPacked | kAudioFormatFlagIsNonInterleaved;
+    asbd.mBytesPerPacket = sizeof(Float32);
+    asbd.mFramesPerPacket = 1;
+    asbd.mBytesPerFrame = sizeof(Float32);
+    asbd.mChannelsPerFrame = 2;
+    asbd.mBitsPerChannel = 8 * sizeof(Float32);
     
-    AudioStreamBasicDescription asbd = self.outputs[1].kAudioUnitProperty_StreamFormat;
-    AVAudioFormat *format = [AVAudioFormat.alloc initWithStreamDescription:&asbd];
-    NSLog(@"format - %@", format);
+    self.outputs[1].kAudioUnitProperty_StreamFormat = asbd;
+    self.inputs[0].kAudioUnitProperty_StreamFormat = asbd;
+    
+    
+    
     
 //    Float64             mSampleRate;
 //    AudioFormatID       mFormatID;
@@ -112,6 +115,19 @@
 //    mBytesPerChannel, mChannelsPerFrame, and (mFlags & kLinearPCMFormatFlagIsNonInterleaved).
 //    For interleaved formats, the size of a sample is mBytesPerFrame / mChannelsPerFrame.
 //    For non-interleaved formats, it is simply mBytesPerFrame.
+    
+    //    AudioStreamBasicDescription format = {0};
+    //    format.mSampleRate = 44100.0;
+    //    format.mFormatID = kAudioFormatLinearPCM;
+    //    format.mBytesPerPacket = sizeof(SInt32);
+    //    format.mChannelsPerFrame = 2;
+    //
+    //    AVAudioFormat *f = [AVAudioFormat.alloc initWithStreamDescription:&format];
+    //    NSLog(@"format - %@", f);
+    
+    //    AudioStreamBasicDescription asbd = self.outputs[1].kAudioUnitProperty_StreamFormat;
+    //    AVAudioFormat *format = [AVAudioFormat.alloc initWithStreamDescription:&asbd];
+    //    NSLog(@"format - %@", format);
 }
 
 @end
