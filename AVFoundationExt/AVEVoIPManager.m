@@ -83,9 +83,18 @@
         }
     }
     
-    AudioStreamBasicDescription format = {0};
-    format.mSampleRate = 44100.0;
-    format.mFormatID = kAudioFormatLinearPCM;
+//    AudioStreamBasicDescription format = {0};
+//    format.mSampleRate = 44100.0;
+//    format.mFormatID = kAudioFormatLinearPCM;
+//    format.mBytesPerPacket = sizeof(SInt32);
+//    format.mChannelsPerFrame = 2;
+//
+//    AVAudioFormat *f = [AVAudioFormat.alloc initWithStreamDescription:&format];
+//    NSLog(@"format - %@", f);
+    
+    AudioStreamBasicDescription asbd = self.outputs[1].kAudioUnitProperty_StreamFormat;
+    AVAudioFormat *format = [AVAudioFormat.alloc initWithStreamDescription:&asbd];
+    NSLog(@"format - %@", format);
     
 //    Float64             mSampleRate;
 //    AudioFormatID       mFormatID;
@@ -96,6 +105,13 @@
 //    UInt32              mChannelsPerFrame;
 //    UInt32              mBitsPerChannel;
 //    UInt32              mReserved;
+    
+//    These types are deprecated. Code performing signal processing should use concrete types
+//    (e.g. float, Float32, SInt16, SInt32). Format-agnostic code, instead of relying on the sizes
+//    of these types, should calculate the size of a sample from an AudioStreamBasicDescription's
+//    mBytesPerChannel, mChannelsPerFrame, and (mFlags & kLinearPCMFormatFlagIsNonInterleaved).
+//    For interleaved formats, the size of a sample is mBytesPerFrame / mChannelsPerFrame.
+//    For non-interleaved formats, it is simply mBytesPerFrame.
 }
 
 @end
