@@ -82,6 +82,20 @@
             }
         }
     }
+    
+    AudioStreamBasicDescription format = {0};
+    format.mSampleRate = 44100.0;
+    format.mFormatID = kAudioFormatLinearPCM;
+    
+//    Float64             mSampleRate;
+//    AudioFormatID       mFormatID;
+//    AudioFormatFlags    mFormatFlags;
+//    UInt32              mBytesPerPacket;
+//    UInt32              mFramesPerPacket;
+//    UInt32              mBytesPerFrame;
+//    UInt32              mChannelsPerFrame;
+//    UInt32              mBitsPerChannel;
+//    UInt32              mReserved;
 }
 
 @end
@@ -174,9 +188,9 @@
         element.didRenderInfo.error = NSError.threadError;
         // Receive -> Convert -> Play
         
-//        NSLog(@"mNumberBuffers - %u", element.didRenderInfo.ioData->mNumberBuffers); // 1
-//        NSLog(@"mNumberChannels - %u", element.didRenderInfo.ioData->mBuffers[0].mNumberChannels); // 1
-//        NSLog(@"mDataByteSize - %u", element.didRenderInfo.ioData->mBuffers[0].mDataByteSize); // 1024
+        NSLog(@"mNumberBuffers - %u", element.didRenderInfo.ioData->mNumberBuffers); // 1
+        NSLog(@"mNumberChannels - %u", element.didRenderInfo.ioData->mBuffers[0].mNumberChannels); // 1
+        NSLog(@"mDataByteSize - %u", element.didRenderInfo.ioData->mBuffers[0].mDataByteSize); // 1024
     } else {
         // Render
         // Record -> Convert -> Send
