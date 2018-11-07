@@ -76,58 +76,21 @@
                     self.outputs[1].kAudioUnitProperty_ShouldAllocateBuffer = 0;
                     if (NSError.threadError) {
                     } else {
-                        [super configure];
+                        AVAudioFormat *format = [AVAudioFormat.alloc initWithCommonFormat:AVAudioPCMFormatFloat32 sampleRate:44100.0 channels:2 interleaved:NO];
+                        self.inputs[0].kAudioUnitProperty_StreamFormat = *format.streamDescription;
+                        if (NSError.threadError) {
+                        } else {
+                            self.outputs[1].kAudioUnitProperty_StreamFormat = *format.streamDescription;
+                            if (NSError.threadError) {
+                            } else {
+                                [super configure];
+                            }
+                        }
                     }
                 }
             }
         }
     }
-    
-    AudioStreamBasicDescription asbd = {0};
-    asbd.mSampleRate = 44100.0;
-    asbd.mFormatID = kAudioFormatLinearPCM;
-    asbd.mFormatFlags = kAudioFormatFlagIsFloat | kAudioFormatFlagsNativeEndian | kAudioFormatFlagIsPacked | kAudioFormatFlagIsNonInterleaved;
-    asbd.mBytesPerPacket = sizeof(Float32);
-    asbd.mFramesPerPacket = 1;
-    asbd.mBytesPerFrame = sizeof(Float32);
-    asbd.mChannelsPerFrame = 2;
-    asbd.mBitsPerChannel = 8 * sizeof(Float32);
-    
-    self.outputs[1].kAudioUnitProperty_StreamFormat = asbd;
-    self.inputs[0].kAudioUnitProperty_StreamFormat = asbd;
-    
-    
-    
-    
-//    Float64             mSampleRate;
-//    AudioFormatID       mFormatID;
-//    AudioFormatFlags    mFormatFlags;
-//    UInt32              mBytesPerPacket;
-//    UInt32              mFramesPerPacket;
-//    UInt32              mBytesPerFrame;
-//    UInt32              mChannelsPerFrame;
-//    UInt32              mBitsPerChannel;
-//    UInt32              mReserved;
-    
-//    These types are deprecated. Code performing signal processing should use concrete types
-//    (e.g. float, Float32, SInt16, SInt32). Format-agnostic code, instead of relying on the sizes
-//    of these types, should calculate the size of a sample from an AudioStreamBasicDescription's
-//    mBytesPerChannel, mChannelsPerFrame, and (mFlags & kLinearPCMFormatFlagIsNonInterleaved).
-//    For interleaved formats, the size of a sample is mBytesPerFrame / mChannelsPerFrame.
-//    For non-interleaved formats, it is simply mBytesPerFrame.
-    
-    //    AudioStreamBasicDescription format = {0};
-    //    format.mSampleRate = 44100.0;
-    //    format.mFormatID = kAudioFormatLinearPCM;
-    //    format.mBytesPerPacket = sizeof(SInt32);
-    //    format.mChannelsPerFrame = 2;
-    //
-    //    AVAudioFormat *f = [AVAudioFormat.alloc initWithStreamDescription:&format];
-    //    NSLog(@"format - %@", f);
-    
-    //    AudioStreamBasicDescription asbd = self.outputs[1].kAudioUnitProperty_StreamFormat;
-    //    AVAudioFormat *format = [AVAudioFormat.alloc initWithStreamDescription:&asbd];
-    //    NSLog(@"format - %@", format);
 }
 
 @end
