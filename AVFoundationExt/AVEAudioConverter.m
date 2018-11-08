@@ -16,6 +16,35 @@
 
 
 
+@interface AVEAudioConverterMediaServicesWereResetInfo ()
+
+@property NSError *error;
+
+@end
+
+
+
+@implementation AVEAudioConverterMediaServicesWereResetInfo
+
+- (instancetype)initWithError:(NSError *)error {
+    self = super.init;
+    if (self) {
+        self.error = error;
+    }
+    return self;
+}
+
+@end
+
+
+
+
+
+
+
+
+
+
 @interface AVEAudioConversion ()
 
 @end
@@ -44,6 +73,7 @@
 @property AVAudioFormat *toFormat;
 @property AVAudioConverter *converter;
 @property AVEAudioSession *session;
+@property AVEAudioConverterMediaServicesWereResetInfo *mediaServicesWereResetInfo;
 
 @end
 
@@ -88,22 +118,18 @@ NSErrorDomain const AVEAudioConverterErrorDomain = @"AVEAudioConverter";
 #pragma mark - Audio session
 
 - (void)AVEAudioSessionMediaServicesWereReset:(AVEAudioSession *)audioSession {
-//    if (self.errors.count == 0) {
-//        NSEOperationState state = self.state;
-//        if (state >= AVEAudioConverterStateDidInitialize) {
-//            NSError *error = [self initialize];
-//            if (error) {
-//                [self.errors addObject:error];
-//            } else {
-//                if (state >= AVEAudioConverterStateDidConfigure) {
-//                    error = [self configure];
-//                    if (error) {
-//                        [self.errors addObject:error];
-//                    }
-//                }
-//            }
-//        }
-//    }
+    NSEOperationState state = self.state;
+    if (state >= AVEAudioConverterStateDidInitialize) {
+        [self initialize];
+        if (NSError.threadError) {
+        } else {
+            if (state >= AVEAudioConverterStateDidConfigure) {
+                [self configure];
+            }
+        }
+    }
+    
+    self.mediaServicesWereResetInfo = [AVEAudioConverterMediaServicesWereResetInfo.alloc initWithError:NSError.threadError];
 }
 
 @end

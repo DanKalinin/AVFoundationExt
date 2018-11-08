@@ -9,8 +9,26 @@
 #import <Helpers/Helpers.h>
 #import "AVEAudioSession.h"
 
+@class AVEAudioConverterMediaServicesWereResetInfo;
 @class AVEAudioConversion;
 @class AVEAudioConverter;
+
+
+
+
+
+
+
+
+
+
+@interface AVEAudioConverterMediaServicesWereResetInfo : HLPObject
+
+@property (readonly) NSError *error;
+
+- (instancetype)initWithError:(NSError *)error;
+
+@end
 
 
 
@@ -66,6 +84,7 @@ NS_ERROR_ENUM(AVEAudioConverterErrorDomain) {
 @property (readonly) AVAudioFormat *toFormat;
 @property (readonly) AVAudioConverter *converter;
 @property (readonly) AVEAudioSession *session;
+@property (readonly) AVEAudioConverterMediaServicesWereResetInfo *mediaServicesWereResetInfo;
 
 - (instancetype)initFromFormat:(AVAudioFormat *)fromFormat toFormat:(AVAudioFormat *)toFormat;
 
