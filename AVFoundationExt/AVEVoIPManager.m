@@ -112,6 +112,22 @@
 
 @implementation AVEVoIPAudioConverter
 
+- (instancetype)init {
+    AVAudioFormat *fromFormat = [AVAudioFormat.alloc initWithCommonFormat:AVAudioPCMFormatFloat32 sampleRate:44100.0 channels:1 interleaved:NO];
+    
+    AudioStreamBasicDescription asbd = {0};
+    asbd.mSampleRate = 44100.0;
+    asbd.mFormatID = kAudioFormatMPEG4AAC;
+    asbd.mChannelsPerFrame = 2;
+    AVAudioFormat *toFormat = [AVAudioFormat.alloc initWithStreamDescription:&asbd];
+    
+    self = [super initFromFormat:fromFormat toFormat:toFormat];
+    if (self) {
+        
+    }
+    return self;
+}
+
 @end
 
 
@@ -149,6 +165,9 @@
     if (self) {
         self.unit = AVEVoIPAudioUnit.voiceProcessingIO;
         [self.unit.delegates addObject:self.delegates];
+        
+        self.converter = AVEVoIPAudioConverter.new;
+        [self.converter.delegates addObject:self.delegates];
         
         self.session = AVEVoIPAudioSession.shared;
         [self.session.delegates addObject:self.delegates];

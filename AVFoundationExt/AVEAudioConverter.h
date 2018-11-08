@@ -12,16 +12,6 @@
 @class AVEAudioConversion;
 @class AVEAudioConverter;
 
-extern const NSEOperationState AVEAudioConverterStateDidInitialize;
-extern const NSEOperationState AVEAudioConverterStateDidConfigure;
-
-extern NSErrorDomain const AVEAudioConverterErrorDomain;
-
-NS_ERROR_ENUM(AVEAudioConverterErrorDomain) {
-    AVEAudioConverterErrorUnknown = 0,
-    AVEAudioConverterErrorConversionImpossible = 1
-};
-
 
 
 
@@ -61,6 +51,16 @@ NS_ERROR_ENUM(AVEAudioConverterErrorDomain) {
 
 @interface AVEAudioConverter : NSEOperation <AVEAudioConverterDelegate, AVEAudioSessionDelegate>
 
+extern const NSEOperationState AVEAudioConverterStateDidInitialize;
+extern const NSEOperationState AVEAudioConverterStateDidConfigure;
+
+extern NSErrorDomain const AVEAudioConverterErrorDomain;
+
+NS_ERROR_ENUM(AVEAudioConverterErrorDomain) {
+    AVEAudioConverterErrorUnknown = 0,
+    AVEAudioConverterErrorConversionImpossible = 1
+};
+
 @property (readonly) HLPArray<AVEAudioConverterDelegate> *delegates;
 @property (readonly) AVAudioFormat *fromFormat;
 @property (readonly) AVAudioFormat *toFormat;
@@ -69,7 +69,7 @@ NS_ERROR_ENUM(AVEAudioConverterErrorDomain) {
 
 - (instancetype)initFromFormat:(AVAudioFormat *)fromFormat toFormat:(AVAudioFormat *)toFormat;
 
-- (NSError *)initialize;
-- (NSError *)configure;
+- (void)initialize;
+- (void)configure;
 
 @end
