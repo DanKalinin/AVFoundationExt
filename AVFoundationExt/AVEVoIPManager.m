@@ -145,6 +145,8 @@
 @property AVEAudioConverter *converter;
 @property AVEAudioSession *session;
 
+@property NSMutableData *originalData;
+
 @end
 
 
@@ -171,6 +173,14 @@
         
         self.session = AVEVoIPAudioSession.shared;
         [self.session.delegates addObject:self.delegates];
+        
+        self.originalData = NSMutableData.data;
+        
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(10 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            NSLog(@"size - %i", (int)self.originalData.length);
+            
+            // original | 10s | 2 MB | Float32, 44100, 1
+        });
         
         [self initialize];
     }
@@ -202,9 +212,11 @@
         element.didRenderInfo.error = NSError.threadError;
         // Receive -> Convert -> Play
         
-        NSLog(@"mNumberBuffers - %u", element.didRenderInfo.ioData->mNumberBuffers); // 1
-        NSLog(@"mNumberChannels - %u", element.didRenderInfo.ioData->mBuffers[0].mNumberChannels); // 1
-        NSLog(@"mDataByteSize - %u", element.didRenderInfo.ioData->mBuffers[0].mDataByteSize); // 1024
+//        NSLog(@"mNumberBuffers - %u", element.didRenderInfo.ioData->mNumberBuffers); // 1 | 2 - stereo, interleaved=NO
+//        NSLog(@"mNumberChannels - %u", element.didRenderInfo.ioData->mBuffers[0].mNumberChannels); // 1 | 2 - stereo, interleaved=YES
+//        NSLog(@"mDataByteSize - %u", element.didRenderInfo.ioData->mBuffers[0].mDataByteSize); // 1024
+        
+        [self.originalData appendBytes:element.didRenderInfo.ioData->mBuffers[0].mData length:element.didRenderInfo.ioData->mBuffers[0].mDataByteSize];
     } else {
         // Render
         // Record -> Convert -> Send
