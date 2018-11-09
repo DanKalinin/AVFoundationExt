@@ -115,6 +115,14 @@ NSErrorDomain const AVEAudioConverterErrorDomain = @"AVEAudioConverter";
     self.state = AVEAudioConverterStateDidConfigure;
 }
 
+- (void)convertToBuffer:(AVAudioBuffer *)toBuffer fromBuffer:(AVAudioBuffer *)fromBuffer {
+    NSError *error = nil;
+    AVAudioConverterOutputStatus status = [self.converter convertToBuffer:toBuffer error:&error withInputFromBlock:^AVAudioBuffer *(AVAudioPacketCount inNumberOfPackets, AVAudioConverterInputStatus *outStatus) {
+        *outStatus = AVAudioConverterInputStatus_HaveData;
+        return fromBuffer;
+    }];
+}
+
 #pragma mark - Audio session
 
 - (void)AVEAudioSessionMediaServicesWereReset:(AVEAudioSession *)audioSession {

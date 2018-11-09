@@ -194,6 +194,9 @@
     [self.unit audioUnitInitialize];
     [self.unit audioOutputUnitStart];
     
+    [self.converter initialize];
+    [self.converter configure];
+    
     [self.session configure];
     [self.session setActive:YES withOptions:0];
     
@@ -236,8 +239,18 @@
         
 //        NSLog(@"data - %f", *(Float32 *)fromBuffer.audioBufferList->mBuffers[0].mData);
         
-        AVAudioCompressedBuffer *toBuffer = [AVAudioCompressedBuffer.alloc initWithFormat:self.converter.toFormat packetCapacity:8 maximumPacketSize:self.converter.converter.maximumOutputPacketSize];
+        AVAudioCompressedBuffer *toBuffer = [AVAudioCompressedBuffer.alloc initWithFormat:self.converter.toFormat packetCapacity:1 maximumPacketSize:self.converter.converter.maximumOutputPacketSize];
         
+        NSError *error = nil;
+        AVAudioConverterOutputStatus status = [self.converter.converter convertToBuffer:toBuffer error:&error withInputFromBlock:^AVAudioBuffer *(AVAudioPacketCount inNumberOfPackets, AVAudioConverterInputStatus * outStatus) {
+            *outStatus = AVAudioConverterInputStatus_EndOfStream;
+            NSLog(@"converting");
+            return fromBuffer;
+        }];
+        
+//        [self.converter.converter reset];
+        
+        NSLog(@"length - %i", (int)toBuffer.byteLength);
         
 //        NSLog(@"inNumberFrames - %u", fromBuffer.frameLength);
 //

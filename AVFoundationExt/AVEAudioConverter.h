@@ -91,4 +91,6 @@ NS_ERROR_ENUM(AVEAudioConverterErrorDomain) {
 - (void)initialize;
 - (void)configure;
 
+- (void)convertToBuffer:(AVAudioBuffer *)toBuffer fromBuffer:(AVAudioBuffer *)fromBuffer;
+
 @end
