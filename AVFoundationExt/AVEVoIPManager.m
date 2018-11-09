@@ -230,6 +230,9 @@
         
         AVAudioPCMBuffer *fromBuffer = [AVAudioPCMBuffer.alloc initWithPCMFormat:self.converter.fromFormat frameCapacity:element.didRenderInfo.inNumberFrames];
         fromBuffer.frameLength = fromBuffer.frameCapacity;
+        *fromBuffer.mutableAudioBufferList = *element.didRenderInfo.ioData;
+        
+        NSLog(@"data - %f", *(Float32 *)fromBuffer.audioBufferList->mBuffers[0].mData);
         
         
 //        NSLog(@"inNumberFrames - %u", fromBuffer.frameLength);
