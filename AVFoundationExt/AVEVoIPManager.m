@@ -212,17 +212,30 @@
         element.didRenderInfo.error = NSError.threadError;
         // Receive -> Convert -> Play
         
-//        NSLog(@"mNumberBuffers - %u", element.didRenderInfo.ioData->mNumberBuffers); // 1 | 2 - stereo, interleaved=NO
-//        NSLog(@"mNumberChannels - %u", element.didRenderInfo.ioData->mBuffers[0].mNumberChannels); // 1 | 2 - stereo, interleaved=YES
-//        NSLog(@"mDataByteSize - %u", element.didRenderInfo.ioData->mBuffers[0].mDataByteSize); // 1024
+//        @property (readonly) AudioUnitRenderActionFlags *ioActionFlags;
+//        @property (readonly) const AudioTimeStamp *inTimeStamp;
+//        @property (readonly) UInt32 inBusNumber;
+//        @property (readonly) UInt32 inNumberFrames;
+//        @property (readonly) AudioBufferList *ioData;
+        
+        NSLog(@"inNumberFrames - %u", element.didRenderInfo.inNumberFrames);
+        
+        NSLog(@"mNumberBuffers - %u", element.didRenderInfo.ioData->mNumberBuffers); // 1 | 2 - stereo, interleaved=NO
+        NSLog(@"mNumberChannels - %u", element.didRenderInfo.ioData->mBuffers[0].mNumberChannels); // 1 | 2 - stereo, interleaved=YES
+        NSLog(@"mDataByteSize - %u", element.didRenderInfo.ioData->mBuffers[0].mDataByteSize); // 1024
         
 //        [self.originalData appendBytes:element.didRenderInfo.ioData->mBuffers[0].mData length:element.didRenderInfo.ioData->mBuffers[0].mDataByteSize];
         
-        AVAudioPCMBuffer *fromBuffer = [AVAudioPCMBuffer.alloc initWithPCMFormat:self.converter.fromFormat frameCapacity:self.converter.fromFormat.streamDescription->mFramesPerPacket];
-        fromBuffer.frameLength = fromBuffer.frameCapacity;
-        NSLog(@"mNumberBuffers - %u", fromBuffer.audioBufferList->mNumberBuffers);
-        NSLog(@"mNumberChannels - %u", fromBuffer.audioBufferList->mBuffers[0].mNumberChannels);
-        NSLog(@"mDataByteSize - %u", fromBuffer.audioBufferList->mBuffers[0].mDataByteSize);
+//        AVAudioPCMBuffer *fromBuffer = [AVAudioPCMBuffer.alloc initWithPCMFormat:self.converter.fromFormat frameCapacity:self.converter.fromFormat.streamDescription->mFramesPerPacket];
+//        fromBuffer.frameLength = fromBuffer.frameCapacity;
+//        NSLog(@"mNumberBuffers - %u", fromBuffer.audioBufferList->mNumberBuffers);
+//        NSLog(@"mNumberChannels - %u", fromBuffer.audioBufferList->mBuffers[0].mNumberChannels);
+//        NSLog(@"mDataByteSize - %u", fromBuffer.audioBufferList->mBuffers[0].mDataByteSize);
+        
+//        NSLog(@"converter format - %@", self.converter.fromFormat);
+//        AudioStreamBasicDescription asbd = self.unit.inputs[0].kAudioUnitProperty_StreamFormat;
+//        AVAudioFormat *format = [AVAudioFormat.alloc initWithStreamDescription:&asbd];
+//        NSLog(@"unit format - %@", format);
         
 //        fromBuffer.frameLength = fromBuffer.frameCapacity;
 //        *fromBuffer.mutableAudioBufferList = *element.didRenderInfo.ioData;
