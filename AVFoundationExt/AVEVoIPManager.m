@@ -218,16 +218,22 @@
 //        @property (readonly) UInt32 inNumberFrames;
 //        @property (readonly) AudioBufferList *ioData;
         
-        NSLog(@"inNumberFrames - %u", element.didRenderInfo.inNumberFrames);
+        // device | simulator
         
-        NSLog(@"mNumberBuffers - %u", element.didRenderInfo.ioData->mNumberBuffers); // 1 | 2 - stereo, interleaved=NO
-        NSLog(@"mNumberChannels - %u", element.didRenderInfo.ioData->mBuffers[0].mNumberChannels); // 1 | 2 - stereo, interleaved=YES
-        NSLog(@"mDataByteSize - %u", element.didRenderInfo.ioData->mBuffers[0].mDataByteSize); // 1024
+//        NSLog(@"inNumberFrames - %u", element.didRenderInfo.inNumberFrames); // 1024 | 512
+//
+//        NSLog(@"mNumberBuffers - %u", element.didRenderInfo.ioData->mNumberBuffers); // 1 | 2 - stereo, interleaved=NO
+//        NSLog(@"mNumberChannels - %u", element.didRenderInfo.ioData->mBuffers[0].mNumberChannels); // 1 | 2 - stereo, interleaved=YES
+//        NSLog(@"mDataByteSize - %u", element.didRenderInfo.ioData->mBuffers[0].mDataByteSize); // 4096 | 2048
         
 //        [self.originalData appendBytes:element.didRenderInfo.ioData->mBuffers[0].mData length:element.didRenderInfo.ioData->mBuffers[0].mDataByteSize];
         
-//        AVAudioPCMBuffer *fromBuffer = [AVAudioPCMBuffer.alloc initWithPCMFormat:self.converter.fromFormat frameCapacity:self.converter.fromFormat.streamDescription->mFramesPerPacket];
-//        fromBuffer.frameLength = fromBuffer.frameCapacity;
+        AVAudioPCMBuffer *fromBuffer = [AVAudioPCMBuffer.alloc initWithPCMFormat:self.converter.fromFormat frameCapacity:element.didRenderInfo.inNumberFrames];
+        fromBuffer.frameLength = fromBuffer.frameCapacity;
+        
+        
+//        NSLog(@"inNumberFrames - %u", fromBuffer.frameLength);
+//
 //        NSLog(@"mNumberBuffers - %u", fromBuffer.audioBufferList->mNumberBuffers);
 //        NSLog(@"mNumberChannels - %u", fromBuffer.audioBufferList->mBuffers[0].mNumberChannels);
 //        NSLog(@"mDataByteSize - %u", fromBuffer.audioBufferList->mBuffers[0].mDataByteSize);
