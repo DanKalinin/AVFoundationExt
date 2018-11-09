@@ -218,8 +218,15 @@
         
 //        [self.originalData appendBytes:element.didRenderInfo.ioData->mBuffers[0].mData length:element.didRenderInfo.ioData->mBuffers[0].mDataByteSize];
         
-        AVAudioPCMBuffer *fromBuffer = [AVAudioPCMBuffer.alloc initWithPCMFormat:self.converter.fromFormat frameCapacity:1024];
+        AVAudioPCMBuffer *fromBuffer = [AVAudioPCMBuffer.alloc initWithPCMFormat:self.converter.fromFormat frameCapacity:self.converter.fromFormat.streamDescription->mFramesPerPacket];
+        fromBuffer.frameLength = fromBuffer.frameCapacity;
+        NSLog(@"mNumberBuffers - %u", fromBuffer.audioBufferList->mNumberBuffers);
+        NSLog(@"mNumberChannels - %u", fromBuffer.audioBufferList->mBuffers[0].mNumberChannels);
+        NSLog(@"mDataByteSize - %u", fromBuffer.audioBufferList->mBuffers[0].mDataByteSize);
         
+//        fromBuffer.frameLength = fromBuffer.frameCapacity;
+//        *fromBuffer.mutableAudioBufferList = *element.didRenderInfo.ioData;
+//        NSLog(@"frameLength - %u", fromBuffer.mutableAudioBufferList->mBuffers[0].mDataByteSize);
     } else {
         // Render
         // Record -> Convert -> Send
