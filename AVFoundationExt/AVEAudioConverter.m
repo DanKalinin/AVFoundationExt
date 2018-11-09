@@ -121,6 +121,7 @@ NSErrorDomain const AVEAudioConverterErrorDomain = @"AVEAudioConverter";
         *outStatus = AVAudioConverterInputStatus_HaveData;
         return fromBuffer;
     }];
+    NSError.threadError = error;
 }
 
 #pragma mark - Audio session

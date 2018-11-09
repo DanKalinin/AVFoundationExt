@@ -118,7 +118,7 @@
     AudioStreamBasicDescription asbd = {0};
     asbd.mSampleRate = 44100.0;
     asbd.mFormatID = kAudioFormatMPEG4AAC;
-    asbd.mChannelsPerFrame = 2;
+    asbd.mChannelsPerFrame = 1;
     AVAudioFormat *toFormat = [AVAudioFormat.alloc initWithStreamDescription:&asbd];
     
     self = [super initFromFormat:fromFormat toFormat:toFormat];
@@ -243,14 +243,16 @@
         
         NSError *error = nil;
         AVAudioConverterOutputStatus status = [self.converter.converter convertToBuffer:toBuffer error:&error withInputFromBlock:^AVAudioBuffer *(AVAudioPacketCount inNumberOfPackets, AVAudioConverterInputStatus * outStatus) {
-            *outStatus = AVAudioConverterInputStatus_EndOfStream;
+            *outStatus = AVAudioConverterInputStatus_HaveData;
             NSLog(@"converting");
             return fromBuffer;
         }];
         
+        NSLog(@"length - %i", (int)toBuffer.byteLength);
+        
 //        [self.converter.converter reset];
         
-        NSLog(@"length - %i", (int)toBuffer.byteLength);
+        
         
 //        NSLog(@"inNumberFrames - %u", fromBuffer.frameLength);
 //
