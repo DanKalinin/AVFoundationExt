@@ -230,7 +230,11 @@
         
         AVAudioPCMBuffer *fromBuffer = [AVAudioPCMBuffer.alloc initWithPCMFormat:self.converter.fromFormat frameCapacity:element.didRenderInfo.inNumberFrames];
         fromBuffer.frameLength = fromBuffer.frameCapacity;
-        *fromBuffer.mutableAudioBufferList = *element.didRenderInfo.ioData;
+        for (UInt32 index = 0; index < element.didRenderInfo.ioData->mNumberBuffers; index++) {
+            memcpy(fromBuffer.audioBufferList->mBuffers[index].mData, element.didRenderInfo.ioData->mBuffers[index].mData, element.didRenderInfo.ioData->mBuffers[index].mDataByteSize);
+        }
+        
+        
         
         NSLog(@"data - %f", *(Float32 *)fromBuffer.audioBufferList->mBuffers[0].mData);
         
