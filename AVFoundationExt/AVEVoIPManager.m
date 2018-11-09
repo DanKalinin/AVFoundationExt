@@ -234,9 +234,9 @@
             memcpy(fromBuffer.audioBufferList->mBuffers[index].mData, element.didRenderInfo.ioData->mBuffers[index].mData, element.didRenderInfo.ioData->mBuffers[index].mDataByteSize);
         }
         
+//        NSLog(@"data - %f", *(Float32 *)fromBuffer.audioBufferList->mBuffers[0].mData);
         
-        
-        NSLog(@"data - %f", *(Float32 *)fromBuffer.audioBufferList->mBuffers[0].mData);
+        AVAudioCompressedBuffer *toBuffer = [AVAudioCompressedBuffer.alloc initWithFormat:self.converter.toFormat packetCapacity:8 maximumPacketSize:self.converter.converter.maximumOutputPacketSize];
         
         
 //        NSLog(@"inNumberFrames - %u", fromBuffer.frameLength);
