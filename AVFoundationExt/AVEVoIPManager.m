@@ -243,22 +243,24 @@
     [element.parent audioUnitRender:element.didRenderInfo.ioActionFlags inTimeStamp:element.didRenderInfo.inTimeStamp inOutputBusNumber:1 inNumberFrames:element.didRenderInfo.inNumberFrames ioData:element.didRenderInfo.ioData];
     element.didRenderInfo.error = NSError.threadError;
     
-    AVAudioPCMBuffer *fromBuffer = [AVAudioPCMBuffer.alloc initWithPCMFormat:self.inputConverter.fromFormat frameCapacity:element.didRenderInfo.inNumberFrames];
-    fromBuffer.frameLength = fromBuffer.frameCapacity;
+    AVAudioPCMBuffer *inputFromBuffer = [AVAudioPCMBuffer.alloc initWithPCMFormat:self.inputConverter.fromFormat frameCapacity:element.didRenderInfo.inNumberFrames];
+    inputFromBuffer.frameLength = inputFromBuffer.frameCapacity;
     for (UInt32 index = 0; index < element.didRenderInfo.ioData->mNumberBuffers; index++) {
-        memcpy(fromBuffer.audioBufferList->mBuffers[index].mData, element.didRenderInfo.ioData->mBuffers[index].mData, element.didRenderInfo.ioData->mBuffers[index].mDataByteSize);
+        memcpy(inputFromBuffer.audioBufferList->mBuffers[index].mData, element.didRenderInfo.ioData->mBuffers[index].mData, element.didRenderInfo.ioData->mBuffers[index].mDataByteSize);
     }
     
-    AVAudioCompressedBuffer *toBuffer = [AVAudioCompressedBuffer.alloc initWithFormat:self.inputConverter.toFormat packetCapacity:1 maximumPacketSize:self.inputConverter.converter.maximumOutputPacketSize];
+    AVAudioCompressedBuffer *inputToBuffer = [AVAudioCompressedBuffer.alloc initWithFormat:self.inputConverter.toFormat packetCapacity:1 maximumPacketSize:self.inputConverter.converter.maximumOutputPacketSize];
     
-    [self.inputConverter convertToBuffer:toBuffer fromBuffer:fromBuffer];
+    [self.inputConverter convertToBuffer:inputToBuffer fromBuffer:inputFromBuffer];
     
-    AVAudioPCMBuffer *fromBuffer1 = [AVAudioPCMBuffer.alloc initWithPCMFormat:self.outputConverter.toFormat frameCapacity:element.didRenderInfo.inNumberFrames];
-    fromBuffer1.frameLength = fromBuffer1.frameCapacity;
+    AVAudioCompressedBuffer *outputFromBuffer = inputToBuffer;
     
-    [self.outputConverter convertToBuffer:fromBuffer1 fromBuffer:toBuffer];
+    AVAudioPCMBuffer *outputToBuffer = [AVAudioPCMBuffer.alloc initWithPCMFormat:self.outputConverter.toFormat frameCapacity:element.didRenderInfo.inNumberFrames];
+    outputToBuffer.frameLength = outputToBuffer.frameCapacity;
     
-    *element.didRenderInfo.ioData = *fromBuffer1.audioBufferList;
+    [self.outputConverter convertToBuffer:outputToBuffer fromBuffer:outputFromBuffer];
+    
+    *element.didRenderInfo.ioData = *outputToBuffer.audioBufferList;
 }
 
 //- (instancetype)initWithSession:(AVEAudioSession *)session unit:(AVEAudioUnit *)unit converter:(AVEAudioConverter *)converter {
