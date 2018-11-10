@@ -51,7 +51,20 @@
 
 
 
-@interface AVEVoIPAudioConverter : AVEAudioConverter
+@interface AVEVoIPInputConverter : AVEAudioConverter
+
+@end
+
+
+
+
+
+
+
+
+
+
+@interface AVEVoIPOutputConverter : AVEAudioConverter
 
 @end
 
@@ -73,7 +86,8 @@
 @interface AVEVoIPManager : NSEOperation <AVEVoIPManagerDelegate>
 
 @property (readonly) AVEAudioUnit *unit;
-@property (readonly) AVEAudioConverter *converter;
+@property (readonly) AVEAudioConverter *inputConverter;
+@property (readonly) AVEAudioConverter *outputConverter;
 @property (readonly) AVEAudioSession *session;
 
 - (NSError *)initialize;

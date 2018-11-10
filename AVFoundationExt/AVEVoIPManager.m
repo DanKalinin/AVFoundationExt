@@ -96,13 +96,13 @@
 
 
 
-@interface AVEVoIPAudioConverter ()
+@interface AVEVoIPInputConverter ()
 
 @end
 
 
 
-@implementation AVEVoIPAudioConverter
+@implementation AVEVoIPInputConverter
 
 - (instancetype)init {
     AVAudioFormat *fromFormat = [AVAudioFormat.alloc initWithCommonFormat:AVAudioPCMFormatFloat32 sampleRate:44100.0 channels:1 interleaved:NO];
@@ -114,9 +114,38 @@
     AVAudioFormat *toFormat = [AVAudioFormat.alloc initWithStreamDescription:&asbd];
     
     self = [super initFromFormat:fromFormat toFormat:toFormat];
-    if (self) {
-        
-    }
+    return self;
+}
+
+@end
+
+
+
+
+
+
+
+
+
+
+@interface AVEVoIPOutputConverter ()
+
+@end
+
+
+
+@implementation AVEVoIPOutputConverter
+
+- (instancetype)init {
+    AudioStreamBasicDescription asbd = {0};
+    asbd.mSampleRate = 44100.0;
+    asbd.mFormatID = kAudioFormatMPEG4AAC;
+    asbd.mChannelsPerFrame = 1;
+    AVAudioFormat *fromFormat = [AVAudioFormat.alloc initWithStreamDescription:&asbd];
+    
+    AVAudioFormat *toFormat = [AVAudioFormat.alloc initWithCommonFormat:AVAudioPCMFormatFloat32 sampleRate:44100.0 channels:1 interleaved:NO];
+    
+    self = [super initFromFormat:fromFormat toFormat:toFormat];
     return self;
 }
 
@@ -134,12 +163,12 @@
 @interface AVEVoIPManager ()
 
 @property AVEAudioUnit *unit;
-@property AVEAudioConverter *converter;
+@property AVEAudioConverter *inputConverter;
+@property AVEAudioConverter *outputConverter;
 @property AVEAudioSession *session;
 
 @property NSMutableData *originalData;
 @property NSMutableData *compressedData;
-@property AVEAudioConverter *converter1;
 
 @end
 
@@ -162,8 +191,11 @@
         self.unit = AVEVoIPAudioUnit.voiceProcessingIO;
         [self.unit.delegates addObject:self.delegates];
         
-        self.converter = AVEVoIPAudioConverter.new;
-        [self.converter.delegates addObject:self.delegates];
+        self.inputConverter = AVEVoIPInputConverter.new;
+        [self.inputConverter.delegates addObject:self.delegates];
+        
+        self.outputConverter = AVEVoIPOutputConverter.new;
+        [self.outputConverter.delegates addObject:self.delegates];
         
         self.session = AVEVoIPAudioSession.shared;
         [self.session.delegates addObject:self.delegates];
@@ -177,8 +209,6 @@
             // original | 10s | 2 MB | Float32, 44100, 1
         });
         
-        self.converter1 = [AVEAudioConverter.alloc initFromFormat:self.converter.toFormat toFormat:self.converter.fromFormat];
-        
         [self initialize];
     }
     return self;
@@ -191,11 +221,11 @@
     [self.unit audioUnitInitialize];
     [self.unit audioOutputUnitStart];
     
-    [self.converter initialize];
-    [self.converter configure];
+    [self.inputConverter initialize];
+    [self.inputConverter configure];
     
-    [self.converter1 initialize];
-    [self.converter1 configure];
+    [self.outputConverter initialize];
+    [self.outputConverter configure];
     
     [self.session configure];
     [self.session setActive:YES withOptions:0];
@@ -213,23 +243,22 @@
     [element.parent audioUnitRender:element.didRenderInfo.ioActionFlags inTimeStamp:element.didRenderInfo.inTimeStamp inOutputBusNumber:1 inNumberFrames:element.didRenderInfo.inNumberFrames ioData:element.didRenderInfo.ioData];
     element.didRenderInfo.error = NSError.threadError;
     
-    AVAudioPCMBuffer *fromBuffer = [AVAudioPCMBuffer.alloc initWithPCMFormat:self.converter.fromFormat frameCapacity:element.didRenderInfo.inNumberFrames];
+    AVAudioPCMBuffer *fromBuffer = [AVAudioPCMBuffer.alloc initWithPCMFormat:self.inputConverter.fromFormat frameCapacity:element.didRenderInfo.inNumberFrames];
     fromBuffer.frameLength = fromBuffer.frameCapacity;
     for (UInt32 index = 0; index < element.didRenderInfo.ioData->mNumberBuffers; index++) {
         memcpy(fromBuffer.audioBufferList->mBuffers[index].mData, element.didRenderInfo.ioData->mBuffers[index].mData, element.didRenderInfo.ioData->mBuffers[index].mDataByteSize);
     }
     
-    AVAudioCompressedBuffer *toBuffer = [AVAudioCompressedBuffer.alloc initWithFormat:self.converter.toFormat packetCapacity:1 maximumPacketSize:self.converter.converter.maximumOutputPacketSize];
+    AVAudioCompressedBuffer *toBuffer = [AVAudioCompressedBuffer.alloc initWithFormat:self.inputConverter.toFormat packetCapacity:1 maximumPacketSize:self.inputConverter.converter.maximumOutputPacketSize];
     
-    [self.converter convertToBuffer:toBuffer fromBuffer:fromBuffer];
+    [self.inputConverter convertToBuffer:toBuffer fromBuffer:fromBuffer];
     
-    AVAudioPCMBuffer *fromBuffer1 = [AVAudioPCMBuffer.alloc initWithPCMFormat:self.converter.fromFormat frameCapacity:element.didRenderInfo.inNumberFrames];
+    AVAudioPCMBuffer *fromBuffer1 = [AVAudioPCMBuffer.alloc initWithPCMFormat:self.outputConverter.toFormat frameCapacity:element.didRenderInfo.inNumberFrames];
     fromBuffer1.frameLength = fromBuffer1.frameCapacity;
     
-    [self.converter1 convertToBuffer:fromBuffer1 fromBuffer:toBuffer];
+    [self.outputConverter convertToBuffer:fromBuffer1 fromBuffer:toBuffer];
     
     *element.didRenderInfo.ioData = *fromBuffer1.audioBufferList;
-
 }
 
 //- (instancetype)initWithSession:(AVEAudioSession *)session unit:(AVEAudioUnit *)unit converter:(AVEAudioConverter *)converter {
