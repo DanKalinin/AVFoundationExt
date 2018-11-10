@@ -117,7 +117,7 @@ NSErrorDomain const AVEAudioConverterErrorDomain = @"AVEAudioConverter";
 
 - (void)convertToBuffer:(AVAudioBuffer *)toBuffer fromBuffer:(AVAudioBuffer *)fromBuffer {
     NSError *error = nil;
-    AVAudioConverterOutputStatus status = [self.converter convertToBuffer:toBuffer error:&error withInputFromBlock:^AVAudioBuffer *(AVAudioPacketCount inNumberOfPackets, AVAudioConverterInputStatus *outStatus) {
+    [self.converter convertToBuffer:toBuffer error:&error withInputFromBlock:^AVAudioBuffer *(AVAudioPacketCount inNumberOfPackets, AVAudioConverterInputStatus *outStatus) {
         *outStatus = AVAudioConverterInputStatus_HaveData;
         return fromBuffer;
     }];

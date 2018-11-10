@@ -146,6 +146,8 @@
 @property AVEAudioSession *session;
 
 @property NSMutableData *originalData;
+@property NSMutableData *compressedData;
+@property AVEAudioConverter *converter1;
 
 @end
 
@@ -175,12 +177,15 @@
         [self.session.delegates addObject:self.delegates];
         
         self.originalData = NSMutableData.data;
+        self.compressedData = NSMutableData.data;
         
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(10 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            NSLog(@"size - %i", (int)self.originalData.length);
-            
+            NSLog(@"originalData - %i", (int)self.originalData.length);
+            NSLog(@"compressedData - %i", (int)self.compressedData.length);
             // original | 10s | 2 MB | Float32, 44100, 1
         });
+        
+        self.converter1 = [AVEAudioConverter.alloc initFromFormat:self.converter.toFormat toFormat:self.converter.fromFormat];
         
         [self initialize];
     }
@@ -196,6 +201,9 @@
     
     [self.converter initialize];
     [self.converter configure];
+    
+    [self.converter1 initialize];
+    [self.converter1 configure];
     
     [self.session configure];
     [self.session setActive:YES withOptions:0];
@@ -241,18 +249,25 @@
         
         AVAudioCompressedBuffer *toBuffer = [AVAudioCompressedBuffer.alloc initWithFormat:self.converter.toFormat packetCapacity:1 maximumPacketSize:self.converter.converter.maximumOutputPacketSize];
         
-        NSError *error = nil;
-        AVAudioConverterOutputStatus status = [self.converter.converter convertToBuffer:toBuffer error:&error withInputFromBlock:^AVAudioBuffer *(AVAudioPacketCount inNumberOfPackets, AVAudioConverterInputStatus * outStatus) {
-            *outStatus = AVAudioConverterInputStatus_HaveData;
-            NSLog(@"converting");
-            return fromBuffer;
-        }];
         
-        NSLog(@"length - %i", (int)toBuffer.byteLength);
+        
+//        NSError *error = nil;
+//        AVAudioConverterOutputStatus status = [self.converter.converter convertToBuffer:toBuffer error:&error withInputFromBlock:^AVAudioBuffer *(AVAudioPacketCount inNumberOfPackets, AVAudioConverterInputStatus * outStatus) {
+//            *outStatus = AVAudioConverterInputStatus_HaveData;
+//            NSLog(@"converting");
+//            return fromBuffer;
+//        }];
+        
+        [self.converter convertToBuffer:toBuffer fromBuffer:fromBuffer];
+        if (NSError.threadError) {
+        } else {
+        }
+
+//        NSLog(@"length - %i", (int)toBuffer.byteLength);
+        
+//        [self.compressedData appendBytes:toBuffer.data length:toBuffer.byteLength];
         
 //        [self.converter.converter reset];
-        
-        
         
 //        NSLog(@"inNumberFrames - %u", fromBuffer.frameLength);
 //
@@ -268,6 +283,18 @@
 //        fromBuffer.frameLength = fromBuffer.frameCapacity;
 //        *fromBuffer.mutableAudioBufferList = *element.didRenderInfo.ioData;
 //        NSLog(@"frameLength - %u", fromBuffer.mutableAudioBufferList->mBuffers[0].mDataByteSize);
+        
+        AVAudioPCMBuffer *fromBuffer1 = [AVAudioPCMBuffer.alloc initWithPCMFormat:self.converter.fromFormat frameCapacity:element.didRenderInfo.inNumberFrames];
+        fromBuffer1.frameLength = fromBuffer1.frameCapacity;
+        
+        [self.converter1 convertToBuffer:fromBuffer1 fromBuffer:toBuffer];
+        
+        *element.didRenderInfo.ioData = *fromBuffer1.audioBufferList;
+        
+        
+//        for (UInt32 index = 0; index < fromBuffer.audioBufferList->mNumberBuffers; index++) {
+//            memcpy(element.didRenderInfo.ioData->mBuffers[index].mData, fromBuffer.audioBufferList->mBuffers[index].mData, fromBuffer.audioBufferList->mBuffers[index].mDataByteSize);
+//        }
     } else {
         // Render
         // Record -> Convert -> Send
