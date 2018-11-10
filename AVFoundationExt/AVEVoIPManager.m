@@ -64,10 +64,10 @@
     self.global.kAudioUnitProperty_MaximumFramesPerSlice = 4096;
     if (NSError.threadError) {
     } else {
-        self.global.kAudioOutputUnitProperty_SetInputCallback = self.global.renderCallback; // 1
+        self.global.kAudioOutputUnitProperty_SetInputCallback = self.global.renderCallback;
         if (NSError.threadError) {
         } else {
-            self.inputs[0].kAudioUnitProperty_SetRenderCallback = self.inputs[0].renderCallback; // 0
+            self.inputs[0].kAudioUnitProperty_SetRenderCallback = self.inputs[0].renderCallback;
             if (NSError.threadError) {
             } else {
                 self.inputs[1].kAudioOutputUnitProperty_EnableIO = 1;
