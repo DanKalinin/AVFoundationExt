@@ -84,6 +84,7 @@ extern OSStatus AVEAudioUnitElementRenderCallback(void *inRefCon, AudioUnitRende
 @property UInt32 kAudioUnitProperty_ShouldAllocateBuffer;
 @property UInt32 kAudioOutputUnitProperty_EnableIO;
 @property AURenderCallbackStruct kAudioOutputUnitProperty_SetInputCallback;
+@property UInt32 kAUVoiceIOProperty_MuteOutput;
 
 @property (readonly) AVEAudioUnit *parent;
 @property (readonly) HLPArray<AVEAudioUnitElementDelegate> *delegates;

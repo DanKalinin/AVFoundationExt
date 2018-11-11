@@ -255,6 +255,17 @@ OSStatus AVEAudioUnitElementRenderCallback(void *inRefCon, AudioUnitRenderAction
     return setInputCallback;
 }
 
+- (void)setKAUVoiceIOProperty_MuteOutput:(UInt32)muteOutput {
+    [self setProperty:kAUVoiceIOProperty_MuteOutput data:&muteOutput size:sizeof(muteOutput)];
+}
+
+- (UInt32)kAUVoiceIOProperty_MuteOutput {
+    UInt32 muteOutput = 0;
+    UInt32 size = sizeof(muteOutput);
+    [self getProperty:kAUVoiceIOProperty_MuteOutput data:&muteOutput size:&size];
+    return muteOutput;
+}
+
 @end
 
 

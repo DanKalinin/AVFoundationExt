@@ -261,6 +261,11 @@
     [self.outputConverter convertToBuffer:outputToBuffer fromBuffer:outputFromBuffer];
     
     *element.didRenderInfo.ioData = *outputToBuffer.audioBufferList;
+    
+    NSLog(@"sr - %@", self.inputConverter.converter.availableEncodeSampleRates);
+    
+//    [self.originalData appendBytes:element.didRenderInfo.ioData->mBuffers[0].mData length:element.didRenderInfo.ioData->mBuffers[0].mDataByteSize];
+//    [self.compressedData appendBytes:inputToBuffer.data length:inputToBuffer.byteLength];
 }
 
 //- (instancetype)initWithSession:(AVEAudioSession *)session unit:(AVEAudioUnit *)unit converter:(AVEAudioConverter *)converter {
