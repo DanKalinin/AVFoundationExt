@@ -103,15 +103,15 @@ NSErrorDomain const AVEAudioConverterErrorDomain = @"AVEAudioConverter";
 - (void)initialize {
     self.converter = [AVAudioConverter.alloc initFromFormat:self.fromFormat toFormat:self.toFormat];
     if (self.converter) {
-        NSError.threadError = nil;
+        NSError.nseThreadError = nil;
         self.state = AVEAudioConverterStateDidInitialize;
     } else {
-        NSError.threadError = [NSError errorWithDomain:AVEAudioConverterErrorDomain code:AVEAudioConverterErrorConversionImpossible userInfo:nil];
+        NSError.nseThreadError = [NSError errorWithDomain:AVEAudioConverterErrorDomain code:AVEAudioConverterErrorConversionImpossible userInfo:nil];
     }
 }
 
 - (void)configure {
-    NSError.threadError = nil;
+    NSError.nseThreadError = nil;
     self.state = AVEAudioConverterStateDidConfigure;
 }
 
@@ -121,7 +121,7 @@ NSErrorDomain const AVEAudioConverterErrorDomain = @"AVEAudioConverter";
         *outStatus = AVAudioConverterInputStatus_HaveData;
         return fromBuffer;
     }];
-    NSError.threadError = error;
+    NSError.nseThreadError = error;
 }
 
 #pragma mark - Audio session
@@ -130,7 +130,7 @@ NSErrorDomain const AVEAudioConverterErrorDomain = @"AVEAudioConverter";
     NSEOperationState state = self.state;
     if (state >= AVEAudioConverterStateDidInitialize) {
         [self initialize];
-        if (NSError.threadError) {
+        if (NSError.nseThreadError) {
         } else {
             if (state >= AVEAudioConverterStateDidConfigure) {
                 [self configure];
@@ -138,7 +138,7 @@ NSErrorDomain const AVEAudioConverterErrorDomain = @"AVEAudioConverter";
         }
     }
     
-    self.mediaServicesWereResetInfo = [AVEAudioConverterMediaServicesWereResetInfo.alloc initWithError:NSError.threadError];
+    self.mediaServicesWereResetInfo = [AVEAudioConverterMediaServicesWereResetInfo.alloc initWithError:NSError.nseThreadError];
 }
 
 @end
