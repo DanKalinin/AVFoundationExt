@@ -48,7 +48,7 @@
 @interface AVEAudioConversion : NSEOperation <AVEAudioConversionDelegate>
 
 @property (readonly) AVEAudioConverter *parent;
-@property (readonly) HLPArray<AVEAudioConversionDelegate> *delegates;
+@property (readonly) NSOrderedSet<AVEAudioConversionDelegate> *delegates;
 
 @end
 
@@ -79,7 +79,7 @@ NS_ERROR_ENUM(AVEAudioConverterErrorDomain) {
     AVEAudioConverterErrorConversionImpossible = 1
 };
 
-@property (readonly) HLPArray<AVEAudioConverterDelegate> *delegates;
+@property (readonly) NSEOrderedSet<AVEAudioConverterDelegate> *delegates;
 @property (readonly) AVAudioFormat *fromFormat;
 @property (readonly) AVAudioFormat *toFormat;
 @property (readonly) AVAudioConverter *converter;

@@ -168,7 +168,7 @@ const NSEOperationState AVEAudioSessionStateDidConfigure = 2;
 
 @dynamic delegates;
 
-+ (instancetype)shared {
++ (instancetype)nseShared {
     static AVEAudioSession *shared = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{

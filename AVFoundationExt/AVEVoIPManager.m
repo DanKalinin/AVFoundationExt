@@ -176,7 +176,7 @@
 
 @implementation AVEVoIPManager
 
-+ (instancetype)shared {
++ (instancetype)nseShared {
     static AVEVoIPManager *shared = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
@@ -197,7 +197,7 @@
         self.outputConverter = AVEVoIPOutputConverter.new;
         [self.outputConverter.delegates addObject:self.delegates];
         
-        self.session = AVEVoIPAudioSession.shared;
+        self.session = AVEVoIPAudioSession.nseShared;
         [self.session.delegates addObject:self.delegates];
         
         self.originalData = NSMutableData.data;

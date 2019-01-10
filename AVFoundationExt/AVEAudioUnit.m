@@ -325,7 +325,7 @@ NSErrorDomain const AVEAudioUnitErrorDomain = @"AVEAudioUnit";
         self.inputs = NSMutableArray.array;
         self.outputs = NSMutableArray.array;
         
-        self.session = AVEAudioSession.shared;
+        self.session = AVEAudioSession.nseShared;
         [self.session.delegates addObject:self];
     }
     return self;

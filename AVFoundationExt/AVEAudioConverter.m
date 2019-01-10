@@ -94,7 +94,7 @@ NSErrorDomain const AVEAudioConverterErrorDomain = @"AVEAudioConverter";
         self.fromFormat = fromFormat;
         self.toFormat = toFormat;
         
-        self.session = AVEAudioSession.shared;
+        self.session = AVEAudioSession.nseShared;
         [self.session.delegates addObject:self];
     }
     return self;
