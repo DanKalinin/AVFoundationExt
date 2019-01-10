@@ -6,7 +6,7 @@
 //
 
 #import <AVFoundation/AVFoundation.h>
-#import <Helpers/Helpers.h>
+#import <FoundationExt/FoundationExt.h>
 #import "AVEAudioSession.h"
 
 @class AVEAudioConverterMediaServicesWereResetInfo;

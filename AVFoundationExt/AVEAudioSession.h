@@ -7,7 +7,7 @@
 //
 
 #import <AVFoundation/AVFoundation.h>
-#import <Helpers/Helpers.h>
+#import <FoundationExt/FoundationExt.h>
 
 @class AVEAudioSessionInterruptionInfo;
 @class AVEAudioSessionRouteChangeInfo;
