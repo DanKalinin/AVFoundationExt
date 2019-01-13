@@ -79,7 +79,7 @@ NS_ERROR_ENUM(AVEAudioConverterErrorDomain) {
     AVEAudioConverterErrorConversionImpossible = 1
 };
 
-@property (readonly) NSEOrderedSet<AVEAudioConverterDelegate> *delegates;
+@property (readonly) NSMutableOrderedSet<AVEAudioConverterDelegate> *delegates;
 @property (readonly) AVAudioFormat *fromFormat;
 @property (readonly) AVAudioFormat *toFormat;
 @property (readonly) AVAudioConverter *converter;

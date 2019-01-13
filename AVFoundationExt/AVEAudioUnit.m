@@ -120,7 +120,7 @@ OSStatus AVEAudioUnitElementRenderCallback(void *inRefCon, AudioUnitRenderAction
         renderCallback.inputProcRefCon = (__bridge void *)self;
         self.renderCallback = renderCallback;
         
-        [self.delegates.exceptions addObject:NSStringFromSelector(@selector(AVEAudioUnitElementDidRender:))];
+        [self.delegates.nseOperation.exceptions addObject:NSStringFromSelector(@selector(AVEAudioUnitElementDidRender:))];
     }
     return self;
 }

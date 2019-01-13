@@ -115,7 +115,7 @@
 
 extern const NSEOperationState AVEAudioSessionStateDidConfigure;
 
-@property (readonly) NSEOrderedSet<AVEAudioSessionDelegate> *delegates;
+@property (readonly) NSMutableOrderedSet<AVEAudioSessionDelegate> *delegates;
 @property (readonly) AVAudioSession *audioSession;
 @property (readonly) AVEAudioSessionInterruptionInfo *interruptionInfo;
 @property (readonly) AVEAudioSessionRouteChangeInfo *routeChangeInfo;

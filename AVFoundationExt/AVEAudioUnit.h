@@ -87,7 +87,7 @@ extern OSStatus AVEAudioUnitElementRenderCallback(void *inRefCon, AudioUnitRende
 @property UInt32 kAUVoiceIOProperty_MuteOutput;
 
 @property (readonly) AVEAudioUnit *parent;
-@property (readonly) NSEOrderedSet<AVEAudioUnitElementDelegate> *delegates;
+@property (readonly) NSMutableOrderedSet<AVEAudioUnitElementDelegate> *delegates;
 @property (readonly) AudioUnit unit;
 @property (readonly) AudioUnitScope scope;
 @property (readonly) AudioUnitElement element;
@@ -137,7 +137,7 @@ NS_ERROR_ENUM(AVEAudioUnitErrorDomain) {
     AVEAudioUnitErrorNotFound = 1
 };
 
-@property (readonly) NSEOrderedSet<AVEAudioUnitDelegate> *delegates;
+@property (readonly) NSMutableOrderedSet<AVEAudioUnitDelegate> *delegates;
 @property (readonly) AudioComponentDescription componentDescription;
 @property (readonly) AudioComponent component;
 @property (readonly) AudioUnit unit;
