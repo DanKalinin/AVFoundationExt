@@ -27,13 +27,13 @@
 - (void)configure {
     NSError *error = nil;
     BOOL success = [self.audioSession setCategory:AVAudioSessionCategoryPlayAndRecord mode:AVAudioSessionModeVoiceChat options:0 error:&error];
-    NSError.nseThreadError = error;
+    NSThread.currentThread.nseOperation.lastError = error;
     if (success) {
         success = [self.audioSession setPreferredIOBufferDuration:0.005 error:&error];
-        NSError.nseThreadError = error;
+        NSThread.currentThread.nseOperation.lastError = error;
         if (success) {
             success = [self.audioSession setPreferredSampleRate:44100.0 error:&error];
-            NSError.nseThreadError = error;
+            NSThread.currentThread.nseOperation.lastError = error;
             if (success) {
                 [super configure];
             }
@@ -62,20 +62,20 @@
 
 - (void)configure {
     self.global.kAudioUnitProperty_MaximumFramesPerSlice = 4096;
-    if (NSError.nseThreadError) {
+    if (NSThread.currentThread.nseOperation.lastError) {
     } else {
         self.inputs[0].kAudioUnitProperty_SetRenderCallback = self.inputs[0].renderCallback;
-        if (NSError.nseThreadError) {
+        if (NSThread.currentThread.nseOperation.lastError) {
         } else {
             self.inputs[1].kAudioOutputUnitProperty_EnableIO = 1;
-            if (NSError.nseThreadError) {
+            if (NSThread.currentThread.nseOperation.lastError) {
             } else {
                 AVAudioFormat *format = [AVAudioFormat.alloc initWithCommonFormat:AVAudioPCMFormatFloat32 sampleRate:44100.0 channels:1 interleaved:NO];
                 self.inputs[0].kAudioUnitProperty_StreamFormat = *format.streamDescription;
-                if (NSError.nseThreadError) {
+                if (NSThread.currentThread.nseOperation.lastError) {
                 } else {
                     self.outputs[1].kAudioUnitProperty_StreamFormat = *format.streamDescription;
-                    if (NSError.nseThreadError) {
+                    if (NSThread.currentThread.nseOperation.lastError) {
                     } else {
                         [super configure];
                     }
@@ -241,7 +241,7 @@
 
 - (void)AVEAudioUnitElementDidRender:(AVEAudioUnitElement *)element {
     [element.parent audioUnitRender:element.didRenderInfo.ioActionFlags inTimeStamp:element.didRenderInfo.inTimeStamp inOutputBusNumber:1 inNumberFrames:element.didRenderInfo.inNumberFrames ioData:element.didRenderInfo.ioData];
-    element.didRenderInfo.error = NSError.nseThreadError;
+    element.didRenderInfo.error = NSThread.currentThread.nseOperation.lastError;
     
     AVAudioPCMBuffer *inputFromBuffer = [AVAudioPCMBuffer.alloc initWithPCMFormat:self.inputConverter.fromFormat frameCapacity:element.didRenderInfo.inNumberFrames];
     inputFromBuffer.frameLength = inputFromBuffer.frameCapacity;

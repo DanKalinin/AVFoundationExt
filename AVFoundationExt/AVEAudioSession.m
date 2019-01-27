@@ -192,14 +192,14 @@ const NSEOperationState AVEAudioSessionStateDidConfigure = 2;
 }
 
 - (void)configure {
-    NSError.nseThreadError = nil;
+    NSThread.currentThread.nseOperation.lastError = nil;
     self.state = AVEAudioSessionStateDidConfigure;
 }
 
 - (void)setActive:(BOOL)active withOptions:(AVAudioSessionSetActiveOptions)options {
     NSError *error = nil;
     BOOL success = [self.audioSession setActive:active withOptions:options error:&error];
-    NSError.nseThreadError = error;
+    NSThread.currentThread.nseOperation.lastError = error;
     if (success) {
         self.active = active;
         self.setActiveOptions = options;
@@ -237,7 +237,7 @@ const NSEOperationState AVEAudioSessionStateDidConfigure = 2;
     NSEOperationState state = self.state;
     if (state >= AVEAudioSessionStateDidConfigure) {
         [self configure];
-        if (NSError.nseThreadError) {
+        if (NSThread.currentThread.nseOperation.lastError) {
         } else {
             if (self.active) {
                 [self setActive:YES withOptions:self.setActiveOptions];
@@ -245,7 +245,7 @@ const NSEOperationState AVEAudioSessionStateDidConfigure = 2;
         }
     }
     
-    self.mediaServicesWereResetInfo = [AVEAudioSessionMediaServicesWereResetInfo.alloc initWithError:NSError.nseThreadError];
+    self.mediaServicesWereResetInfo = [AVEAudioSessionMediaServicesWereResetInfo.alloc initWithError:NSThread.currentThread.nseOperation.lastError];
 }
 
 @end

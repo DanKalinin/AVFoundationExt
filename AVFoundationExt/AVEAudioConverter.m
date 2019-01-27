@@ -103,15 +103,15 @@ NSErrorDomain const AVEAudioConverterErrorDomain = @"AVEAudioConverter";
 - (void)initialize {
     self.converter = [AVAudioConverter.alloc initFromFormat:self.fromFormat toFormat:self.toFormat];
     if (self.converter) {
-        NSError.nseThreadError = nil;
+        NSThread.currentThread.nseOperation.lastError = nil;
         self.state = AVEAudioConverterStateDidInitialize;
     } else {
-        NSError.nseThreadError = [NSError errorWithDomain:AVEAudioConverterErrorDomain code:AVEAudioConverterErrorConversionImpossible userInfo:nil];
+        NSThread.currentThread.nseOperation.lastError = [NSError errorWithDomain:AVEAudioConverterErrorDomain code:AVEAudioConverterErrorConversionImpossible userInfo:nil];
     }
 }
 
 - (void)configure {
-    NSError.nseThreadError = nil;
+    NSThread.currentThread.nseOperation.lastError = nil;
     self.state = AVEAudioConverterStateDidConfigure;
 }
 
@@ -121,7 +121,7 @@ NSErrorDomain const AVEAudioConverterErrorDomain = @"AVEAudioConverter";
         *outStatus = AVAudioConverterInputStatus_HaveData;
         return fromBuffer;
     }];
-    NSError.nseThreadError = error;
+    NSThread.currentThread.nseOperation.lastError = error;
 }
 
 #pragma mark - Audio session
@@ -130,7 +130,7 @@ NSErrorDomain const AVEAudioConverterErrorDomain = @"AVEAudioConverter";
     NSEOperationState state = self.state;
     if (state >= AVEAudioConverterStateDidInitialize) {
         [self initialize];
-        if (NSError.nseThreadError) {
+        if (NSThread.currentThread.nseOperation.lastError) {
         } else {
             if (state >= AVEAudioConverterStateDidConfigure) {
                 [self configure];
@@ -138,7 +138,7 @@ NSErrorDomain const AVEAudioConverterErrorDomain = @"AVEAudioConverter";
         }
     }
     
-    self.mediaServicesWereResetInfo = [AVEAudioConverterMediaServicesWereResetInfo.alloc initWithError:NSError.nseThreadError];
+    self.mediaServicesWereResetInfo = [AVEAudioConverterMediaServicesWereResetInfo.alloc initWithError:NSThread.currentThread.nseOperation.lastError];
 }
 
 @end
